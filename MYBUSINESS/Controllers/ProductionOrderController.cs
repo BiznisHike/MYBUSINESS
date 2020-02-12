@@ -9,7 +9,6 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using CrystalDecisions.CrystalReports.Engine;
 using Microsoft.Reporting.WebForms;
 using MYBUSINESS.CustomClasses;
 using MYBUSINESS.Models;
@@ -752,85 +751,7 @@ namespace MYBUSINESS.Controllers
         //    //printerSettings.PrinterName = "abc";
         //    reportDocument.PrintToPrinter(printerSettings, new PageSettings(), false);
 
-        //}
-        public ActionResult PrintSO(string SOId)
-        {
-            SOId = Models.Encryption.Decrypt(SOId);
-
-            ReportDocument rd = new ReportDocument();
-            rd.Load(System.IO.Path.Combine(Server.MapPath("~/Reports"), "SOSRReceipt2.rpt"));
-            rd.SetParameterValue("@SaleOrderID", SOId);
-            //rd.SetDataSource(allCustomer);
-
-            Response.Buffer = false;
-            Response.ClearContent();
-            Response.ClearHeaders();
-
-
-            System.IO.Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-            stream.Seek(0, System.IO.SeekOrigin.Begin);
-
-            return File(stream, "application/pdf", "SOSR.pdf");
-
-        }
-        //PrintSO1
-        public FileContentResult PrintSO1(string id)
-        {
-            id = Decode(id);
-
-            //id = Models.Encryption.Decrypt(id);
-
-            ReportDocument rd = new ReportDocument();
-            rd.Load(System.IO.Path.Combine(Server.MapPath("~/Reports"), "SOSRReceipt2.rpt"));
-            rd.SetParameterValue("@SaleOrderID", id);
-            //rd.SetDataSource(allCustomer);
-
-
-            //Response.Buffer = false;
-            //Response.ClearContent();
-            //Response.ClearHeaders();
-
-
-            CrystalDecisions.CrystalReports.Engine.Database oCRDb = rd.Database;
-            CrystalDecisions.CrystalReports.Engine.Tables oCRTables = oCRDb.Tables;
-            //CrystalDecisions.CrystalReports.Engine.Table oCRTable;
-            CrystalDecisions.Shared.TableLogOnInfo oCRTableLogonInfo;
-            CrystalDecisions.Shared.ConnectionInfo oCRConnectionInfo = new CrystalDecisions.Shared.ConnectionInfo();
-
-            oCRConnectionInfo.DatabaseName = "Business1";
-            oCRConnectionInfo.ServerName = "(local)";
-            oCRConnectionInfo.UserID = "sa";
-            oCRConnectionInfo.Password = "abc";
-
-            //oCRConnectionInfo.DatabaseName = "Business1";
-            ////oCRConnectionInfo.ServerName = "(local)";
-            //oCRConnectionInfo.ServerName = "Business1.mssql.somee.com";
-            //oCRConnectionInfo.UserID = "waqaslinks_SQLLogin_2";
-            //oCRConnectionInfo.Password = "klvfdbwfvg";
-
-
-            foreach (CrystalDecisions.CrystalReports.Engine.Table oCRTable in oCRTables)
-            {
-                oCRTableLogonInfo = oCRTable.LogOnInfo;
-                oCRTableLogonInfo.ConnectionInfo = oCRConnectionInfo;
-                oCRTable.ApplyLogOnInfo(oCRTableLogonInfo);
-            }
-
-
-            System.IO.Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-
-            //stream.Seek(0, System.IO.SeekOrigin.Begin);
-            System.IO.BinaryReader br = new System.IO.BinaryReader(stream);
-            byte[] getBytes = null;
-            getBytes = br.ReadBytes(Convert.ToInt32(br.BaseStream.Length));
-            HttpContext.Response.AddHeader("content-disposition", "inline; filename=" + "SOSR.pdf");
-
-            return File(getBytes, "application/pdf");
-
-            //return File(getBytes, "application/octet-stream");
-            ////return File(stream, "application/pdf", "SOSR.pdf");
-
-        }
+     
 
         public FileContentResult PrintSO2(string id)
         {
