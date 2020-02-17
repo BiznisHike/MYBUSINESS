@@ -27,11 +27,29 @@
     <div class="container" id="container">
         <div class="table-wrapper">
             <div class="table-title">
+                <font size="1"> @Html.ActionLink("Products", "Index", "Products")</font> |
+                <font size="1">  <a href="Create?IsReturn=false">New Sale</a></font> |
+                <font size="1">  <a href="Create?IsReturn=true">Return Sale</a></font> 
+
                 <div class="row">
-                    <div class="col-sm-offset-5"><h2>Sale <b>Order</b></h2></div>
+                    <div class="col-sm-offset-5">
+                        <h2>
+                            @{
+                                if (bool.Parse(ViewBag.IsReturn) == true)
+                                {
+
+                                    @:Return
+                                }
+                                else
+                                {
+                                    @:Sale
+                                }
+                            } <b>Order</b>
+                        </h2>
+                    </div>
                     @*<div class="col-sm-4">
-                            <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
-                        </div>*@
+                <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
+            </div>*@
                 </div>
                 @*<input type="hidden" name="SaleOrder.SaleReturn" id="saleReturn" value="true" />*@
                 <input type="hidden" name="SaleOrder.SaleReturn" id="saleReturn" value=@ViewBag.IsReturn />
@@ -315,7 +333,7 @@
     </div>
 }
 
-    <script>
+<script>
     $(document).ready(function () {
         document.getElementById('SOCreate').reset(); // has to be handle
     });
@@ -359,11 +377,11 @@
             piece = (int)(d.Stock % d.PerPack);
             if (piece == 0)
             {
-                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton", "@d.PerPack"]); 
+                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton", "@d.PerPack"]);
             }
             else
             {
-                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton,@piece", "@d.PerPack"]); 
+                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton,@piece", "@d.PerPack"]);
             }
 
         }
@@ -373,7 +391,7 @@
 
     //OnTypeName('#name0');
 
-    </script>
+</script>
 
 
 <div id="dialog-CreateCustomer" title="Create customer dialog">
@@ -445,6 +463,7 @@
 
     //alert(IsReturn);
 </script>
+<a href="~/Views/SOSR/_CustomerWiseSale.cshtml">~/Views/SOSR/_CustomerWiseSale.cshtml</a>
 
 @*@section Scripts {
         @Scripts.Render("~/bundles/jqueryval")

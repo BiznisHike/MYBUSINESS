@@ -82,12 +82,13 @@
                                                 <ul class="nav navbar-nav">
                                                     <li class="dropdown">
                                                         @*<a href="/Products/Index">@item.Name <b class="caret"></b></a>*@
-                                                        @item.Name <b class="caret"></b>
+                                                        @item.Name <b class="caret"></b><br>
+                                                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; <font size="1">@Html.ActionLink("Update", "Edit", new { id = item.Id })</font>
                                                         <ul id="products-menu" class="dropdown-menu clearfix" role="menu">
                                                             <li><a href="@Url.Action("SearchProduct", "SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Sales">Search in Sales History</a></li>
                                                             <li><a href="@Url.Action("SearchProduct", "POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Purchasess">Search in Purchases History</a></li>
                                                             @*<li><a href="@Url.Action("PerMonthSale","SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Per Month Sales">Per Month Sales</a></li>
-                                                                <li><a href="@Url.Action("PerMonthPurchase","POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Per Month Purchasess">Per Month Purchases</a></li>*@
+            <li><a href="@Url.Action("PerMonthPurchase","POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Per Month Purchasess">Per Month Purchases</a></li>*@
                                                         </ul>
                                                     </li>
                                                 </ul>
@@ -144,7 +145,7 @@
                                                 @Html.DisplayFor(modelItem => item.Saleable)
                                             </td>
                                             <td>
-                                                @Html.ActionLink("Update", "Edit", new { id = item.Id }) |
+                                                
                                                 <a href="@Url.Action("ProductWiseSale","SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product">Product Wise Sale</a>
 
                                                 @*|

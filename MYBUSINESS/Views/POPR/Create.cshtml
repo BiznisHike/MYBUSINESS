@@ -25,11 +25,31 @@
     <div class="container" id="container">
         <div class="table-wrapper">
             <div class="table-title">
+                <font size="1"> @Html.ActionLink("Products", "Index", "Products")</font> |
+                <font size="1">  <a href="Create?IsReturn=false">New Purchase</a></font> |
+                <font size="1">  <a href="Create?IsReturn=true">Return Purchase</a></font>
+
                 <div class="row">
-                    <div class="col-sm-offset-5"><h2>Purchase <b>Order</b></h2></div>
+                    <div class="col-sm-offset-5">
+                        <h2>
+                            @{
+                                if (bool.Parse(ViewBag.IsReturn) == true)
+                                {
+
+                                    @:Return
+                                }
+                                else
+                                {
+                                    @:Purchase
+                                }
+                            }
+
+                            <b>Order</b>
+                        </h2>
+                    </div>
                     @*<div class="col-sm-4">
-                            <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
-                        </div>*@
+                <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
+            </div>*@
                 </div>
                 <input type="hidden" name="PurchaseOrder.PurchaseReturn" id="purchaseReturn" value=@ViewBag.IsReturn />
                 <input type="hidden" name="PurchaseOrder.SupplierId" id="idnSupplier" value="" />
@@ -308,7 +328,7 @@
     </div>
 }
 
-    <script>
+<script>
     $(document).ready(function () {
         document.getElementById('POCreate').reset(); // has to be handle
     });
@@ -352,11 +372,11 @@
             piece = (int)(d.Stock % d.PerPack);
             if (piece == 0)
             {
-                 @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton", "@d.PerPack"]); 
+                 @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton", "@d.PerPack"]);
             }
             else
             {
-                 @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton,@piece", "@d.PerPack"]); 
+                 @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton,@piece", "@d.PerPack"]);
             }
          }
       }
@@ -364,7 +384,7 @@
 
     //OnTypeName('#name0');
 
-    </script>
+</script>
 
 
 <div id="dialog-CreateSupplier" title="Create supplier dialog">
