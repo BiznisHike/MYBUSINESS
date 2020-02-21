@@ -16,48 +16,48 @@ namespace MYBUSINESS.Controllers
         private BusinessContext db = new BusinessContext();
         public ActionResult Login()
         {
-            
+
             //if (StaticClass.CurrentAction != null) StaticClass.ReturnUrl = ControllerContext.HttpContext.Request.UrlReferrer.ToString();
             //if (StaticClass.PreviousAction != null) StaticClass.ReturnUrl = ControllerContext.HttpContext.Request.Url.ToString();
             //if (StaticClass.CurrentAction != null) StaticClass.ReturnUrl = ControllerContext.HttpContext.Request.Url.ToString();
             //if (CurrentAction != "Login")
-            
+
             Session.Clear();
             Session.Abandon();
-            
+
             //return Redirect(ControllerContext.HttpContext.Request.UrlReferrer.ToString());
             return View();
         }
-       
+
         public ActionResult Logout()
         {
-            
+
             Session.Clear();
             Session.Abandon();
 
             return RedirectToAction("Login");
-            
+
 
         }
 
         [HttpPost]
-        public ActionResult Login(Employee emp)
+        public ActionResult Login(Business biz)
         //public ActionResult Login(Employee emp, Right right)
         {
-            
-            string unl= Encryption.Decrypt("WuQ65MCb4JWsdtu2Sypl6g==");//abc123
 
-            if (emp.Password == null) { emp.Password = string.Empty; }
-            emp.Password = Encryption.Encrypt(emp.Password);
+            //string unl = Encryption.Decrypt("WuQ65MCb4JWsdtu2Sypl6g==");//abc123
+
+            //if (biz.Password == null) { biz.Password = string.Empty; }
+            //biz.Password = Encryption.Encrypt(biz.Password);
 
             //it sounds singelordefault will give error if value is more than one.
-            MYBUSINESS.Models.Employee user = db.Employees.SingleOrDefault(usr => ((usr.Login == emp.Login) && (usr.Password == emp.Password)));
+            MYBUSINESS.Models.Business user = db.Businesses.SingleOrDefault(usr => ((usr.email == biz.email) && (usr.Password == biz.Password)));
             if (user != null)
             {
                 //MYBUSINESS.Models.EmployeeLeaveViewModel elViewModel = new  MYBUSINESS.Models.EmployeeLeaveViewModel();
                 //user = db.Employees.FirstOrDefault();
                 Session.Add("CurrentUser", user);
-                return RedirectToAction("Create", "SOSR",new {IsReturn="false" });//change it from 'if condtion' to here
+                return RedirectToAction("Create", "SOSR", new { IsReturn = "false" });//change it from 'if condtion' to here
                 //return View("Index", "DashBoard",user);
             }
             else
@@ -65,12 +65,58 @@ namespace MYBUSINESS.Controllers
                 TempData["message"] = "Password is not valid";
                 return RedirectToAction("Login", "UserManagement");
             }
-            
+
             //return RedirectToAction("RecoverPassword", "UserManagement");
-            
+
             //return RenderAction("Login", "UserManagement");
         }
 
+        public ActionResult Register()
+        {
+            //int maxId = db.Employees.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            //maxId += 1;
+         
+            return View();
+
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Register([Bind(Include = "Id,DepartmentId,EmployeeTypeId,Login,Password")] Employee rgstr)
+
+
+        //{
+        //   rgstr.Id=12;
+        //    rgstr.EmployeeTypeId = 0;
+        //    rgstr.DepartmentId = 0;
+        //    //rgstr.Casual = 0;
+        //    //rgstr.CreateDate = DateTime.Now;
+        //    //rgstr.Designation = "Enterpenuere";
+        //    //rgstr.Earned = 1;
+        //    //rgstr.FirstName = "Waqas";
+        //    //rgstr.Gender = "M";
+        //    //rgstr.IsActive = 1;
+        //    //rgstr.LastName = "Javaid";
+        //    //rgstr.Probation = 90;
+        //    //rgstr.RankId = 0;
+        //    //rgstr.RegistrationDate = DateTime.Now;
+        //    //rgstr.RightId = 0;
+        //    //rgstr.UpdateDate = DateTime.Now;
+        //    //rgstr.Email = "waqas@gmail.com";
+        //    //rgstr.bizId = "Mall";
+
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        db.Employees.Add(rgstr);
+        //        db.SaveChanges();
+
+        //        return RedirectToAction("Login", "UserManagement");
+        //    }
+
+        //    //return View(customer);
+        //    return View(rgstr);
+        //}
         //// GET: /UserManagement/
         //public ActionResult Index()
         //{
@@ -85,12 +131,12 @@ namespace MYBUSINESS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
+            Business business = db.Businesses.Find(id);
+            if (business == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            return View(business);
         }
 
         //// GET: /UserManagement/Create
@@ -158,12 +204,12 @@ namespace MYBUSINESS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
-            if (employee == null)
+            Business business = db.Businesses.Find(id);
+            if (business == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            return View(business);
         }
 
         // POST: /UserManagement/Delete/5
@@ -171,8 +217,8 @@ namespace MYBUSINESS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Employee employee = db.Employees.Find(id);
-            db.Employees.Remove(employee);
+            Business business = db.Businesses.Find(id);
+            db.Businesses.Remove(business);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

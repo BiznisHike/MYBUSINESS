@@ -9,14 +9,14 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="decimal" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="BusinessName" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="Address" Type="nvarchar" MaxLength="200" />
-          <Property Name="Contact" Type="nvarchar" MaxLength="200" />
-          <Property Name="email" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="phone" Type="nvarchar" MaxLength="200" />
-          <Property Name="Password" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Serial" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="nchar" MaxLength="500" />
+          <Property Name="Contact" Type="nchar" MaxLength="100" />
+          <Property Name="email" Type="nchar" MaxLength="100" />
+          <Property Name="phone" Type="nchar" MaxLength="50" />
+          <Property Name="Password" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -29,7 +29,7 @@
           <Property Name="Remarks" Type="nchar" MaxLength="500" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
-          <Property Name="bizId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -40,7 +40,7 @@
           <Property Name="Remarks" Type="nchar" MaxLength="500" />
           <Property Name="CreateDate" Type="date" />
           <Property Name="UpdateDate" Type="date" />
-          <Property Name="bizId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -76,7 +76,7 @@
           <Property Name="Remarks" Type="nchar" MaxLength="500" />
           <Property Name="CreateDate" Type="date" />
           <Property Name="UpdateDate" Type="date" />
-          <Property Name="bizId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Payment">
           <Key>
@@ -247,7 +247,7 @@
           <Property Name="Balance" Type="decimal" Precision="10" Scale="2" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
-          <Property Name="bizId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="varchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_Customer_Business">
           <End Role="Business" Type="Self.Business" Multiplicity="0..1" />
@@ -591,7 +591,7 @@
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="bizId" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Business" Relationship="Models.FK_Customer_Business" FromRole="Customer" ToRole="Business" />
         </EntityType>
         <EntityType Name="PO">
@@ -729,7 +729,7 @@
           <NavigationProperty Name="Products" Relationship="Models.FK_Product_Supplier" FromRole="Supplier" ToRole="Product" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="bizId" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Business" Relationship="Models.FK_Supplier_Business" FromRole="Supplier" ToRole="Business" />
         </EntityType>
         <Association Name="FK_SO_Customer">
@@ -986,7 +986,7 @@
           <Property Name="CreateDate" Type="DateTime" Precision="0" />
           <Property Name="UpdateDate" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Employees" Relationship="Models.FK_Employee_Department" FromRole="Department" ToRole="Employee" />
-          <Property Name="bizId" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Business" Relationship="Models.FK_Department_Business" FromRole="Department" ToRole="Business" />
         </EntityType>
         <Association Name="FK_Employee_Department">
@@ -1011,7 +1011,7 @@
           <Property Name="CreateDate" Type="DateTime" Precision="0" />
           <Property Name="UpdateDate" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Products" Relationship="Models.FK_Product_Location" FromRole="Location" ToRole="Product" />
-          <Property Name="bizId" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Business" Relationship="Models.FK_Location_Business" FromRole="Location" ToRole="Business" />
         </EntityType>
         <EntityType Name="ProductionOrder">
@@ -1179,18 +1179,18 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
-          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Contact" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="email" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="phone" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Serial" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+          <Property Name="Contact" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="phone" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="Customers" Relationship="Models.FK_Customer_Business" FromRole="Business" ToRole="Customer" />
           <NavigationProperty Name="Departments" Relationship="Models.FK_Department_Business" FromRole="Business" ToRole="Department" />
           <NavigationProperty Name="Locations" Relationship="Models.FK_Location_Business" FromRole="Business" ToRole="Location" />
           <NavigationProperty Name="Suppliers" Relationship="Models.FK_Supplier_Business" FromRole="Business" ToRole="Supplier" />
-          <Property Name="BusinessName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Customer_Business">
           <End Type="Models.Business" Role="Business" Multiplicity="0..1" />
@@ -1552,13 +1552,13 @@
           <EntitySetMapping Name="Businesses">
             <EntityTypeMapping TypeName="Models.Business">
               <MappingFragment StoreEntitySet="Business">
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="BusinessName" ColumnName="BusinessName" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="phone" ColumnName="phone" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="Contact" ColumnName="Contact" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Serial" ColumnName="Serial" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
