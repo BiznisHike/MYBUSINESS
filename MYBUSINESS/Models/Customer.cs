@@ -27,10 +27,9 @@ namespace MYBUSINESS.Models
         public string Remarks { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
-        public Nullable<decimal> bizId { get; set; }
+        public string bizId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SO> SOes { get; set; }
-        public virtual Business Business { get; set; }
     }
 }

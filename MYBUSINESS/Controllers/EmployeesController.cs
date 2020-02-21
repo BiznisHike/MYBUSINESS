@@ -58,7 +58,7 @@ namespace MYBUSINESS.Controllers
         //    return View(employee);
         //}
 
-        //GET: Employees/Edit/5
+        // GET: Employees/Edit/5
         public ActionResult Edit(decimal id)
         {
             Employee CurrentUser = (Employee)Session["CurrentUser"];
@@ -81,12 +81,12 @@ namespace MYBUSINESS.Controllers
         //public ActionResult Edit([Bind(Include = "Login,Password")] Employee employee)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Login,Password")] Employee userChanges, FormCollection fc)
+        public ActionResult Edit([Bind(Include = "Login,Password")] Employee userChanges,FormCollection fc)
         {
             string oldPass = fc["OldPassword"];
             string pass1 = fc["Password1"];
             string pass2 = fc["Password2"];
-
+            
             Employee CurrentUser = (Employee)Session["CurrentUser"];
 
             if (CurrentUser.Login == userChanges.Login && CurrentUser.Password == Encryption.Encrypt(oldPass) && pass1 == pass2)
@@ -97,80 +97,52 @@ namespace MYBUSINESS.Controllers
 
                 if (ModelState.IsValid)
                 {
-
-                    //db.Entry(userChanges).State = EntityState.Modified;
-                    db.Employees.Add(userChanges);
+                    
+                    db.Entry(userChanges).State = EntityState.Modified;
                     db.SaveChanges();
                     Session.Add("CurrentUser", userChanges);
-
-                    return RedirectToAction("Create", "SOSR");
+                    
+                    return RedirectToAction("Create","SOSR");
                 }
             }
 
             ViewBag.Error = "Password does not match";
             return View(userChanges);
         }
-        //public ActionResult Register()
-        //{
-        //    int maxId = db.Employees.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
-        //    maxId += 1;
-        //    ViewBag.SuggestedNewCustId = maxId;
-        //    return View();
 
+        // GET: Employees/Delete/5
+        //public ActionResult Delete(decimal id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Employee employee = db.Employees.Find(id);
+        //    if (employee == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(employee);
         //}
 
-        //[HttpPost]
+        //// POST: Employees/Delete/5
+        //[HttpPost, ActionName("Delete")]
         //[ValidateAntiForgeryToken]
-        //public ActionResult Register(Employee rgstr)
-
+        //public ActionResult DeleteConfirmed(decimal id)
         //{
+        //    Employee employee = db.Employees.Find(id);
+        //    db.Employees.Remove(employee);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
 
-        //    if (ModelState.IsValid)
-        //    {
-
-        //        db.Employees.Add(rgstr);
-        //        db.SaveChanges();
-
-        //        return RedirectToAction("Login", "UserManagement");
-        //    }
-
-        //return View(customer);
-        //return View(rgstr);
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
-
-    // GET: Employees/Delete/5
-    //public ActionResult Delete(decimal id)
-    //{
-    //    if (id == null)
-    //    {
-    //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-    //    }
-    //    Employee employee = db.Employees.Find(id);
-    //    if (employee == null)
-    //    {
-    //        return HttpNotFound();
-    //    }
-    //    return View(employee);
-    //}
-
-    //// POST: Employees/Delete/5
-    //[HttpPost, ActionName("Delete")]
-    //[ValidateAntiForgeryToken]
-    //public ActionResult DeleteConfirmed(decimal id)
-    //{
-    //    Employee employee = db.Employees.Find(id);
-    //    db.Employees.Remove(employee);
-    //    db.SaveChanges();
-    //    return RedirectToAction("Index");
-    //}
-
-    //protected override void Dispose(bool disposing)
-    //{
-    //    if (disposing)
-    //    {
-    //        db.Dispose();
-    //    }
-    //    base.Dispose(disposing);
-//}
-//    }
 }

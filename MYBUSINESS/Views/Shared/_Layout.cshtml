@@ -385,9 +385,9 @@
 
                         @if (Session["CurrentUser"] != null)
                         {
-                            MYBUSINESS.Models.Business user = (MYBUSINESS.Models.Business)HttpContext.Current.Session["CurrentUser"];
+                            MYBUSINESS.Models.Employee user = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                            <li>@Html.ActionLink(user.email, "Edit", "Business", new { id = 0 }, null)</li>
+                            <li>@Html.ActionLink(user.Login, "Edit", "Employees", new { id = 0 }, null)</li>
                             <li>@Html.ActionLink("Logout", "Logout", "UserManagement")</li>
                         }
                     </ul>

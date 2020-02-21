@@ -236,7 +236,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\BusinessController.cs" />
     <Compile Include="Controllers\CustomerLedgerController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
@@ -255,7 +254,6 @@
     <Compile Include="Controllers\SupplierLedgerController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
-    <Compile Include="Controllers\UserRegisterController.cs" />
     <Compile Include="CustomClasses\License.cs" />
     <Compile Include="CustomClasses\LMSFilter.cs" />
     <Compile Include="CustomClasses\MetaDataClasses\Payment_Metadata.cs" />
@@ -279,9 +277,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Business.cs">
-      <DependentUpon>BusinessDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\BusinessDataModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -670,8 +665,6 @@
     <Content Include="Views\Home\_Dashboard.cshtml" />
     <Content Include="Views\StockTransections\_Summary.cshtml" />
     <Content Include="Views\StockTransections\Summary.cshtml" />
-    <Content Include="Views\UserRegister\Register.cshtml" />
-    <Content Include="Views\Business\Edit.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>
@@ -707,7 +700,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Reports\Report1.rdlc" />
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

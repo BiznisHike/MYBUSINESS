@@ -40,7 +40,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<ProductionOrder> ProductionOrders { get; set; }
         public virtual DbSet<ProductionOrderDetail> ProductionOrderDetails { get; set; }
-        public virtual DbSet<Business> Businesses { get; set; }
     
         public virtual ObjectResult<spPOReport_Result> spPOReport(string purchaseOrderID)
         {

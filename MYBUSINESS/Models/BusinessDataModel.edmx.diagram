@@ -33,11 +33,6 @@
         <AssociationConnector Association="Models.FK_ProductionOrderDetail_Product" />
         <AssociationConnector Association="Models.FK_SO_Employee" />
         <AssociationConnector Association="Models.FK_PO_Employee" />
-        <EntityTypeShape EntityType="Models.Business" Width="1.5" PointX="8.875" PointY="0.75" />
-        <AssociationConnector Association="Models.FK_Customer_Business" />
-        <AssociationConnector Association="Models.FK_Department_Business" />
-        <AssociationConnector Association="Models.FK_Location_Business" />
-        <AssociationConnector Association="Models.FK_Supplier_Business" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -15,16 +15,6 @@ namespace LMSMYBUSINESS.Models
         {
             string CurrentController = HttpContext.Current.Request.RequestContext.RouteData.Values["Controller"].ToString();
             string CurrentAction = HttpContext.Current.Request.RequestContext.RouteData.Values["Action"].ToString();
-           
-            if (CurrentController == "UserRegister" && CurrentAction == "Register")
-            {
-                //Let things happend automatically.
-                //return;
-                //filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "UserRegister" }, { "action", "Register" } });
-                return;
-            }
-
-
 
             if (HttpContext.Current.Session["CurrentUser"] != null)
             {

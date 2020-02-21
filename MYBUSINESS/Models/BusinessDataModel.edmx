@@ -5,19 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Business">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="decimal" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="BusinessName" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="Address" Type="nvarchar" MaxLength="200" />
-          <Property Name="Contact" Type="nvarchar" MaxLength="200" />
-          <Property Name="email" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="phone" Type="nvarchar" MaxLength="200" />
-          <Property Name="Password" Type="nvarchar" MaxLength="200" Nullable="false" />
-        </EntityType>
         <EntityType Name="Customer">
           <Key>
             <PropertyRef Name="Id" />
@@ -29,7 +16,7 @@
           <Property Name="Remarks" Type="nchar" MaxLength="500" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
-          <Property Name="bizId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -40,7 +27,7 @@
           <Property Name="Remarks" Type="nchar" MaxLength="500" />
           <Property Name="CreateDate" Type="date" />
           <Property Name="UpdateDate" Type="date" />
-          <Property Name="bizId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -76,7 +63,7 @@
           <Property Name="Remarks" Type="nchar" MaxLength="500" />
           <Property Name="CreateDate" Type="date" />
           <Property Name="UpdateDate" Type="date" />
-          <Property Name="bizId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Payment">
           <Key>
@@ -247,32 +234,8 @@
           <Property Name="Balance" Type="decimal" Precision="10" Scale="2" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
-          <Property Name="bizId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="bizId" Type="varchar" MaxLength="50" />
         </EntityType>
-        <Association Name="FK_Customer_Business">
-          <End Role="Business" Type="Self.Business" Multiplicity="0..1" />
-          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Customer">
-              <PropertyRef Name="bizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Department_Business">
-          <End Role="Business" Type="Self.Business" Multiplicity="0..1" />
-          <End Role="Department" Type="Self.Department" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Department">
-              <PropertyRef Name="bizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Employee_Department">
           <End Role="Department" Type="Self.Department" Multiplicity="1" />
           <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
@@ -282,18 +245,6 @@
             </Principal>
             <Dependent Role="Employee">
               <PropertyRef Name="DepartmentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Location_Business">
-          <End Role="Business" Type="Self.Business" Multiplicity="0..1" />
-          <End Role="Location" Type="Self.Location" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Location">
-              <PropertyRef Name="bizId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -465,18 +416,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Supplier_Business">
-          <End Role="Business" Type="Self.Business" Multiplicity="0..1" />
-          <End Role="Supplier" Type="Self.Supplier" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Supplier">
-              <PropertyRef Name="bizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Function Name="spPOReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PurchaseOrderID" Type="nvarchar" Mode="In" />
         </Function>
@@ -484,7 +423,6 @@
           <Parameter Name="SaleOrderID" Type="nvarchar" Mode="In" />
         </Function>
         <EntityContainer Name="ModelsStoreContainer">
-          <EntitySet Name="Business" EntityType="Self.Business" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
@@ -498,21 +436,9 @@
           <EntitySet Name="SO" EntityType="Self.SO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SOD" EntityType="Self.SOD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Customer_Business" Association="Self.FK_Customer_Business">
-            <End Role="Business" EntitySet="Business" />
-            <End Role="Customer" EntitySet="Customer" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Department_Business" Association="Self.FK_Department_Business">
-            <End Role="Business" EntitySet="Business" />
-            <End Role="Department" EntitySet="Department" />
-          </AssociationSet>
           <AssociationSet Name="FK_Employee_Department" Association="Self.FK_Employee_Department">
             <End Role="Department" EntitySet="Department" />
             <End Role="Employee" EntitySet="Employee" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Location_Business" Association="Self.FK_Location_Business">
-            <End Role="Business" EntitySet="Business" />
-            <End Role="Location" EntitySet="Location" />
           </AssociationSet>
           <AssociationSet Name="FK_Payment_SO" Association="Self.FK_Payment_SO">
             <End Role="SO" EntitySet="SO" />
@@ -570,10 +496,6 @@
             <End Role="SO" EntitySet="SO" />
             <End Role="SOD" EntitySet="SOD" />
           </AssociationSet>
-          <AssociationSet Name="FK_Supplier_Business" Association="Self.FK_Supplier_Business">
-            <End Role="Business" EntitySet="Business" />
-            <End Role="Supplier" EntitySet="Supplier" />
-          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -591,8 +513,7 @@
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="bizId" Type="Decimal" Precision="10" Scale="0" />
-          <NavigationProperty Name="Business" Relationship="Models.FK_Customer_Business" FromRole="Customer" ToRole="Business" />
+          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="PO">
           <Key>
@@ -729,8 +650,7 @@
           <NavigationProperty Name="Products" Relationship="Models.FK_Product_Supplier" FromRole="Supplier" ToRole="Product" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="bizId" Type="Decimal" Precision="10" Scale="0" />
-          <NavigationProperty Name="Business" Relationship="Models.FK_Supplier_Business" FromRole="Supplier" ToRole="Business" />
+          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_SO_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
@@ -863,23 +783,6 @@
           <FunctionImport Name="spSOReport" ReturnType="Collection(Models.spSOReport_Result)">
           <Parameter Name="SaleOrderID" Mode="In" Type="String" />
           </FunctionImport>
-          <EntitySet Name="Businesses" EntityType="Models.Business" />
-          <AssociationSet Name="FK_Customer_Business" Association="Models.FK_Customer_Business">
-            <End Role="Business" EntitySet="Businesses" />
-            <End Role="Customer" EntitySet="Customers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Department_Business" Association="Models.FK_Department_Business">
-            <End Role="Business" EntitySet="Businesses" />
-            <End Role="Department" EntitySet="Departments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Location_Business" Association="Models.FK_Location_Business">
-            <End Role="Business" EntitySet="Businesses" />
-            <End Role="Location" EntitySet="Locations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Supplier_Business" Association="Models.FK_Supplier_Business">
-            <End Role="Business" EntitySet="Businesses" />
-            <End Role="Supplier" EntitySet="Suppliers" />
-          </AssociationSet>
                  
           
         </EntityContainer>
@@ -986,8 +889,7 @@
           <Property Name="CreateDate" Type="DateTime" Precision="0" />
           <Property Name="UpdateDate" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Employees" Relationship="Models.FK_Employee_Department" FromRole="Department" ToRole="Employee" />
-          <Property Name="bizId" Type="Decimal" Precision="10" Scale="0" />
-          <NavigationProperty Name="Business" Relationship="Models.FK_Department_Business" FromRole="Department" ToRole="Business" />
+          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_Employee_Department">
           <End Type="Models.Department" Role="Department" Multiplicity="1" />
@@ -1011,8 +913,7 @@
           <Property Name="CreateDate" Type="DateTime" Precision="0" />
           <Property Name="UpdateDate" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Products" Relationship="Models.FK_Product_Location" FromRole="Location" ToRole="Product" />
-          <Property Name="bizId" Type="Decimal" Precision="10" Scale="0" />
-          <NavigationProperty Name="Business" Relationship="Models.FK_Location_Business" FromRole="Location" ToRole="Business" />
+          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ProductionOrder">
           <Key>
@@ -1175,71 +1076,6 @@
           <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
           <Property Type="String" Name="Remarks" Nullable="true" MaxLength="500" />
         </ComplexType>
-        <EntityType Name="Business">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
-          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Contact" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="email" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="phone" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Customers" Relationship="Models.FK_Customer_Business" FromRole="Business" ToRole="Customer" />
-          <NavigationProperty Name="Departments" Relationship="Models.FK_Department_Business" FromRole="Business" ToRole="Department" />
-          <NavigationProperty Name="Locations" Relationship="Models.FK_Location_Business" FromRole="Business" ToRole="Location" />
-          <NavigationProperty Name="Suppliers" Relationship="Models.FK_Supplier_Business" FromRole="Business" ToRole="Supplier" />
-          <Property Name="BusinessName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <Association Name="FK_Customer_Business">
-          <End Type="Models.Business" Role="Business" Multiplicity="0..1" />
-          <End Type="Models.Customer" Role="Customer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Customer">
-              <PropertyRef Name="bizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Department_Business">
-          <End Type="Models.Business" Role="Business" Multiplicity="0..1" />
-          <End Type="Models.Department" Role="Department" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Department">
-              <PropertyRef Name="bizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Location_Business">
-          <End Type="Models.Business" Role="Business" Multiplicity="0..1" />
-          <End Type="Models.Location" Role="Location" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Location">
-              <PropertyRef Name="bizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Supplier_Business">
-          <End Type="Models.Business" Role="Business" Multiplicity="0..1" />
-          <End Type="Models.Supplier" Role="Supplier" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Supplier">
-              <PropertyRef Name="bizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         
         
       
@@ -1549,20 +1385,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Businesses">
-            <EntityTypeMapping TypeName="Models.Business">
-              <MappingFragment StoreEntitySet="Business">
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="BusinessName" ColumnName="BusinessName" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="phone" ColumnName="phone" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="Contact" ColumnName="Contact" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           
           
         </EntityContainerMapping>
