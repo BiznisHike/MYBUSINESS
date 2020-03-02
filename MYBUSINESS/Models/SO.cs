@@ -22,32 +22,34 @@ namespace MYBUSINESS.Models
         }
     
         public string Id { get; set; }
+        public Nullable<int> SOSerial { get; set; }
         public decimal BillAmount { get; set; }
         public decimal BillPaid { get; set; }
         public Nullable<decimal> Discount { get; set; }
         public Nullable<decimal> Balance { get; set; }
+        public Nullable<decimal> PrevBalance { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
-        public Nullable<int> CustomerId { get; set; }
-        public Nullable<decimal> SODId { get; set; }
         public Nullable<bool> SaleReturn { get; set; }
+        public Nullable<decimal> CustomerId { get; set; }
+        public Nullable<decimal> SODId { get; set; }
         public Nullable<decimal> SaleOrderAmount { get; set; }
         public Nullable<decimal> SaleReturnAmount { get; set; }
         public Nullable<decimal> SaleOrderQty { get; set; }
         public Nullable<decimal> SaleReturnQty { get; set; }
-        public Nullable<int> SOSerial { get; set; }
-        public Nullable<decimal> PrevBalance { get; set; }
         public Nullable<decimal> Profit { get; set; }
-        public string Remarks { get; set; }
-        public Nullable<int> EmployeeId { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentDetail { get; set; }
+        public string Remarks { get; set; }
         public string Remarks2 { get; set; }
+        public Nullable<decimal> EmployeeId { get; set; }
+        public Nullable<decimal> AccountId { get; set; }
     
+        public virtual Account Account { get; set; }
         public virtual Customer Customer { get; set; }
+        public virtual Employee Employee { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SOD> SODs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Payment> Payments { get; set; }
-        public virtual Employee Employee { get; set; }
     }
 }

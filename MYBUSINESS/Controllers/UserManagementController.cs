@@ -45,18 +45,20 @@ namespace MYBUSINESS.Controllers
         //public ActionResult Login(Employee emp, Right right)
         {
             
-            string unl= Encryption.Decrypt("WuQ65MCb4JWsdtu2Sypl6g==");//abc123
+            //string unl= Encryption.Decrypt("WuQ65MCb4JWsdtu2Sypl6g==");//abc123
 
             if (emp.Password == null) { emp.Password = string.Empty; }
             emp.Password = Encryption.Encrypt(emp.Password);
 
             //it sounds singelordefault will give error if value is more than one.
-            MYBUSINESS.Models.Employee user = db.Employees.SingleOrDefault(usr => ((usr.Login == emp.Login) && (usr.Password == emp.Password)));
+            MYBUSINESS.Models.Employee user = db.Employees.SingleOrDefault(usr => ((usr.Email == emp.Email) && (usr.Password == emp.Password)));
             if (user != null)
             {
                 //MYBUSINESS.Models.EmployeeLeaveViewModel elViewModel = new  MYBUSINESS.Models.EmployeeLeaveViewModel();
                 //user = db.Employees.FirstOrDefault();
                 Session.Add("CurrentUser", user);
+                Session.Add("CurrentBusiness", user.Department.Business);
+
                 return RedirectToAction("Create", "SOSR",new {IsReturn="false" });//change it from 'if condtion' to here
                 //return View("Index", "DashBoard",user);
             }

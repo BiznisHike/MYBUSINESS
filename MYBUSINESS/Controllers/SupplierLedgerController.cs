@@ -29,13 +29,13 @@ namespace MYBUSINESS.Controllers
             //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id));
             //var pOes = db.POes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref pOes);
-            Dictionary<int, int> LstMaxSerialNo = new Dictionary<int, int>();
-            int thisSerial = 0;
+            Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
+            decimal thisSerial = 0;
             foreach (PO itm in pOes)
             {
-                thisSerial = (int)itm.Supplier.POes.Max(x => x.POSerial);
+                thisSerial = (decimal)itm.Supplier.POes.Max(x => x.POSerial);
 
-                if (!LstMaxSerialNo.ContainsKey((int)itm.SupplierId))
+                if (!LstMaxSerialNo.ContainsKey((decimal)itm.SupplierId))
                 {
                     LstMaxSerialNo.Add(itm.Supplier.Id, thisSerial);
                 }

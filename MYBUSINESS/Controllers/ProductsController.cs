@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
+
 using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
@@ -13,12 +15,28 @@ namespace MYBUSINESS.Controllers
     public class ProductsController : Controller
     {
         private BusinessContext db = new BusinessContext();
+        private IQueryable<Product> _dbFilteredProducts;
+        private IQueryable<Supplier> _dbFilteredSuppliers;
+        public ProductsController()
+        {
+            //Business CurrentBusiness = (Business)Session["CurrentBusiness"];
+            //db.Products = (DbSet<Product>)db.Products.AsQueryable().Where(x => x.Supplier.Business.Id == CurrentBusiness.Id);
+            //db.Suppliers = (DbSet<Supplier>)db.Suppliers.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+        }
+        protected override void Initialize(RequestContext requestContext)
+        {
 
+            base.Initialize(requestContext);
+
+            Business CurrentBusiness = (Business)Session["CurrentBusiness"];
+            _dbFilteredProducts = db.Products.AsQueryable().Where(x => x.Supplier.bizId == CurrentBusiness.Id);
+            _dbFilteredSuppliers = db.Suppliers.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+        }
         // GET: Products
         public ActionResult Index()
         {
-            ViewBag.Suppliers = db.Suppliers;
-            return View(db.Products.ToList());
+            ViewBag.Suppliers = _dbFilteredSuppliers;
+            return View(_dbFilteredProducts.ToList());
         }
 
         public ActionResult SearchData(string suppId)
@@ -60,10 +78,10 @@ namespace MYBUSINESS.Controllers
         public ActionResult Create()
         {
             //int maxId = db.Products.Max(p => p.Id);
-            int maxId = db.Products.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            decimal maxId = db.Products.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             ViewBag.SuggestedId = maxId;
-            ViewBag.Suppliers = db.Suppliers;
+            ViewBag.Suppliers = _dbFilteredSuppliers;
             Product prod = new Product();
 
             prod.PurchasePrice = 0;
@@ -86,20 +104,21 @@ namespace MYBUSINESS.Controllers
                 product.Stock = 0;
             }
 
-            if (product.PerPack == null || product.PerPack==0)
+            if (product.PerPack == null || product.PerPack == 0)
             {
                 product.PerPack = 1;
             }
 
             product.Stock = product.Stock * product.PerPack;
-
+            
             if (ModelState.IsValid)
             {
+                
                 db.Products.Add(product);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Suppliers = db.Suppliers;
+            ViewBag.Suppliers = _dbFilteredSuppliers;
             return View(product);
         }
 

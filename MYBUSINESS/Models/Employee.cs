@@ -17,22 +17,22 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Employee()
         {
+            this.POes = new HashSet<PO>();
             this.ProductionOrders = new HashSet<ProductionOrder>();
             this.SOes = new HashSet<SO>();
-            this.POes = new HashSet<PO>();
         }
     
-        public int Id { get; set; }
+        public decimal Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Gender { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public decimal EmployeeTypeId { get; set; }
+        public Nullable<decimal> EmployeeTypeId { get; set; }
         public Nullable<decimal> RightId { get; set; }
         public Nullable<byte> RankId { get; set; }
-        public int DepartmentId { get; set; }
+        public decimal DepartmentId { get; set; }
         public string Designation { get; set; }
         public Nullable<byte> Probation { get; set; }
         public Nullable<System.DateTime> RegistrationDate { get; set; }
@@ -45,10 +45,10 @@ namespace MYBUSINESS.Models
     
         public virtual Department Department { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PO> POes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionOrder> ProductionOrders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SO> SOes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PO> POes { get; set; }
     }
 }

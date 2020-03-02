@@ -28,8 +28,25 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <font size="1"> @Html.ActionLink("Products", "Index", "Products")</font> |
-                <font size="1">  <a href="Create?IsReturn=false">New Sale</a></font> |
-                <font size="1">  <a href="Create?IsReturn=true">Return Sale</a></font> 
+                
+                <font size="1">
+                    @{
+                        if (bool.Parse(ViewBag.IsReturn) == true)
+                        {
+
+                            <a href="Create?IsReturn=false">Sale Order</a>
+
+
+                        }
+                        else
+                        {
+                            <a href="Create?IsReturn=true">Return Order</a>
+                        }
+
+                    }
+                </font>
+
+               
 
                 <div class="row">
                     <div class="col-sm-offset-5">
@@ -269,29 +286,32 @@
                 <div class="table-title">
 
                     <div class="row">
-                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
-                        <div class="col-sm-3">
+                        
+                        <div class="col-sm-7" style="margin-left:17em">
+                            
+
+                                @Html.DropDownList("SaleOrder.AccountId", new SelectList(ViewBag.Accounts, "Id", "Name"), new { @class = "form-control" })
+                          
+                            </div>
+                            <div class="col-sm-7" style="margin-left:17em">
+                                @*<textarea name="SaleOrder.PaymentMethod" rows="1" cols="100" class="form-control" placeholder="Payment method..."></textarea>*@
+                                <select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method">
+                                    <option value="Cash" selected>Cash</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
 
                         </div>
-                        <div class="col-sm-7">
-                            @*<textarea name="SaleOrder.PaymentMethod" rows="1" cols="100" class="form-control" placeholder="Payment method..."></textarea>*@
-                            <select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method">
-                                <option value="Cash" selected>Cash</option>
-                                <option value="Online">Online</option>
-                                <option value="Cheque">Cheque</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-
-
-                    </div>
 
                     <div class="row">
                         @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
                         <div class="col-sm-3">
 
                         </div>
-                        <div class="col-sm-7">
+                        <div class="col-sm-7"  style="margin-left:17em">
                             <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
                         </div>
 
@@ -306,7 +326,7 @@
                         <div class="col-sm-3">
 
                         </div>
-                        <div class="col-sm-7">
+                        <div class="col-sm-7" style="margin-left:17em">
                             <textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill"></textarea>
                         </div>
 
@@ -319,7 +339,7 @@
                         <div class="col-sm-3">
 
                         </div>
-                        <div class="col-sm-7">
+                        <div class="col-sm-7"  style="margin-left:17em">
                             <textarea name="SaleOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill"></textarea>
                         </div>
 

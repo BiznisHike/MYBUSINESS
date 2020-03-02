@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
@@ -13,12 +14,21 @@ namespace MYBUSINESS.Controllers
     public class SuppliersController : Controller
     {
         private BusinessContext db = new BusinessContext();
+        private IQueryable<Supplier> _dbFilteredSuppliers;
+        protected override void Initialize(RequestContext requestContext)
+        {
 
+            base.Initialize(requestContext);
+
+            Business CurrentBusiness = (Business)Session["CurrentBusiness"];
+          
+            _dbFilteredSuppliers = db.Suppliers.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+        }
         // GET: Suppliers
         public ActionResult Index(string id)
         {
            
-            return View(db.Suppliers.ToList());
+            return View(_dbFilteredSuppliers.ToList());
         }
 
         // GET: Suppliers/Details/5
@@ -39,7 +49,7 @@ namespace MYBUSINESS.Controllers
         // GET: Suppliers/Create
         public ActionResult Create()
         {
-            int maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             ViewBag.SuggestedNewSuppId = maxId;
             return View();
@@ -50,8 +60,10 @@ namespace MYBUSINESS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Address,Balance")] Supplier supplier)
+        public ActionResult Create([Bind(Include = "bizId,Id,Name,Address,Balance")] Supplier supplier)
         {
+            Business CurrentBusiness = (Business)Session["CurrentBusiness"];
+            supplier.bizId = CurrentBusiness.Id;
             if (ModelState.IsValid)
             {
                 if (supplier.Balance == null)

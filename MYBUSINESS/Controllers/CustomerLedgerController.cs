@@ -30,13 +30,13 @@ namespace MYBUSINESS.Controllers
             //sOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id));
             //var sOes = db.SOes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref sOes);
-            Dictionary<int, int> LstMaxSerialNo = new Dictionary<int, int>();
-            int thisSerial = 0;
+            Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
+            decimal thisSerial = 0;
             foreach (SO itm in sOes)
             {
-                thisSerial = (int)itm.Customer.SOes.Max(x => x.SOSerial);
+                thisSerial = (decimal)itm.Customer.SOes.Max(x => x.SOSerial);
 
-                if (!LstMaxSerialNo.ContainsKey((int)itm.CustomerId))
+                if (!LstMaxSerialNo.ContainsKey((decimal)itm.CustomerId))
                 {
                     LstMaxSerialNo.Add(itm.Customer.Id, thisSerial);
                 }

@@ -21,29 +21,29 @@ namespace MYBUSINESS.Models
         }
     
         public string Id { get; set; }
+        public Nullable<int> POSerial { get; set; }
         public decimal BillAmount { get; set; }
         public decimal BillPaid { get; set; }
         public Nullable<decimal> Discount { get; set; }
         public Nullable<decimal> Balance { get; set; }
+        public Nullable<decimal> PrevBalance { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
-        public Nullable<int> SupplierId { get; set; }
-        public Nullable<decimal> PODId { get; set; }
         public Nullable<bool> PurchaseReturn { get; set; }
+        public Nullable<decimal> SupplierId { get; set; }
+        public Nullable<decimal> PODId { get; set; }
         public Nullable<decimal> PurchaseOrderAmount { get; set; }
         public Nullable<decimal> PurchaseReturnAmount { get; set; }
         public Nullable<decimal> PurchaseOrderQty { get; set; }
         public Nullable<decimal> PurchaseReturnQty { get; set; }
-        public Nullable<int> POSerial { get; set; }
-        public Nullable<decimal> PrevBalance { get; set; }
-        public string Remarks { get; set; }
-        public Nullable<int> EmployeeId { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentDetail { get; set; }
+        public string Remarks { get; set; }
         public string Remarks2 { get; set; }
+        public Nullable<decimal> EmployeeId { get; set; }
     
+        public virtual Employee Employee { get; set; }
         public virtual Supplier Supplier { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<POD> PODs { get; set; }
-        public virtual Employee Employee { get; set; }
     }
 }

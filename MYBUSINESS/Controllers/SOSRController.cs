@@ -9,10 +9,11 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Reporting.WebForms;
 using MYBUSINESS.CustomClasses;
 using MYBUSINESS.Models;
-
+using System.Web.Routing;
 namespace MYBUSINESS.Controllers
 {
 
@@ -20,9 +21,33 @@ namespace MYBUSINESS.Controllers
     //[NoCache]
     public class SOSRController : Controller
     {
+        
         private BusinessContext db = new BusinessContext();
+        private IQueryable<Customer> _dbFilteredCustomers;
+        private IQueryable<Product> _dbFilteredProducts;
+        private IQueryable<Account> _dbFilteredAccounts;
+        private IQueryable<SO> _dbFilteredSO;
+        public SOSRController()
+        {
 
+            //Business _CurrentBusiness = (Business)Session["CurrentBusiness"];
+            /*db.Customers = (DbSet<Customer>)db.Customers.AsQueryable().Where(x => x.Business.Id == 1);*/
+            //db.Products = (DbSet<Product>)db.Products.AsQueryable().Where(x => x.Supplier.Business.Id == _CurrentBusiness.Id);
+            //db.Accounts = (DbSet<Account>)db.Accounts.AsQueryable().Where(x => x.bizId == _CurrentBusiness.Id);
+        }
         // GET: SOes
+        protected override void Initialize(RequestContext requestContext)
+        {
+            //Employee employee1 = TempData["mydata"] as Employee;
+            //Employee employee = ViewBag.data;
+            base.Initialize(requestContext);
+            //decimal BusinessId = decimal.Parse(this.ControllerContext.RouteData.Values["CurrentBusiness"].ToString());
+            Business CurrentBusiness = (Business)Session["CurrentBusiness"];
+            _dbFilteredCustomers = db.Customers.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+            _dbFilteredProducts= db.Products.AsQueryable().Where(x => x.Supplier.bizId == CurrentBusiness.Id);
+            _dbFilteredAccounts= db.Accounts.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+            _dbFilteredSO = db.SOes.AsQueryable().Where(x => x.Employee.Department.bizId == CurrentBusiness.Id);
+        }
         public ActionResult Index()
         {
             //EnterProfit();
@@ -30,18 +55,18 @@ namespace MYBUSINESS.Controllers
             var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
 
-            IQueryable<SO> sOes = db.SOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate).Include(s => s.Customer);
+            IQueryable<SO> sOes = _dbFilteredSO.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate).Include(s => s.Customer);
             //sOes = sOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate);
             //sOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id));
             //var sOes = db.SOes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref sOes);
-            Dictionary<int, int> LstMaxSerialNo = new Dictionary<int, int>();
-            int thisSerial = 0;
+            Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
+            decimal thisSerial = 0;
             foreach (SO itm in sOes)
             {
-                thisSerial = (int)itm.Customer.SOes.Max(x => x.SOSerial);
+                thisSerial = (decimal)itm.Customer.SOes.Max(x => x.SOSerial);
 
-                if (!LstMaxSerialNo.ContainsKey((int)itm.CustomerId))
+                if (!LstMaxSerialNo.ContainsKey((decimal)itm.CustomerId))
                 {
                     LstMaxSerialNo.Add(itm.Customer.Id, thisSerial);
                 }
@@ -52,7 +77,7 @@ namespace MYBUSINESS.Controllers
             }
 
             ViewBag.LstMaxSerialno = LstMaxSerialNo;
-            ViewBag.Customers = db.Customers;
+            ViewBag.Customers = _dbFilteredCustomers;
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
             return View(sOes.OrderByDescending(i => i.Date).ToList());
@@ -81,7 +106,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse(startDate);
                 dtEndtDate = DateTime.Parse(endDate);
 
-                selectedSOes = db.SOes.Where(so => so.CustomerId == intCustId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedSOes = _dbFilteredSO.Where(so => so.CustomerId == intCustId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -102,7 +127,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse(startDate);
                 dtEndtDate = DateTime.Parse(endDate);
 
-                selectedSOes = db.SOes.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedSOes = _dbFilteredSO.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -113,7 +138,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse("1-1-1800");
                 dtEndtDate = DateTime.Parse(endDate);
 
-                selectedSOes = db.SOes.Where(so => so.CustomerId == intCustId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedSOes = _dbFilteredSO.Where(so => so.CustomerId == intCustId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -124,7 +149,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse(startDate);
                 dtEndtDate = DateTime.Today.AddDays(1);
 
-                selectedSOes = db.SOes.Where(so => so.CustomerId == intCustId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedSOes = _dbFilteredSO.Where(so => so.CustomerId == intCustId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -135,7 +160,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse("1-1-1800");
                 dtEndtDate = DateTime.Today.AddDays(1);
 
-                selectedSOes = db.SOes.Where(so => so.CustomerId == intCustId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedSOes = _dbFilteredSO.Where(so => so.CustomerId == intCustId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -146,7 +171,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse(startDate);
                 dtEndtDate = DateTime.Today.AddDays(1);
 
-                selectedSOes = db.SOes.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedSOes = _dbFilteredSO.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -157,17 +182,17 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse("1-1-1800");
                 dtEndtDate = DateTime.Parse(endDate);
 
-                selectedSOes = db.SOes.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedSOes = _dbFilteredSO.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
             GetTotalBalance(ref selectedSOes);
-            Dictionary<int, int> LstMaxSerialNo = new Dictionary<int, int>();
-            int thisSerial = 0;
+            Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
+            decimal thisSerial = 0;
             foreach (SO itm in selectedSOes)
             {
-                thisSerial = (int)itm.Customer.SOes.Max(x => x.SOSerial);
+                thisSerial = (decimal)itm.Customer.SOes.Max(x => x.SOSerial);
 
-                if (!LstMaxSerialNo.ContainsKey((int)itm.CustomerId))
+                if (!LstMaxSerialNo.ContainsKey((decimal)itm.CustomerId))
                 {
                     LstMaxSerialNo.Add(itm.Customer.Id, thisSerial);
                 }
@@ -193,13 +218,13 @@ namespace MYBUSINESS.Controllers
             ViewBag.CustomerId = custId;
             ViewBag.CustName = custName;
             //ViewBag.SupplierName = supplierName;//db.Products.FirstOrDefault(x => x.Id == productId).Name;
-            ViewBag.Customers = db.Customers;
+            ViewBag.Customers = _dbFilteredCustomers;
             //01-Jan-2019
 
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
 
-            IQueryable<SO> sOes = db.SOes;//.Include(s => s.Customer);
+            IQueryable<SO> sOes = _dbFilteredSO;//.Include(s => s.Customer);
             sOes = sOes.Where(x => x.CustomerId == custId && x.Date >= dtStartDate && x.Date <= dtEndtDate).OrderBy(i => i.SOSerial).AsQueryable();
             //foreach (SO itm in sOes)
             //{
@@ -215,7 +240,7 @@ namespace MYBUSINESS.Controllers
         {
 
             /////////////////////////////////////////////////////////////////////////////
-            IQueryable<SO> sOes = db.SOes;//.Include(s => s.Customer);
+            IQueryable<SO> sOes = _dbFilteredSO;//.Include(s => s.Customer);
             //sOes = sOes.Where(x => x.CustomerId == custId && x.Date >= dtStartDate && x.Date <= dtEndtDate).OrderBy(i => i.Date).OrderBy(i => i.SOSerial).AsQueryable();
 
 
@@ -339,12 +364,12 @@ namespace MYBUSINESS.Controllers
             var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
             ViewBag.ProductId = productId;
-            ViewBag.ProductName = db.Products.FirstOrDefault(x => x.Id == productId).Name;
-            ViewBag.Customers = db.Customers;
+            ViewBag.ProductName = _dbFilteredProducts.FirstOrDefault(x => x.Id == productId).Name;
+            ViewBag.Customers = _dbFilteredCustomers;
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
 
-            List<SO> sOes = db.SOes.ToList();//.Include(s => s.Customer);
+            List<SO> sOes = _dbFilteredSO.ToList();//.Include(s => s.Customer);
 
             //sOes = db.SOes.Where(x => x.SODs.Where(y => y.ProductId == productId));
 
@@ -398,10 +423,10 @@ namespace MYBUSINESS.Controllers
             }
 
 
-            //List<SO> sOes = db.SOes.ToList();//.Include(s => s.Customer);
+            //List<SO> sOes = _dbFilteredSO.ToList();//.Include(s => s.Customer);
             List<SO> selectedSOes = null;
 
-            selectedSOes = db.SOes.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate).ToList();
+            selectedSOes = _dbFilteredSO.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate).ToList();
             /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             int intProdId;
@@ -445,7 +470,7 @@ namespace MYBUSINESS.Controllers
         }
         public ActionResult PerMonthSale(int productId)
         {
-            IQueryable<SO> sOes = db.SOes.Include(s => s.Customer);
+            IQueryable<SO> sOes = _dbFilteredSO.Include(s => s.Customer);
 
             //sOes = db.SOes.Where(x => x.SODs.Where(y => y.ProductId == productId));
 
@@ -465,13 +490,13 @@ namespace MYBUSINESS.Controllers
                 //itm.Id = Encryption.Encrypt(itm.Id);
                 itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id)));
             }
-            ViewBag.ProductName = db.Products.FirstOrDefault(x => x.Id == productId).Name;
+            ViewBag.ProductName = _dbFilteredProducts.FirstOrDefault(x => x.Id == productId).Name;
             return View("PerMonthSale", sOes.OrderBy(i => i.Date).ToList());
         }
 
         public ActionResult SearchProduct(int productId)
         {
-            IQueryable<SO> sOes = db.SOes.Include(s => s.Customer);
+            IQueryable<SO> sOes = _dbFilteredSO.Include(s => s.Customer);
 
             //sOes = db.SOes.Where(x => x.SODs.Where(y => y.ProductId == productId));
 
@@ -498,7 +523,7 @@ namespace MYBUSINESS.Controllers
                 //itm.Id = Encryption.Encrypt(itm.Id);
                 itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id)));
             }
-            ViewBag.Customers = db.Customers;
+            ViewBag.Customers = _dbFilteredCustomers;
             return View("Index", sOes.OrderByDescending(i => i.Date).ToList());
         }
 
@@ -510,7 +535,7 @@ namespace MYBUSINESS.Controllers
             decimal TotalBalance = 0;
             foreach (SO itm in DistSOes)
             {
-                Customer cust = db.Customers.Where(x => x.Id == itm.CustomerId).FirstOrDefault();
+                Customer cust = _dbFilteredCustomers.Where(x => x.Id == itm.CustomerId).FirstOrDefault();
 
                 TotalBalance += (decimal)cust.Balance;
 
@@ -544,20 +569,20 @@ namespace MYBUSINESS.Controllers
         // GET: SOes/Create
 
         public ActionResult Create(string IsReturn)
-        {
-
+            {
+            ViewBag.Accounts = _dbFilteredAccounts;
             //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name");
             //ViewBag.Products = db.Products;
 
             //int maxId = db.Customers.Max(p => p.Id);
-            int maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             ViewBag.SuggestedNewCustId = maxId;
 
-
+           
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
-            saleOrderViewModel.Customers = db.Customers;
-            saleOrderViewModel.Products = db.Products.Where(x => x.Saleable == true);
+            saleOrderViewModel.Customers = _dbFilteredCustomers;
+            saleOrderViewModel.Products = _dbFilteredProducts;
             //bool IsReturn1 = true;
             ViewBag.IsReturn = IsReturn;
             //string isReturn1 = "true";
@@ -569,7 +594,7 @@ namespace MYBUSINESS.Controllers
         //[OutputCache(NoStore = true, Duration = 0)]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Prefix = "Customer", Include = "Name,Address")] Customer Customer, [Bind(Prefix = "SaleOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,CustomerId,Remarks,Remarks2,PaymentMethod,PaymentDetail,SaleReturn")] SO sO, [Bind(Prefix = "SaleOrderDetail", Include = "ProductId,SalePrice,Quantity,SaleType,PerPack,IsPack")] List<SOD> sOD, FormCollection collection)
+        public ActionResult Create([Bind(Prefix = "Customer", Include = "Name,Address")] Customer Customer, [Bind(Prefix = "SaleOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,CustomerId,Remarks,Remarks2,PaymentMethod,PaymentDetail,SaleReturn,AccountId")] SO sO, /*[Bind(Prefix = "Account", Include = "Name,Id")]Account account*//*,*/ [Bind(Prefix = "SaleOrderDetail", Include = "ProductId,SalePrice,Quantity,SaleType,PerPack,IsPack")] List<SOD> sOD, FormCollection collection)
 
         {
 
@@ -579,14 +604,16 @@ namespace MYBUSINESS.Controllers
             {
 
 
-                Customer cust = db.Customers.FirstOrDefault(x => x.Id == sO.CustomerId);
+                Customer cust = _dbFilteredCustomers.FirstOrDefault(x => x.Id == sO.CustomerId);
                 if (cust == null)
                 {//its means new customer
                     //sO.CustomerId = 10;
                     //int maxId = db.Customers.Max(p => p.Id);
-                    int maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+                    decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                     maxId += 1;
+                    Business CurrentBusiness = (Business)Session["CurrentBusiness"];
                     Customer.Id = maxId;
+                    Customer.bizId = CurrentBusiness.Id;
                     Customer.Balance = sO.Balance;
                     db.Customers.Add(Customer);
                     //db.SaveChanges();
@@ -613,6 +640,7 @@ namespace MYBUSINESS.Controllers
                 //int maxId = db.SOes.Max(p => p.Auto);
                 int maxId1 = (int)db.SOes.DefaultIfEmpty().Max(p => p == null ? 0 : p.SOSerial);
                 maxId1 += 1;
+               
                 sO.SOSerial = maxId1;
                 //if (LicenseExpired(maxId1) == true) { throw null; }
                 //sO.Date = DateTime.Now;
@@ -629,6 +657,7 @@ namespace MYBUSINESS.Controllers
 
                 db.SOes.Add(sO);
                 //db.SaveChanges();
+                
                 int sno = 0;
                 decimal totalPurchaseAmount = 0;
                 //sOD.RemoveAll(so => so.ProductId == null);
@@ -642,7 +671,7 @@ namespace MYBUSINESS.Controllers
                         sod.SO = sO;
                         sod.SOId = sO.Id;
 
-                        Product product = db.Products.FirstOrDefault(x => x.Id == sod.ProductId);
+                        Product product = _dbFilteredProducts.FirstOrDefault(x => x.Id == sod.ProductId);
                         //sod.Sale Price in now from view
 
                         //sod.SalePrice = product.SalePrice;
@@ -707,7 +736,7 @@ namespace MYBUSINESS.Controllers
 
                 /////////////////////add values to payment table
 
-                int maxPaymentId = db.Payments.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+                decimal maxPaymentId = db.Payments.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                 maxPaymentId += 1;
                 Payment payment = new Payment();
                 payment.PaymentAmount = (decimal)sO.BillPaid;
@@ -721,7 +750,7 @@ namespace MYBUSINESS.Controllers
 
                 ////////////////////////////v deffer the duplicate error
                 int previousbillNum = maxId1 - 1;
-                SO previousBill = db.SOes.Where(x => x.SOSerial == previousbillNum).FirstOrDefault();
+                SO previousBill = _dbFilteredSO.Where(x => x.SOSerial == previousbillNum).FirstOrDefault();
 
                 DateTime PrvTime = (DateTime)previousBill.Date;//previous bill time
                 DateTime thisTime = (DateTime)sO.Date;//this bill time
@@ -746,7 +775,7 @@ namespace MYBUSINESS.Controllers
                     SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(sO.Id)));
                 }
                 ViewBag.SOIDEnc = SOId;
-
+                ViewBag.IsReturn = false;
 
                 ////////////////////////////^ deffer the duplicate error
 
@@ -916,7 +945,7 @@ namespace MYBUSINESS.Controllers
 
         public decimal GetPreviousBalance(int id)
         {
-            IQueryable lstSO = db.SOes.Where(x => x.CustomerId == id);
+            IQueryable lstSO = _dbFilteredSO.Where(x => x.CustomerId == id);
 
             //lstSO.ForEachAsync(c => { c. = 0; c.GroupID = 0; c.CompanyID = 0; });
             decimal SOAmount = 0;
@@ -946,7 +975,7 @@ namespace MYBUSINESS.Controllers
             //id = new string( Encoding.UTF8.GetString(BytesArr).ToCharArray());
             //id = Encryption.Decrypt(id,"BZNS");
 
-            int maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             ViewBag.SuggestedNewCustId = maxId;
 
@@ -1014,8 +1043,8 @@ namespace MYBUSINESS.Controllers
             }
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
             List<SOD> sod = db.SODs.Where(x => x.SOId == id).ToList();
-            saleOrderViewModel.Products = db.Products;
-            saleOrderViewModel.Customers = db.Customers;
+            saleOrderViewModel.Products = _dbFilteredProducts;
+            saleOrderViewModel.Customers = _dbFilteredCustomers;
             saleOrderViewModel.SaleOrderDetail = sod;
             sO.Id = Encryption.Encrypt(sO.Id);
             saleOrderViewModel.SaleOrder = sO;
@@ -1092,13 +1121,13 @@ namespace MYBUSINESS.Controllers
                 ///////////////////////////////////////////
 
                 //Customer cust = db.Customers.FirstOrDefault(x => x.Id == newSO.CustomerId);
-                Customer customer = db.Customers.Where(x => x.Id == newSO.CustomerId).FirstOrDefault();
+                Customer customer = _dbFilteredCustomers.Where(x => x.Id == newSO.CustomerId).FirstOrDefault();
                 if (customer == null)
                 {//its means new customer(not in db)
                  //sO.CustomerId = 10;
                  //int maxId = db.Customers.Max(p => p.Id);
                     customer = saleOrderViewModel1.Customer;
-                    int maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+                    decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                     maxId += 1;
 
                     customer.Id = maxId;
@@ -1135,7 +1164,7 @@ namespace MYBUSINESS.Controllers
                 //handling old prodcts quantity. add old quantites back to the stock, then in next loop product quantity will be minus. this is simple and stateforward.
                 foreach (SOD sod in oldSODs)
                 {
-                    Product product = db.Products.FirstOrDefault(x => x.Id == sod.ProductId);
+                    Product product = _dbFilteredProducts.FirstOrDefault(x => x.Id == sod.ProductId);
 
                     if (sod.SaleType == false)//sale
                     {
@@ -1193,7 +1222,7 @@ namespace MYBUSINESS.Controllers
                         sod.SO = sO;
                         sod.SOId = sO.Id;
 
-                        Product product = db.Products.FirstOrDefault(x => x.Id == sod.ProductId);
+                        Product product = _dbFilteredProducts.FirstOrDefault(x => x.Id == sod.ProductId);
                         //sod.salePrice is now from view
                         //sod.SalePrice = product.SalePrice;
                         //dont do this. when user even just open a old bill and just press save. and price was updated after that old bill. all calculations gets wrong
@@ -1260,7 +1289,7 @@ namespace MYBUSINESS.Controllers
             //return View(sO);
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
 
-            saleOrderViewModel.Products = db.Products;
+            saleOrderViewModel.Products = _dbFilteredProducts;
             return View(saleOrderViewModel);
             //return View();
         }
@@ -1306,7 +1335,7 @@ namespace MYBUSINESS.Controllers
             //handling old prodcts quantity. add old quantites back to the stock, then in next loop product quantity will be minus. this si simple and stateforward.
             foreach (SOD sod in oldSODs)
             {
-                Product product = db.Products.FirstOrDefault(x => x.Id == sod.ProductId);
+                Product product = _dbFilteredProducts.FirstOrDefault(x => x.Id == sod.ProductId);
                 product.Stock += sod.Quantity;
             }
             db.SODs.RemoveRange(oldSODs);
@@ -1370,7 +1399,7 @@ namespace MYBUSINESS.Controllers
                 foreach (SOD sod in lstSODItems)
 
                 {
-                    Product prod = db.Products.Where(x => x.Id == sod.ProductId).FirstOrDefault();
+                    Product prod = _dbFilteredProducts.Where(x => x.Id == sod.ProductId).FirstOrDefault();
 
                     if (sod.SaleType == true)//return
                     {

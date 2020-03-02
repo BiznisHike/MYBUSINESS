@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
+
 using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
@@ -13,11 +15,20 @@ namespace MYBUSINESS.Controllers
     public class DepartmentsController : Controller
     {
         private BusinessContext db = new BusinessContext();
+        private IQueryable<Department> _dbFilteredDepartments;
 
+        protected override void Initialize(RequestContext requestContext)
+        {
+            base.Initialize(requestContext);
+          
+            Business CurrentBusiness = (Business)Session["CurrentBusiness"];
+
+            _dbFilteredDepartments = db.Departments.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+        }
         // GET: Departments
         public ActionResult Index()
         {
-            return View(db.Departments.ToList());
+            return View(_dbFilteredDepartments.ToList());
         }
 
         // GET: Departments/Details/5
@@ -46,11 +57,20 @@ namespace MYBUSINESS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Remarks,CreateDate,UpdateDate")] Department department)
+        public ActionResult Create(Department department)
         {
+            Business CurrentBusiness = (Business)Session["CurrentBusiness"];
             if (ModelState.IsValid)
             {
-                db.Departments.Add(department);
+                decimal maxDeptId = db.Departments.DefaultIfEmpty().Max(e => e == null ? 0 : e.Id);
+                maxDeptId += 1;
+                Department Ndepartment = new Department();
+                Ndepartment.bizId = CurrentBusiness.Id;
+                Ndepartment.Name = department.Name;
+                Ndepartment.Remarks=department.Remarks;
+                Ndepartment.Id = maxDeptId;
+                Ndepartment.CreateDate = DateTime.Now;
+                db.Departments.Add(Ndepartment);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -61,6 +81,7 @@ namespace MYBUSINESS.Controllers
         // GET: Departments/Edit/5
         public ActionResult Edit(int? id)
         {
+          
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -70,6 +91,7 @@ namespace MYBUSINESS.Controllers
             {
                 return HttpNotFound();
             }
+           
             return View(department);
         }
 
@@ -78,7 +100,7 @@ namespace MYBUSINESS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Remarks,CreateDate,UpdateDate")] Department department)
+        public ActionResult Edit([Bind(Include = "bizId,Id,Name,Remarks,CreateDate,UpdateDate")] Department department)
         {
             if (ModelState.IsValid)
             {

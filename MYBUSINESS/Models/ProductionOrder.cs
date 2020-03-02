@@ -40,10 +40,10 @@ namespace MYBUSINESS.Models
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
         public Nullable<int> ProductionOrderQty { get; set; }
-        public Nullable<int> EmployeeId { get; set; }
+        public Nullable<decimal> EmployeeId { get; set; }
     
+        public virtual Employee Employee { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionOrderDetail> ProductionOrderDetails { get; set; }
-        public virtual Employee Employee { get; set; }
     }
 }

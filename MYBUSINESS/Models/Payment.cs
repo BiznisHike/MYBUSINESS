@@ -14,10 +14,10 @@ namespace MYBUSINESS.Models
     
     public partial class Payment
     {
+        public decimal Id { get; set; }
         public string SOId { get; set; }
         public string PaymentMethod { get; set; }
         public decimal PaymentAmount { get; set; }
-        public int Id { get; set; }
         public System.DateTime ReceivedDate { get; set; }
         public string Remarks { get; set; }
     

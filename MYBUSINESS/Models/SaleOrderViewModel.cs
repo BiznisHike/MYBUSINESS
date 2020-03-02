@@ -14,6 +14,8 @@ namespace MYBUSINESS.Models
         public IQueryable<Product> Products { get; set; }
         public Product Product { get; set; }
 
+        public IQueryable<Account> Accounts { get; set; }
+        public Account account { get; set; }
     }
 
    

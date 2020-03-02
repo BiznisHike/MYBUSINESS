@@ -20,13 +20,14 @@ namespace MYBUSINESS.Models
             this.Products = new HashSet<Product>();
         }
     
-        public int Id { get; set; }
+        public decimal Id { get; set; }
         public string Name { get; set; }
         public string Remarks { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
-        public string bizId { get; set; }
+        public decimal bizId { get; set; }
     
+        public virtual Business Business { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Product> Products { get; set; }
     }

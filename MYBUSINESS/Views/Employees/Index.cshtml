@@ -4,12 +4,12 @@
     ViewBag.Title = "Employees";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<center><h2>Index</h2></center>
+<h2 style="margin-left:2em">Index</h2>
 
-    <p>
+    <p style="margin-left:4em">
         @Html.ActionLink("Create New", "Create")
     </p>
-    <table class="table table-hover">
+    <table  class="table table-hover cell-border">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)

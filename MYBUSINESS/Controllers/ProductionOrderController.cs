@@ -33,13 +33,13 @@ namespace MYBUSINESS.Controllers
             //sOes.ForEachAsync(m => m.Id = Models.Encryption.Encrypt(m.Id));
             //var sOes = db.SOes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref sOes);
-            Dictionary<int, int> LstMaxSerialNo=new Dictionary<int, int>();
-            int thisSerial=0;
+            Dictionary<decimal, decimal> LstMaxSerialNo=new Dictionary<decimal, decimal>();
+            decimal thisSerial =0;
             foreach (SO itm in sOes)
             {
-                thisSerial= (int)itm.Customer.SOes.Max(x => x.SOSerial);
+                thisSerial= (decimal)itm.Customer.SOes.Max(x => x.SOSerial);
                 
-                if (!LstMaxSerialNo.ContainsKey((int)itm.CustomerId))
+                if (!LstMaxSerialNo.ContainsKey((decimal)itm.CustomerId))
                 {
                     LstMaxSerialNo.Add(itm.Customer.Id, thisSerial);
                 }
@@ -159,13 +159,13 @@ namespace MYBUSINESS.Controllers
 
             }
             GetTotalBalance(ref selectedSOes);
-            Dictionary<int, int> LstMaxSerialNo = new Dictionary<int, int>();
-            int thisSerial = 0;
+            Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
+            decimal thisSerial = 0;
             foreach (SO itm in selectedSOes)
             {
-                thisSerial = (int)itm.Customer.SOes.Max(x => x.SOSerial);
+                thisSerial = (decimal)itm.Customer.SOes.Max(x => x.SOSerial);
 
-                if (!LstMaxSerialNo.ContainsKey((int)itm.CustomerId))
+                if (!LstMaxSerialNo.ContainsKey((decimal)itm.CustomerId))
                 {
                     LstMaxSerialNo.Add(itm.Customer.Id, thisSerial);
                 }
@@ -548,7 +548,7 @@ namespace MYBUSINESS.Controllers
             //ViewBag.Products = db.Products;
 
             //int maxId = db.Customers.Max(p => p.Id);
-            int maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             ViewBag.SuggestedNewCustId = maxId;
 
@@ -578,7 +578,7 @@ namespace MYBUSINESS.Controllers
                 {//its means new customer
                     //sO.CustomerId = 10;
                     //int maxId = db.Customers.Max(p => p.Id);
-                    int maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+                    decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                     maxId += 1;
                     Customer.Id = maxId;
                     Customer.Balance = sO.Balance;
@@ -663,7 +663,7 @@ namespace MYBUSINESS.Controllers
 
                 /////////////////////add values to payment table
 
-                int maxPaymentId = db.Payments.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+                decimal maxPaymentId = db.Payments.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                 maxPaymentId += 1;
                 Payment payment = new Payment();
                 payment.PaymentAmount = (decimal)sO.BillPaid;
@@ -867,7 +867,7 @@ namespace MYBUSINESS.Controllers
             //id = new string( Encoding.UTF8.GetString(BytesArr).ToCharArray());
             //id = Models.Encryption.Decrypt(id,"ABC");
 
-            int maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             ViewBag.SuggestedNewCustId = maxId;
 
@@ -965,7 +965,7 @@ namespace MYBUSINESS.Controllers
                  //sO.CustomerId = 10;
                  //int maxId = db.Customers.Max(p => p.Id);
                     customer = saleOrderViewModel1.Customer;
-                    int maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+                    decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                     maxId += 1;
 
                     customer.Id = maxId;

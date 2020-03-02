@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
+
 using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
@@ -13,12 +15,28 @@ namespace MYBUSINESS.Controllers
     public class EmployeesController : Controller
     {
         private BusinessContext db = new BusinessContext();
+        private IQueryable<Employee> _dbFilteredEmployees;
+        private IQueryable<Department> _dbFilteredDepartments;
+        public EmployeesController()
+        {
+           //Business CurrentBusiness = (Business)Session["CurrentBusiness"];
+           // db.Employees = (DbSet<Employee>)db.Employees.AsQueryable().Where(x => x.Department.bizId == CurrentBusiness.Id);
+           // db.Departments = (DbSet<Department>)db.Departments.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+        }
+        protected override void Initialize(RequestContext requestContext)
+        {
+            base.Initialize(requestContext);
 
-        // GET: Employees
-        //public ActionResult Index()
-        //{
-        //    return View(db.Employees.ToList());
-        //}
+            Business CurrentBusiness = (Business)Session["CurrentBusiness"];
+
+            _dbFilteredEmployees = db.Employees.AsQueryable().Where(x => x.Department.bizId == CurrentBusiness.Id);
+            _dbFilteredDepartments = db.Departments.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+        }
+        //GET: Employees
+        public ActionResult Index()
+        {
+            return View(_dbFilteredEmployees.ToList());
+        }
 
         //// GET: Employees/Details/5
         //public ActionResult Details(decimal id)
@@ -59,6 +77,33 @@ namespace MYBUSINESS.Controllers
         //}
 
         // GET: Employees/Edit/5
+        public ActionResult Create()
+        {
+            ViewBag.Departments = _dbFilteredDepartments;
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Employee newEmployee)
+        {
+            decimal maxId = db.Employees.DefaultIfEmpty().Max(e => e == null ? 0 : e.Id);
+            maxId += 1;
+       
+            Employee Nemployee = new Employee();
+            Nemployee.Id = maxId;
+            int pos = newEmployee.Email.IndexOf("@");
+            Nemployee.Login = newEmployee.Email.Substring(0, pos);
+            Nemployee.DepartmentId = newEmployee.DepartmentId;
+            Nemployee.FirstName = newEmployee.FirstName;
+            Nemployee.LastName = newEmployee.LastName;
+            Nemployee.Email = newEmployee.Email;
+            Nemployee.Password= Encryption.Encrypt(newEmployee.Password);
+           
+            db.Employees.Add(Nemployee);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+       
+        }
         public ActionResult Edit(decimal id)
         {
             Employee CurrentUser = (Employee)Session["CurrentUser"];
@@ -81,7 +126,7 @@ namespace MYBUSINESS.Controllers
         //public ActionResult Edit([Bind(Include = "Login,Password")] Employee employee)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Login,Password")] Employee userChanges,FormCollection fc)
+        public ActionResult Edit([Bind(Include = "Email,Password")] Employee userChanges,FormCollection fc)
         {
             string oldPass = fc["OldPassword"];
             string pass1 = fc["Password1"];
@@ -89,11 +134,12 @@ namespace MYBUSINESS.Controllers
             
             Employee CurrentUser = (Employee)Session["CurrentUser"];
 
-            if (CurrentUser.Login == userChanges.Login && CurrentUser.Password == Encryption.Encrypt(oldPass) && pass1 == pass2)
+            if (CurrentUser.Email == userChanges.Email && CurrentUser.Password == Encryption.Encrypt(oldPass) && pass1 == pass2)
             {
                 userChanges.Id = CurrentUser.Id;
                 //userChanges.Login = userChanges.Login;
                 userChanges.Password = Encryption.Encrypt(pass2);
+                userChanges.Login = CurrentUser.Email.Split('@').FirstOrDefault();
 
                 if (ModelState.IsValid)
                 {
@@ -101,8 +147,9 @@ namespace MYBUSINESS.Controllers
                     db.Entry(userChanges).State = EntityState.Modified;
                     db.SaveChanges();
                     Session.Add("CurrentUser", userChanges);
-                    
-                    return RedirectToAction("Create","SOSR");
+                    //ViewBag.IsReturn = "false";
+                    //return RedirectToAction("Create","SOSR", "false");
+                    return RedirectToAction("Create", "SOSR", new { IsReturn = "false" });//change it from 'if condtion' to here
                 }
             }
 

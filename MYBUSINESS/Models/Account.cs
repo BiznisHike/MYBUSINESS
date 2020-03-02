@@ -12,27 +12,23 @@ namespace MYBUSINESS.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Supplier
+    public partial class Account
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Supplier()
+        public Account()
         {
-            this.POes = new HashSet<PO>();
-            this.Products = new HashSet<Product>();
+            this.SOes = new HashSet<SO>();
         }
     
         public decimal Id { get; set; }
         public string Name { get; set; }
-        public string Address { get; set; }
-        public Nullable<decimal> Balance { get; set; }
+        public string Remarks { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public decimal bizId { get; set; }
     
         public virtual Business Business { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PO> POes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<SO> SOes { get; set; }
     }
 }

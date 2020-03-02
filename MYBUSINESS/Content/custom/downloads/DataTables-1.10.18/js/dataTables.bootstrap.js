@@ -170,6 +170,7 @@ DataTable.ext.renderer.pageButton.bootstrap = function ( settings, host, idx, bu
 	attach(
 		$(host).empty().html('<ul class="pagination"/>').children('ul'),
 		buttons
+		$('ul').on('expanded.tree', handleExpandedEvent)
 	);
 
 	if ( activeEl !== undefined ) {

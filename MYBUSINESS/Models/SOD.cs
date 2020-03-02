@@ -14,21 +14,21 @@ namespace MYBUSINESS.Models
     
     public partial class SOD
     {
-        public Nullable<int> SODId { get; set; }
-        public Nullable<int> ProductId { get; set; }
-        public string SOId { get; set; }
-        public Nullable<int> Quantity { get; set; }
         public decimal Auto { get; set; }
-        public Nullable<decimal> SalePrice { get; set; }
-        public Nullable<bool> SaleType { get; set; }
-        public Nullable<decimal> PurchasePrice { get; set; }
-        public string Remarks { get; set; }
+        public string SOId { get; set; }
+        public Nullable<int> SODId { get; set; }
+        public Nullable<decimal> ProductId { get; set; }
         public Nullable<decimal> OpeningStock { get; set; }
-        public Nullable<decimal> Profit { get; set; }
+        public Nullable<int> Quantity { get; set; }
+        public Nullable<decimal> SalePrice { get; set; }
+        public Nullable<decimal> PurchasePrice { get; set; }
         public Nullable<decimal> PerPack { get; set; }
         public Nullable<bool> IsPack { get; set; }
+        public Nullable<bool> SaleType { get; set; }
+        public Nullable<decimal> Profit { get; set; }
+        public string Remarks { get; set; }
     
-        public virtual SO SO { get; set; }
         public virtual Product Product { get; set; }
+        public virtual SO SO { get; set; }
     }
 }

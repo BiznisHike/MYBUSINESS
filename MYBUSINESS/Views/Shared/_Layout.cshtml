@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@ViewBag.Title - ShopON</title>
 
-
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -14,7 +13,7 @@
     @*@Scripts.Render("~/bundles/modernizr")*@
     @*@Scripts.Render("~/bundles/bootstrap")*@
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
@@ -37,10 +36,10 @@
     @*<link rel="stylesheet" href="~/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">*@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    @*[if lt IE 9]>*@
+    @*<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>*@
+    <![endif]
     <!-- Google Font -->
     @*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">*@
     <link href="~/Content/custom/downloads/css.css" rel="stylesheet" />
@@ -127,9 +126,9 @@
                 </a>
 
                 <script>
-                    //$(document).ready(function () {
-                        //$('#menuToggle').trigger('click');
-                    //});
+                                    //$(document).ready(function () {
+                                        //$('#menuToggle').trigger('click');
+                                    //});
                 </script>
 
 
@@ -449,6 +448,20 @@
                     </li>
                     <li class="treeview">
                         <a href="#">
+                            <i class="fa fa-credit-card "></i>
+                            <span>Accounts</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/accounts/Create"><i class="fa fa-address-card"></i> <span>New Account</span></a></li>
+                            <li><a href="/accounts/Index"><i class="fa fa-list"></i> <span>Accounts List</span></a></li>
+                            >
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
                             <i class="fa fa-gift"></i>
                             <span>Products</span>
                             <span class="pull-right-container">
@@ -476,7 +489,7 @@
                         </ul>
                     </li>
 
-                    <li class="treeview">
+                    <li class="treeview" data-widget="tree">
                         <a href="#">
                             <i class="fa fa-address-book"></i>
                             <span>Suppliers</span>
@@ -484,50 +497,80 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
+                        <ul  class="treeview-menu">
                             <li><a href="/Suppliers/Create"><i class="fa fa-file-text"></i> <span>New Supplier</span></a></li>
                             <li><a href="/Suppliers/Index"><i class="fa fa-search"></i> <span>Suppliers List</span></a></li>
                         </ul>
                     </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-building-o"></i>
+                            <span>Departments</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/Departments/Create"><i class="fa fa-plus-square"></i> <span>New Departments</span></a></li>
+                            <li><a href="/Departments/Index"><i class="fa fa-search"></i> <span>Department List</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-user-circle-o"></i>
+                            <span>Employees</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/Employees/Create"><i class="fa fa-user-plus"></i> <span>New Employee</span></a></li>
+                            <li><a href="/Employees/Index"><i class="fa fa-server   "></i> <span>Employee List</span></a></li>
+                        </ul>
+                    </li>
+                    
+
+
+
                     @*<li class="treeview">
-            <a href="#">
-                <i class="fa fa-user-circle"></i>
-                <span>Employees</span>
-                <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                </span>
-            </a>
-            <ul class="treeview-menu">
-                <li><a href="/Employees/Index"><i class="fa fa-search"></i> <span>Employees List</span></a></li>
-                <li><a href="/Employees/Create"><i class="fa fa-file-text"></i> <span>New Employee</span></a></li>
-            </ul>
-        </li>*@
+                            <a href="#">
+                                <i class="fa fa-user-circle"></i>
+                                <span>Employees</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="/Employees/Index"><i class="fa fa-search"></i> <span>Employees List</span></a></li>
+                                <li><a href="/Employees/Create"><i class="fa fa-file-text"></i> <span>New Employee</span></a></li>
+                            </ul>
+                        </li>*@
                     @*<li class="treeview">
-            <a href="#">
-                <i class="fa fa-building"></i>
-                <span>Departments</span>
-                <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                </span>
-            </a>
-            <ul class="treeview-menu">
-                <li><a href="/Departments/Index"><i class="fa fa-search"></i> <span>Departments List</span></a></li>
-                <li><a href="/Departments/Create"><i class="fa fa-file-text"></i> <span>New Department</span></a></li>
-            </ul>
-        </li>*@
+                            <a href="#">
+                                <i class="fa fa-building"></i>
+                                <span>Departments</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="/Departments/Index"><i class="fa fa-search"></i> <span>Departments List</span></a></li>
+                                <li><a href="/Departments/Create"><i class="fa fa-file-text"></i> <span>New Department</span></a></li>
+                            </ul>
+                        </li>*@
                     @*<li class="treeview">
-            <a href="#">
-                <i class="fa fa-building"></i>
-                <span>Stores</span>
-                <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                </span>
-            </a>
-            <ul class="treeview-menu">
-                <li><a href="/Locations/Index"><i class="fa fa-search"></i> <span>Stores List</span></a></li>
-                <li><a href="/Locations/Create"><i class="fa fa-file-text"></i> <span>New Store</span></a></li>
-            </ul>
-        </li>*@
+                            <a href="#">
+                                <i class="fa fa-building"></i>
+                                <span>Stores</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="/Locations/Index"><i class="fa fa-search"></i> <span>Stores List</span></a></li>
+                                <li><a href="/Locations/Create"><i class="fa fa-file-text"></i> <span>New Store</span></a></li>
+                            </ul>
+                        </li>*@
                 </ul>
             </section>
             <!-- /.sidebar -->
@@ -537,16 +580,16 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 @*<h1>
-                Dashboard
-                <small>Control panel</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Dashboard</li>
-            </ol>*@
+                        Dashboard
+                        <small>Control panel</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="active">Dashboard</li>
+                    </ol>*@
             </section>
             <!-- Main content -->
-            
+
             @RenderBody()
             <!-- /.content -->
         </div>
@@ -728,7 +771,7 @@
              immediately after the control sidebar -->
         <div class="control-sidebar-bg"></div>
     </div>
-
+   
     @RenderSection("scripts", required: false)
 </body>
 </html>

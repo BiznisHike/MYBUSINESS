@@ -71,7 +71,7 @@ namespace MYBUSINESS.Controllers
             string SOId= Decode(payment.SOId);
             SO sO = db.SOes.Where(x => x.Id == SOId).FirstOrDefault();
             //Customer thisCust= sO.Customer;
-            int maxId = db.Payments.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            decimal maxId = db.Payments.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             payment.Id = maxId;
             if (ModelState.IsValid)

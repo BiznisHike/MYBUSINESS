@@ -18,35 +18,35 @@ namespace MYBUSINESS.Models
         public Product()
         {
             this.PODs = new HashSet<POD>();
-            this.SODs = new HashSet<SOD>();
             this.ProductionOrderDetails = new HashSet<ProductionOrderDetail>();
+            this.SODs = new HashSet<SOD>();
         }
     
-        public int Id { get; set; }
+        public decimal Id { get; set; }
         public string Name { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal SalePrice { get; set; }
         public Nullable<decimal> Stock { get; set; }
+        public Nullable<int> PerPack { get; set; }
+        public decimal totalPiece { get; set; }
         public bool Saleable { get; set; }
         public string RackPosition { get; set; }
-        public int SupplierId { get; set; }
+        public decimal SupplierId { get; set; }
         public string Image { get; set; }
         public string Remarks { get; set; }
         public string BarCode { get; set; }
         public Nullable<int> ReOrder { get; set; }
-        public Nullable<int> LocationId { get; set; }
-        public Nullable<int> PerPack { get; set; }
-        public decimal totalPiece { get; set; }
+        public Nullable<decimal> LocationId { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<POD> PODs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SOD> SODs { get; set; }
-        public virtual Supplier Supplier { get; set; }
         public virtual Location Location { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<POD> PODs { get; set; }
+        public virtual Supplier Supplier { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionOrderDetail> ProductionOrderDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SOD> SODs { get; set; }
     }
 }

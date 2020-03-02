@@ -46,7 +46,7 @@
                 {
                     @Html.AntiForgeryToken()
                     <div class="form-group has-feedback">
-                        <input type="text" name="Login" id="Login" class="form-control" placeholder="Login">
+                        <input type="text" name="Email" id="Email" class="form-control" placeholder="Email">
                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
                     </div>
                     <div class="form-group has-feedback">
@@ -65,11 +65,12 @@
                         <!-- /.col -->
 
                         <div class="col-xs-4">
-                            <button type="submit"class="btn btn-primary btn-block btn-flat">Sign In</button><br />
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button><br />
                         </div>
-                        <button  class="btn btn-primary btn-block btn-flat">Sign Up</button>
+
                         <!-- /.col -->
                     </div>
+                    @Html.ActionLink("Register a new membership", "Register", "BusinessRegister")
                 }
                 @*<div class="social-auth-links text-center">
             <p>- OR -</p>

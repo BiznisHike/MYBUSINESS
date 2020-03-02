@@ -16,6 +16,10 @@ namespace LMSMYBUSINESS.Models
             string CurrentController = HttpContext.Current.Request.RequestContext.RouteData.Values["Controller"].ToString();
             string CurrentAction = HttpContext.Current.Request.RequestContext.RouteData.Values["Action"].ToString();
 
+            if (HttpContext.Current.Session["CurrentUser"] == null && CurrentController == "BusinessRegister" && CurrentAction == "Register")
+            {
+                return;
+            }
             if (HttpContext.Current.Session["CurrentUser"] != null)
             {
                 //Employee emp = (Employee)HttpContext.Current.Session["CurrentUser"];

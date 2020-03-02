@@ -17,7 +17,7 @@ namespace MYBUSINESS.Models
         public decimal Auto { get; set; }
         public string SOId { get; set; }
         public Nullable<int> SODId { get; set; }
-        public Nullable<int> ProductId { get; set; }
+        public Nullable<decimal> ProductId { get; set; }
         public Nullable<int> Quantity { get; set; }
         public Nullable<decimal> SalePrice { get; set; }
         public Nullable<decimal> PurchasePrice { get; set; }
@@ -25,7 +25,7 @@ namespace MYBUSINESS.Models
         public Nullable<int> ShortFall { get; set; }
         public Nullable<int> Remarks { get; set; }
     
-        public virtual ProductionOrder ProductionOrder { get; set; }
         public virtual Product Product { get; set; }
+        public virtual ProductionOrder ProductionOrder { get; set; }
     }
 }

@@ -26,8 +26,22 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <font size="1"> @Html.ActionLink("Products", "Index", "Products")</font> |
-                <font size="1">  <a href="Create?IsReturn=false">New Purchase</a></font> |
-                <font size="1">  <a href="Create?IsReturn=true">Return Purchase</a></font>
+                <font size="1">
+                    @{
+                        if (bool.Parse(ViewBag.IsReturn) == true)
+                        {
+
+                            <a href="Create?IsReturn=false">Purchase Order</a>
+
+
+                        }
+                        else
+                        {
+                            <a href="Create?IsReturn=true">Return Order</a>
+                        }
+
+                    }
+                </font>
 
                 <div class="row">
                     <div class="col-sm-offset-5">

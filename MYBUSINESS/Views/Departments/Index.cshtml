@@ -6,10 +6,10 @@
 }
 <link href="~/Content/custom/downloads/datatables.min.css" rel="stylesheet" />
 <script src="~/Content/custom/downloads/datatables.min.js"></script>
-<center><h2>Departments</h2></center>
+<h2 style="margin-left:2em">Departments</h2>
 
-<p>
-        @Html.ActionLink("Create New", "Create")
+<p style="margin-left:4em">
+            @Html.ActionLink("Create New", "Create")
     </p>
 <section class="content">
     <div class="row">
@@ -39,27 +39,31 @@
                             </tr>
                         </thead>
                         <tbody>
+                           
                             @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Remarks)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CreateDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.UpdateDate)
-                                    </td>
-                                    <td>
-                                        @Html.ActionLink("Update", "Edit", new { id = item.Id }) @*|
-                                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
-                                    </td>
-                                </tr>
+                            <tr>
+                               
+                                <td>
+                                   
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Remarks)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreateDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UpdateDate)
+                                </td>
+                                <td>
+                                   
+                                    @Html.ActionLink("Update", "Edit", new { id = item.Id , bizId= item.bizId})
+            @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
+            @*@Html.ActionLink("Delete", "Delete", new { id = item.Id,})*@
+                                </td>
+                            </tr>
                             }
                         </tbody>
                         <tfoot>
