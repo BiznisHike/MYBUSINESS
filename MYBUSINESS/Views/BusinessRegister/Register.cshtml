@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Registration Page</title>
+    <title>Biznishike | Registration Page</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -35,7 +35,7 @@
 <body class="hold-transition register-page">
     <div class="register-box">
         <div class="register-logo">
-            <a href="../../index2.html"><b>Admin</b>LTE</a>
+            <a href="../../index2.html"><b>Biznis</b>Hike</a>
         </div>
 
         <div class="register-box-body">
@@ -43,30 +43,33 @@
             @using (Html.BeginForm("Register", "BusinessRegister", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                
 
-                <div class="form-group has-feedback" >
-                    <input type="text" name="employee.FirstName" class="form-control" placeholder="First name">
+
+        <div class="form-group has-feedback">
+            <p id="Status" />
+            <input type="text" name="employee.FirstName" class="form-control" maxlength="12" placeholder="First name">
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        </div>
+                <div class="form-group has-feedback">
+                    <input type="text" name="employee.LastName" maxlength="12" class="form-control" placeholder="Last name">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="text" name="employee.LastName" class="form-control" placeholder="Last name">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback">
-                    <input type="text" name="business.Name" class="form-control" placeholder="Business name">
+                    <input type="text" name="business.Name" id="business.Name" maxlength="20" class="form-control" placeholder="Business name">
                     <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
+                    <small style="color:red">@ViewBag.NameError</small>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="tel" name="business.phone" class="form-control" placeholder="Phone Number">
+                    <input type="tel" name="business.phone" maxlength="16" class="form-control" placeholder="Phone Number">
                     <span class="glyphicon glyphicon-phone-alt form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="email" name="employee.Email" class="form-control" placeholder="Email">
+                    <input type="email" name="employee.Email" maxlength="20" class="form-control" placeholder="Email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    <small style="color:red">@ViewBag.EmailError</small>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" name="employee.Password" class="form-control" placeholder="Password">
+                    <input type="password" name="employee.Password" maxlength="8" class="form-control" placeholder="Password">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
 
@@ -83,10 +86,10 @@
             }
             @Html.ActionLink("I already have a membership", "Login", "UserManagement")
         </div>
-            
 
-            <!-- /.form-box -->
-        </div>
+
+        <!-- /.form-box -->
+    </div>
     <!-- /.register-box -->
     <!-- jQuery 3 -->
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
@@ -95,13 +98,33 @@
     <!-- iCheck -->
     <script src="../../plugins/iCheck/icheck.min.js"></script>
     <script>
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' /* optional */
-    });
-  });
+        $(function () {
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%' /* optional */
+            });
+        });
+    </script>
+    <script>
+    function UserCheck() {
+        $("#Status").html("Checking...");
+        $.post("@Url.Action("Register", "BusinessRegister")",
+            {
+                userdata: $("#business.Name").val()
+            },
+        function (data) {
+            if (data == 0) {
+                $("#Status").html('<font color="Green">Available !. you can take it.</font>');
+                $("#business.Name").css("border-color", "Green");
+
+            }
+            else {
+                $("#Status").html('<font color="Red">That name is taken.Try Another.</font>');
+                $("#business.Name   ").css("border-color", "Red");
+            }
+        });
+    }
     </script>
 </body>
 </html>

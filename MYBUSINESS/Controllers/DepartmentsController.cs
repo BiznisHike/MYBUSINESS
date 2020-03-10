@@ -57,7 +57,7 @@ namespace MYBUSINESS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Department department)
+        public ActionResult Create(Department department,String AddAnother)
         {
             Business CurrentBusiness = (Business)Session["CurrentBusiness"];
             if (ModelState.IsValid)
@@ -72,7 +72,12 @@ namespace MYBUSINESS.Controllers
                 Ndepartment.CreateDate = DateTime.Now;
                 db.Departments.Add(Ndepartment);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!string.IsNullOrEmpty(AddAnother))
+
+                {
+                    return RedirectToAction("Create");
+                }
+                else { return RedirectToAction("Index"); }
             }
 
             return View(department);

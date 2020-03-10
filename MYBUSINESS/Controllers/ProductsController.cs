@@ -97,7 +97,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,Stock,SupplierId,Saleable,PerPack")] Product product)
+        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,Stock,SupplierId,Saleable,PerPack")] Product product,String AddAnother)
         {
             if (product.Stock == null)
             {
@@ -116,7 +116,13 @@ namespace MYBUSINESS.Controllers
                 
                 db.Products.Add(product);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                if (!string.IsNullOrEmpty(AddAnother))
+
+                {
+                    return RedirectToAction("Create");
+                }
+                else { return RedirectToAction("Index"); }
             }
             ViewBag.Suppliers = _dbFilteredSuppliers;
             return View(product);

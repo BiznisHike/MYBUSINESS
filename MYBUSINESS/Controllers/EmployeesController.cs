@@ -79,13 +79,21 @@ namespace MYBUSINESS.Controllers
         // GET: Employees/Edit/5
         public ActionResult Create()
         {
-            ViewBag.Departments = _dbFilteredDepartments;
+            ViewBag.Department = _dbFilteredDepartments;
+           
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Employee newEmployee)
+        public ActionResult Create(Employee newEmployee,String AddAnother)
         {
+            Employee user = db.Employees.SingleOrDefault(x => x.Email == newEmployee.Email);
+            if (user != null) {
+                ViewBag.Error = "Employee Id Already Exist!";
+                ViewBag.Department = _dbFilteredDepartments;
+                return View("Create");
+            
+            }
             decimal maxId = db.Employees.DefaultIfEmpty().Max(e => e == null ? 0 : e.Id);
             maxId += 1;
        
@@ -97,12 +105,18 @@ namespace MYBUSINESS.Controllers
             Nemployee.FirstName = newEmployee.FirstName;
             Nemployee.LastName = newEmployee.LastName;
             Nemployee.Email = newEmployee.Email;
+            Nemployee.RegistrationDate = DateTime.Now;
             Nemployee.Password= Encryption.Encrypt(newEmployee.Password);
            
             db.Employees.Add(Nemployee);
             db.SaveChanges();
-            return RedirectToAction("Index");
-       
+            if (!string.IsNullOrEmpty(AddAnother))
+
+            {
+                return RedirectToAction("Create");
+            }
+            else { return RedirectToAction("Index"); }
+
         }
         public ActionResult Edit(decimal id)
         {

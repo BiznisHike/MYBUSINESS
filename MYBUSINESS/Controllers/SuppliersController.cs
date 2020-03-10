@@ -60,7 +60,7 @@ namespace MYBUSINESS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "bizId,Id,Name,Address,Balance")] Supplier supplier)
+        public ActionResult Create([Bind(Include = "bizId,Id,Name,Address,Balance")] Supplier supplier,String AddAnother)
         {
             Business CurrentBusiness = (Business)Session["CurrentBusiness"];
             supplier.bizId = CurrentBusiness.Id;
@@ -72,7 +72,12 @@ namespace MYBUSINESS.Controllers
                 }
                 db.Suppliers.Add(supplier);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!string.IsNullOrEmpty(AddAnother))
+
+                {
+                    return RedirectToAction("Create");
+                }
+                else { return RedirectToAction("Index"); }
             }
 
             return View(supplier);

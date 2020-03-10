@@ -14,7 +14,13 @@
     @*@Scripts.Render("~/bundles/bootstrap")*@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+<script>
+   $(document).on('turbolinks:load', function(){
+  $(Selector.data).each(function () {
+    Plugin.call($(this));
+  });
+});
+</script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
     <!-- Ionicons -->
@@ -406,6 +412,7 @@
                     @*<li><a href="/Home/Index"><i class="fa fa-list"></i> <span>Summary</span></a></li>*@
                     @*<li><a href="/ProductionOrder/Create"><i class="fa fa-file-text"></i> <span>New Production Order</span></a></li>*@
                     @*<li><a href="/GoodsReceipt/Create"><i class="fa fa-file-text"></i> <span>New Goods Receipt</span></a></li>*@
+                    <li><a href="/Dashboard/Index"><i class="fa fa-user"></i> <span>Dashboard</span></a></li>
                     <li><a href="/SOSR/Create/?IsReturn=false"><i class="fa fa-file-text"></i> <span>New Sale</span></a></li>
 
                     @*<li>@Html.ActionLink("aaa","Create", new { IsReturn = "false" }, new { htmlAttributes = new { @class = "form-control" } })<i class="fa fa-file-text"></i> <span><b>New Sale</b></span></a></li>*@
@@ -497,7 +504,7 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul  class="treeview-menu">
+                        <ul class="treeview-menu">
                             <li><a href="/Suppliers/Create"><i class="fa fa-file-text"></i> <span>New Supplier</span></a></li>
                             <li><a href="/Suppliers/Index"><i class="fa fa-search"></i> <span>Suppliers List</span></a></li>
                         </ul>
@@ -528,49 +535,49 @@
                             <li><a href="/Employees/Index"><i class="fa fa-server   "></i> <span>Employee List</span></a></li>
                         </ul>
                     </li>
-                    
+
 
 
 
                     @*<li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-user-circle"></i>
-                                <span>Employees</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="/Employees/Index"><i class="fa fa-search"></i> <span>Employees List</span></a></li>
-                                <li><a href="/Employees/Create"><i class="fa fa-file-text"></i> <span>New Employee</span></a></li>
-                            </ul>
-                        </li>*@
+            <a href="#">
+                <i class="fa fa-user-circle"></i>
+                <span>Employees</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li><a href="/Employees/Index"><i class="fa fa-search"></i> <span>Employees List</span></a></li>
+                <li><a href="/Employees/Create"><i class="fa fa-file-text"></i> <span>New Employee</span></a></li>
+            </ul>
+        </li>*@
                     @*<li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-building"></i>
-                                <span>Departments</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="/Departments/Index"><i class="fa fa-search"></i> <span>Departments List</span></a></li>
-                                <li><a href="/Departments/Create"><i class="fa fa-file-text"></i> <span>New Department</span></a></li>
-                            </ul>
-                        </li>*@
+            <a href="#">
+                <i class="fa fa-building"></i>
+                <span>Departments</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li><a href="/Departments/Index"><i class="fa fa-search"></i> <span>Departments List</span></a></li>
+                <li><a href="/Departments/Create"><i class="fa fa-file-text"></i> <span>New Department</span></a></li>
+            </ul>
+        </li>*@
                     @*<li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-building"></i>
-                                <span>Stores</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="/Locations/Index"><i class="fa fa-search"></i> <span>Stores List</span></a></li>
-                                <li><a href="/Locations/Create"><i class="fa fa-file-text"></i> <span>New Store</span></a></li>
-                            </ul>
-                        </li>*@
+            <a href="#">
+                <i class="fa fa-building"></i>
+                <span>Stores</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li><a href="/Locations/Index"><i class="fa fa-search"></i> <span>Stores List</span></a></li>
+                <li><a href="/Locations/Create"><i class="fa fa-file-text"></i> <span>New Store</span></a></li>
+            </ul>
+        </li>*@
                 </ul>
             </section>
             <!-- /.sidebar -->

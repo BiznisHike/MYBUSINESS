@@ -58,7 +58,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control",placeholder = "Enter Product Name", required="required"  } })
                                     @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
 
                                 </div>
@@ -113,12 +113,22 @@
                             </div>
 
                             <div class="box-footer">
-                                <input type="submit" value="Create" id="CreateProduct" class="btn btn-primary" />
-                                @Html.ActionLink("Back to List", "Index")
-                            </div>
+                                @*<input type="submit" value="Create" class="btn btn-primary" />*@
+                                <div class="dropdown">
+                                    <button type="submit" value="Create" class="btn btn-primary">
+                                        Create
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>*<input type="submit" name="AddAnother" value="Create & Add Another" class="btn btn-primary" /></li>
+
+                                    </ul>
+                                    @Html.ActionLink("Back to List", "Index")
+                                </div>
+</div>
 
 
-                        </form>
+</form>
                     }
                 </div>
             </div>

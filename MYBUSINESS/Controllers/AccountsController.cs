@@ -15,6 +15,7 @@ namespace MYBUSINESS.Controllers
     {
         private BusinessContext db = new BusinessContext();
         private IQueryable<Account> _dbFilteredAccounts;
+
         public AccountsController()
         {
             //Business CurrentBusiness = (Business)Session["CurrentBusiness"];
@@ -54,7 +55,7 @@ namespace MYBUSINESS.Controllers
         // GET: Accounts/Create
         public ActionResult Create()
         {
-            
+
             return View();
         }
 
@@ -63,14 +64,14 @@ namespace MYBUSINESS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Account account)
+        public ActionResult Create(Account account, String AddAnother)
         {
             Business CurrentBusiness = (Business)Session["CurrentBusiness"];
             if (ModelState.IsValid)
             {
                 decimal maxAccId = db.Accounts.DefaultIfEmpty().Max(a => a == null ? 0 : a.Id);
                 maxAccId += 1;
-               
+
                 Account NAccount = new Account();
                 NAccount.bizId = CurrentBusiness.Id;
                 NAccount.Id = maxAccId;
@@ -78,7 +79,12 @@ namespace MYBUSINESS.Controllers
                 NAccount.CreateDate = DateTime.Now;
                 db.Accounts.Add(NAccount);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!string.IsNullOrEmpty(AddAnother))
+
+                { return RedirectToAction("Create");
+                }
+                else{ return RedirectToAction("Index"); }
+
             }
 
             ViewBag.bizId = new SelectList(db.Businesses, "Id", "Name", account.bizId);

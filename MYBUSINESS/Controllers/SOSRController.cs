@@ -570,7 +570,9 @@ namespace MYBUSINESS.Controllers
 
         public ActionResult Create(string IsReturn)
             {
+           
             ViewBag.Accounts = _dbFilteredAccounts;
+            ViewBag.IsReturn = true;
             //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name");
             //ViewBag.Products = db.Products;
 
@@ -598,6 +600,7 @@ namespace MYBUSINESS.Controllers
 
         {
 
+            
             string SOId = string.Empty;
             //SO sO = new SO();
             if (ModelState.IsValid)
@@ -750,7 +753,7 @@ namespace MYBUSINESS.Controllers
 
                 ////////////////////////////v deffer the duplicate error
                 int previousbillNum = maxId1 - 1;
-                SO previousBill = _dbFilteredSO.Where(x => x.SOSerial == previousbillNum).FirstOrDefault();
+                SO previousBill = db.SOes.Where(x => x.SOSerial == previousbillNum).FirstOrDefault();
 
                 DateTime PrvTime = (DateTime)previousBill.Date;//previous bill time
                 DateTime thisTime = (DateTime)sO.Date;//this bill time
@@ -775,7 +778,7 @@ namespace MYBUSINESS.Controllers
                     SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(sO.Id)));
                 }
                 ViewBag.SOIDEnc = SOId;
-                ViewBag.IsReturn = false;
+              
 
                 ////////////////////////////^ deffer the duplicate error
 

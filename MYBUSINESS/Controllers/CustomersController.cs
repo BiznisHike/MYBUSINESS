@@ -60,7 +60,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "bizId,vId,Name,Address,Balance")] Customer customer)
+        public ActionResult Create([Bind(Include = "bizId,vId,Name,Address,Balance")] Customer customer, String AddAnother)
         {
             decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
@@ -76,7 +76,12 @@ namespace MYBUSINESS.Controllers
                 }
                 db.Customers.Add(customer);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!string.IsNullOrEmpty(AddAnother))
+
+                {
+                    return RedirectToAction("Create");
+                }
+                else { return RedirectToAction("Index"); }
             }
 
             //if ((TempData["Controller"]).ToString() == "SOSR" && (TempData["Action"]).ToString() == "Create")
