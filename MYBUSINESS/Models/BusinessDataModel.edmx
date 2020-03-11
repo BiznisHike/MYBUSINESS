@@ -77,6 +77,7 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
           <Property Name="bizId" Type="varchar" MaxLength="50" />
+          <Property Name="ImgPath" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Location">
           <Key>
@@ -884,6 +885,7 @@
           <NavigationProperty Name="POes" Relationship="Models.FK_PO_Employee" FromRole="Employee" ToRole="PO" />
           <NavigationProperty Name="ProductionOrders" Relationship="Models.FK_ProductionOrder_Employee" FromRole="Employee" ToRole="ProductionOrder" />
           <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Employee" FromRole="Employee" ToRole="SO" />
+          <Property Name="ImgPath" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Location">
           <Key>
@@ -1474,6 +1476,7 @@
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="Models.Employee">
               <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="ImgPath" ColumnName="ImgPath" />
                 <ScalarProperty Name="bizId" ColumnName="bizId" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />

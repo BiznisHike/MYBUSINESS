@@ -14,7 +14,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Create New Employee</h3>
                     </div>
-                    @using (Html.BeginForm())
+                    @using (Html.BeginForm("Create","Employees",FormMethod.Post,new {enctype="multipart/form-data"}))
                     {
                         @Html.AntiForgeryToken()
                         <form role="form">
@@ -25,14 +25,14 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control",placeholder = "Enter First Name", required="required" } })
+                                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter First Name", required = "required" } })
                                     @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
 
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control",placeholder="Enter Last Name" } })
+                                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Last Name" } })
                                     @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
 
                                 </div>
@@ -44,18 +44,21 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control",placeholder = "Enter Email Address", required="required" } })
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Email Address", required = "required" } })
                                     @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                                     <small style="color:crimson">@ViewBag.Error</small>
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control",placeholder="Enter Password",required="required"  } })
+                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Password", required = "required" } })
                                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
 
                                 </div>
-
+                                <div class="form-group" >
+                                    @Html.LabelFor(model => model.ImgPath, htmlAttributes: new { @class = "control-label" })
+                                    <input type="file" name="ImageFile" required />
+                                </div>
                             </div>
                             <div class="box-footer">
                                 @*<input type="submit" value="Create" class="btn btn-primary" />*@
@@ -69,6 +72,7 @@
 
                                     </ul>
                                     @Html.ActionLink("Back to List", "Index")
+                               
                                 </div>
                             </div>
 

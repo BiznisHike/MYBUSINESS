@@ -43,10 +43,10 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         public ActionResult Login(Employee emp)
         //public ActionResult Login(Employee emp, Right right)
-        {
-            
-            //string unl= Encryption.Decrypt("WuQ65MCb4JWsdtu2Sypl6g==");//abc123
+            {
 
+            //string unl= Encryption.Decrypt("WuQ65MCb4JWsdtu2Sypl6g==");//abc123
+            
             if (emp.Password == null) { emp.Password = string.Empty; }
             emp.Password = Encryption.Encrypt(emp.Password);
 
@@ -54,6 +54,7 @@ namespace MYBUSINESS.Controllers
             MYBUSINESS.Models.Employee user = db.Employees.SingleOrDefault(usr => ((usr.Email == emp.Email) && (usr.Password == emp.Password)));
             if (user != null)
             {
+                 
                 //MYBUSINESS.Models.EmployeeLeaveViewModel elViewModel = new  MYBUSINESS.Models.EmployeeLeaveViewModel();
                 //user = db.Employees.FirstOrDefault();
                 Session.Add("CurrentUser", user);
