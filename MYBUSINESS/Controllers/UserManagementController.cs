@@ -59,7 +59,7 @@ namespace MYBUSINESS.Controllers
                 Session.Add("CurrentUser", user);
                 Session.Add("CurrentBusiness", user.Department.Business);
 
-                return RedirectToAction("Create", "SOSR",new {IsReturn="false" });//change it from 'if condtion' to here
+                return RedirectToAction("Index","Dashboard");//change it from 'if condtion' to here
                 //return View("Index", "DashBoard",user);
             }
             else

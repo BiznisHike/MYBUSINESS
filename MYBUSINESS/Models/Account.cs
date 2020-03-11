@@ -18,6 +18,7 @@ namespace MYBUSINESS.Models
         public Account()
         {
             this.SOes = new HashSet<SO>();
+            this.POes = new HashSet<PO>();
         }
     
         public decimal Id { get; set; }
@@ -30,5 +31,7 @@ namespace MYBUSINESS.Models
         public virtual Business Business { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SO> SOes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PO> POes { get; set; }
     }
 }

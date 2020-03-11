@@ -22,6 +22,7 @@ namespace MYBUSINESS.Controllers
         private BusinessContext db = new BusinessContext();
         private IQueryable<Product> _dbFilteredProducts;
         private IQueryable<Supplier> _dbFilteredSuppliers;
+        private IQueryable<Account> _dbFilteredAccounts;
         private IQueryable<PO> _dbFilteredPO;
         private IQueryable<POD> _dbFilteredPoD;
         protected override void Initialize(RequestContext requestContext)
@@ -35,6 +36,7 @@ namespace MYBUSINESS.Controllers
             _dbFilteredProducts= db.Products.AsQueryable().Where(x => x.Supplier.bizId == CurrentBusiness.Id);
             _dbFilteredPO = db.POes.AsQueryable().Where(x => x.Supplier.bizId == CurrentBusiness.Id);
             _dbFilteredPoD = db.PODs.AsQueryable().Where(x => x.Product.Supplier.bizId == CurrentBusiness.Id);
+            _dbFilteredAccounts = db.Accounts.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
         }
         public POPRController()
         {   
@@ -299,7 +301,7 @@ namespace MYBUSINESS.Controllers
         {
             //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name");
             //ViewBag.Products = db.Products;
-
+            ViewBag.Accounts = _dbFilteredAccounts;
             //int maxId = db.Suppliers.Max(p => p.Id);
             decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
@@ -316,7 +318,7 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice")] List<POD> pOD)
+        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,AccountId")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice")] List<POD> pOD)
 
         {
             

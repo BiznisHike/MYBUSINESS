@@ -124,6 +124,7 @@
           <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
           <Property Name="Remarks2" Type="nvarchar" MaxLength="500" />
           <Property Name="EmployeeId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="AccountId" Type="decimal" Precision="10" Scale="0" />
         </EntityType>
         <EntityType Name="POD">
           <Key>
@@ -330,6 +331,18 @@
             </Principal>
             <Dependent Role="Payment">
               <PropertyRef Name="SOId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PO_Account">
+          <End Role="Account" Type="Self.Account" Multiplicity="0..1" />
+          <End Role="PO" Type="Self.PO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PO">
+              <PropertyRef Name="AccountId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -559,6 +572,10 @@
             <End Role="SO" EntitySet="SO" />
             <End Role="Payment" EntitySet="Payment" />
           </AssociationSet>
+          <AssociationSet Name="FK_PO_Account" Association="Self.FK_PO_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="PO" EntitySet="PO" />
+          </AssociationSet>
           <AssociationSet Name="FK_PO_Employee" Association="Self.FK_PO_Employee">
             <End Role="Employee" EntitySet="Employee" />
             <End Role="PO" EntitySet="PO" />
@@ -730,6 +747,10 @@
             <End Role="SO" EntitySet="SOes" />
             <End Role="Payment" EntitySet="Payments" />
           </AssociationSet>
+          <AssociationSet Name="FK_PO_Account" Association="Models.FK_PO_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="PO" EntitySet="POes" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="spPOReport_Result">
           <Property Type="String" Name="Id" Nullable="false" MaxLength="50" />
@@ -787,6 +808,7 @@
           <Property Name="bizId" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
           <NavigationProperty Name="Business" Relationship="Models.FK_Account_Business" FromRole="Account" ToRole="Business" />
           <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Account" FromRole="Account" ToRole="SO" />
+          <NavigationProperty Name="POes" Relationship="Models.FK_PO_Account" FromRole="Account" ToRole="PO" />
         </EntityType>
         <EntityType Name="Business">
           <Key>
@@ -903,6 +925,8 @@
           <NavigationProperty Name="Employee" Relationship="Models.FK_PO_Employee" FromRole="PO" ToRole="Employee" />
           <NavigationProperty Name="Supplier" Relationship="Models.FK_PO_Supplier" FromRole="PO" ToRole="Supplier" />
           <NavigationProperty Name="PODs" Relationship="Models.FK_POD_PO" FromRole="PO" ToRole="POD" />
+          <Property Name="AccountId" Type="Decimal" Precision="10" Scale="0" />
+          <NavigationProperty Name="Account" Relationship="Models.FK_PO_Account" FromRole="PO" ToRole="Account" />
         </EntityType>
         <EntityType Name="POD">
           <Key>
@@ -1325,6 +1349,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PO_Account">
+          <End Type="Models.Account" Role="Account" Multiplicity="0..1" />
+          <End Type="Models.PO" Role="PO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PO">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1476,6 +1512,7 @@
           <EntitySetMapping Name="POes">
             <EntityTypeMapping TypeName="Models.PO">
               <MappingFragment StoreEntitySet="PO">
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
                 <ScalarProperty Name="Remarks2" ColumnName="Remarks2" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
