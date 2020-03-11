@@ -99,13 +99,16 @@ namespace MYBUSINESS.Controllers
             maxId += 1;
        
             Employee Nemployee = new Employee();
-            String FileName = Path.GetFileNameWithoutExtension(newEmployee.ImageFile.FileName);
-            string Extention = Path.GetExtension(newEmployee.ImageFile.FileName);
-            FileName = FileName + DateTime.Now.ToString("yymmssfff") + Extention;
-            newEmployee.ImgPath = "~/Image/" + FileName;
-            FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
-            newEmployee.ImageFile.SaveAs(FileName);
-            Nemployee.ImgPath = newEmployee.ImgPath;
+            if (!string.IsNullOrEmpty(newEmployee.ImgPath))
+            {
+                String FileName = Path.GetFileNameWithoutExtension(newEmployee.ImageFile.FileName);
+                string Extention = Path.GetExtension(newEmployee.ImageFile.FileName);
+                FileName = FileName + DateTime.Now.ToString("yymmssfff") + Extention;
+                newEmployee.ImgPath = "~/Image/" + FileName;
+                FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
+                newEmployee.ImageFile.SaveAs(FileName);
+                Nemployee.ImgPath = newEmployee.ImgPath;
+            }
             Nemployee.Id = maxId;
             int pos = newEmployee.Email.IndexOf("@");
             Nemployee.Login = newEmployee.Email.Substring(0, pos);
