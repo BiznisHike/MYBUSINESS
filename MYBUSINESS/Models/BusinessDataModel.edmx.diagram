@@ -42,6 +42,10 @@
         <EntityTypeShape EntityType="Models.Payment" Width="1.5" PointX="12.75" PointY="13.125" />
         <AssociationConnector Association="Models.FK_Payment_SO" />
         <AssociationConnector Association="Models.FK_PO_Account" />
+        <EntityTypeShape EntityType="Models.expense" Width="1.5" PointX="3" PointY="29.25" />
+        <EntityTypeShape EntityType="Models.ExpenseDetail" Width="1.5" PointX="5.25" PointY="29.375" />
+        <AssociationConnector Association="Models.FK_expense_Business" />
+        <AssociationConnector Association="Models.FK_ExpenseDetail_expense" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

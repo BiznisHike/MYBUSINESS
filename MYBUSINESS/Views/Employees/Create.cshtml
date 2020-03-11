@@ -55,10 +55,15 @@
                                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
 
                                 </div>
-                                <div class="form-group" >
-                                    @Html.LabelFor(model => model.ImgPath, htmlAttributes: new { @class = "control-label" })
-                                    <input type="file" name="ImageFile"/>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.ImgPath, new { type = "file" })
+                                    @Html.ValidationMessageFor(model => model.ImgPath, "", new { @class = "text-danger" })
+
                                 </div>
+                                @*<div class="form-group" >
+            @Html.LabelFor(model => model.ImgPath, htmlAttributes: new { @class = "control-label" })
+            <input type="file" name="ImageFile"/>
+        </div>*@
                             </div>
                             <div class="box-footer">
                                 @*<input type="submit" value="Create" class="btn btn-primary" />*@

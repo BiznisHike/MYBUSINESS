@@ -79,6 +79,25 @@
           <Property Name="bizId" Type="varchar" MaxLength="50" />
           <Property Name="ImgPath" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="expense">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="decimal" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateCreate" Type="nchar" MaxLength="10" />
+          <Property Name="DateUpdated" Type="nchar" MaxLength="10" />
+          <Property Name="expenseTotal" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="BizId" Type="decimal" Precision="10" Scale="0" />
+        </EntityType>
+        <EntityType Name="ExpenseDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="decimal" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExpenseId" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="ExpenseName" Type="nchar" MaxLength="50" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" />
+        </EntityType>
         <EntityType Name="Location">
           <Key>
             <PropertyRef Name="Id" />
@@ -311,6 +330,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_expense_Business">
+          <End Role="Business" Type="Self.Business" Multiplicity="0..1" />
+          <End Role="expense" Type="Self.expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Business">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="expense">
+              <PropertyRef Name="BizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExpenseDetail_expense">
+          <End Role="expense" Type="Self.expense" Multiplicity="1" />
+          <End Role="ExpenseDetail" Type="Self.ExpenseDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expense">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExpenseDetail">
+              <PropertyRef Name="ExpenseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Location_Business">
           <End Role="Business" Type="Self.Business" Multiplicity="1" />
           <End Role="Location" Type="Self.Location" Multiplicity="*" />
@@ -539,6 +582,8 @@
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="expense" EntityType="Self.expense" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExpenseDetail" EntityType="Self.ExpenseDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payment" EntityType="Self.Payment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PO" EntityType="Self.PO" Schema="dbo" store:Type="Tables" />
@@ -564,6 +609,14 @@
           <AssociationSet Name="FK_Employee_Department" Association="Self.FK_Employee_Department">
             <End Role="Department" EntitySet="Department" />
             <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_expense_Business" Association="Self.FK_expense_Business">
+            <End Role="Business" EntitySet="Business" />
+            <End Role="expense" EntitySet="expense" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExpenseDetail_expense" Association="Self.FK_ExpenseDetail_expense">
+            <End Role="expense" EntitySet="expense" />
+            <End Role="ExpenseDetail" EntitySet="ExpenseDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_Location_Business" Association="Self.FK_Location_Business">
             <End Role="Business" EntitySet="Business" />
@@ -752,6 +805,16 @@
             <End Role="Account" EntitySet="Accounts" />
             <End Role="PO" EntitySet="POes" />
           </AssociationSet>
+          <EntitySet Name="expenses" EntityType="Models.expense" />
+          <EntitySet Name="ExpenseDetails" EntityType="Models.ExpenseDetail" />
+          <AssociationSet Name="FK_expense_Business" Association="Models.FK_expense_Business">
+            <End Role="Business" EntitySet="Businesses" />
+            <End Role="expense" EntitySet="expenses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExpenseDetail_expense" Association="Models.FK_ExpenseDetail_expense">
+            <End Role="expense" EntitySet="expenses" />
+            <End Role="ExpenseDetail" EntitySet="ExpenseDetails" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="spPOReport_Result">
           <Property Type="String" Name="Id" Nullable="false" MaxLength="50" />
@@ -827,6 +890,7 @@
           <NavigationProperty Name="Departments" Relationship="Models.FK_Department_Business" FromRole="Business" ToRole="Department" />
           <NavigationProperty Name="Locations" Relationship="Models.FK_Location_Business" FromRole="Business" ToRole="Location" />
           <NavigationProperty Name="Suppliers" Relationship="Models.FK_Supplier_Business" FromRole="Business" ToRole="Supplier" />
+          <NavigationProperty Name="expenses" Relationship="Models.FK_expense_Business" FromRole="Business" ToRole="expense" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -1363,6 +1427,52 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="expense">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreate" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="DateUpdated" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="expenseTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BizId" Type="Decimal" Precision="10" Scale="0" />
+          <NavigationProperty Name="Business" Relationship="Models.FK_expense_Business" FromRole="expense" ToRole="Business" />
+          <NavigationProperty Name="ExpenseDetails" Relationship="Models.FK_ExpenseDetail_expense" FromRole="expense" ToRole="ExpenseDetail" />
+        </EntityType>
+        <EntityType Name="ExpenseDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExpenseId" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
+          <Property Name="ExpenseName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
+          <NavigationProperty Name="expense" Relationship="Models.FK_ExpenseDetail_expense" FromRole="ExpenseDetail" ToRole="expense" />
+        </EntityType>
+        <Association Name="FK_expense_Business">
+          <End Type="Models.Business" Role="Business" Multiplicity="0..1" />
+          <End Type="Models.expense" Role="expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Business">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="expense">
+              <PropertyRef Name="BizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExpenseDetail_expense">
+          <End Type="Models.expense" Role="expense" Multiplicity="1" />
+          <End Type="Models.ExpenseDetail" Role="ExpenseDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expense">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExpenseDetail">
+              <PropertyRef Name="ExpenseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1690,6 +1800,27 @@
                 <ScalarProperty Name="PaymentAmount" ColumnName="PaymentAmount" />
                 <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
                 <ScalarProperty Name="SOId" ColumnName="SOId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="expenses">
+            <EntityTypeMapping TypeName="Models.expense">
+              <MappingFragment StoreEntitySet="expense">
+                <ScalarProperty Name="BizId" ColumnName="BizId" />
+                <ScalarProperty Name="expenseTotal" ColumnName="expenseTotal" />
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExpenseDetails">
+            <EntityTypeMapping TypeName="Models.ExpenseDetail">
+              <MappingFragment StoreEntitySet="ExpenseDetail">
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="ExpenseName" ColumnName="ExpenseName" />
+                <ScalarProperty Name="ExpenseId" ColumnName="ExpenseId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

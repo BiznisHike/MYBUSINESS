@@ -42,6 +42,8 @@ namespace MYBUSINESS.Models
         public virtual DbSet<SOD> SODs { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<expense> expenses { get; set; }
+        public virtual DbSet<ExpenseDetail> ExpenseDetails { get; set; }
     
         public virtual ObjectResult<spPOReport_Result> spPOReport(string purchaseOrderID)
         {

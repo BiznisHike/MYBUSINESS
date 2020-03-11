@@ -99,17 +99,32 @@ namespace MYBUSINESS.Controllers
             maxId += 1;
        
             Employee Nemployee = new Employee();
-            if (!string.IsNullOrEmpty(newEmployee.ImgPath))
+            if (Request.Files.Count > 0)
             {
-                String FileName = Path.GetFileNameWithoutExtension(newEmployee.ImageFile.FileName);
-                string Extention = Path.GetExtension(newEmployee.ImageFile.FileName);
-                FileName = FileName + DateTime.Now.ToString("yymmssfff") + Extention;
-                newEmployee.ImgPath = "~/Image/" + FileName;
-                FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
-                newEmployee.ImageFile.SaveAs(FileName);
-                Nemployee.ImgPath = newEmployee.ImgPath;
+                HttpPostedFileBase file = Request.Files[0];
+                if (file.ContentLength > 0)
+                {
+                    String FileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    string Extention = Path.GetExtension(file.FileName);
+                    FileName = FileName + DateTime.Now.ToString("yymmssfff") + Extention;
+                    newEmployee.ImgPath = "~/Image/" + FileName;
+                    FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
+                     file.SaveAs(FileName);
+                    Nemployee.ImgPath = newEmployee.ImgPath;
+       
+                }
             }
-            Nemployee.Id = maxId;
+                //if (!string.IsNullOrEmpty(newEmployee.ImgPath))
+                //{
+                //    String FileName = Path.GetFileNameWithoutExtension(newEmployee.ImageFile.FileName);
+                //    string Extention = Path.GetExtension(newEmployee.ImageFile.FileName);
+                //    FileName = FileName + DateTime.Now.ToString("yymmssfff") + Extention;
+                //    newEmployee.ImgPath = "~/Image/" + FileName;
+                //    FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
+                //    newEmployee.ImageFile.SaveAs(FileName);
+                //    Nemployee.ImgPath = newEmployee.ImgPath;
+                //}
+                Nemployee.Id = maxId;
             int pos = newEmployee.Email.IndexOf("@");
             Nemployee.Login = newEmployee.Email.Substring(0, pos);
             Nemployee.DepartmentId = newEmployee.DepartmentId;
