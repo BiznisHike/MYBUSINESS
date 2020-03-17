@@ -30,6 +30,9 @@
                                         <th>
                                             @Html.DisplayNameFor(model => model.Name)
                                         </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ImgPath)
+                                        </th>
 
                                         <th>
                                             @Html.DisplayNameFor(model => model.PurchasePrice)
@@ -88,11 +91,18 @@
                                                             <li><a href="@Url.Action("SearchProduct", "SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Sales">Search in Sales History</a></li>
                                                             <li><a href="@Url.Action("SearchProduct", "POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Purchasess">Search in Purchases History</a></li>
                                                             @*<li><a href="@Url.Action("PerMonthSale","SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Per Month Sales">Per Month Sales</a></li>
-            <li><a href="@Url.Action("PerMonthPurchase","POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Per Month Purchasess">Per Month Purchases</a></li>*@
+                                                                <li><a href="@Url.Action("PerMonthPurchase","POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Per Month Purchasess">Per Month Purchases</a></li>*@
                                                         </ul>
                                                     </li>
                                                 </ul>
 
+                                            </td>
+                                            <td>
+                                                @if (String.IsNullOrEmpty(item.ImgPath))
+                                                {
+                                                item.ImgPath = "~/image/download (1).png";
+                                                }
+                                                <a href="@Url.Content(item.ImgPath)"><img id="myImg" src="@Url.Content(item.ImgPath)" width="50" height="50" alt="Avatar" /></a>
                                             </td>
 
                                             <td>
@@ -145,7 +155,7 @@
                                                 @Html.DisplayFor(modelItem => item.Saleable)
                                             </td>
                                             <td>
-                                                
+
                                                 <a href="@Url.Action("ProductWiseSale","SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product">Product Wise Sale</a>
 
                                                 @*|
@@ -158,7 +168,9 @@
                                 <tfoot>
                                     <tr style="font-weight:bold">
                                         @*<td>Total</td>*@
+
                                         <td>@Model.Count()</td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
 
@@ -181,8 +193,21 @@
                     </div>
                 </div>
             </div>
+            <div id="myModal" class="modal">
+
+                <!-- The Close Button -->
+                <span class="close">&times;</span>
+
+                <!-- Modal Content (The Image) -->
+                <img class="modal-content" id="img01">
+
+                <!-- Modal Caption (Image Text) -->
+                <div id="caption"></div>
+            </div>
+
         </section>
     </div>
+   
 }
 <script type="text/javascript">
     $(document).ready(function () {
@@ -204,9 +229,11 @@
             "order": [[0, "desc"]],
             "searching": false
 
+
         });
 
 
     });
+
 
 </script>

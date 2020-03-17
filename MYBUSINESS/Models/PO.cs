@@ -42,10 +42,10 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> EmployeeId { get; set; }
         public Nullable<decimal> AccountId { get; set; }
     
+        public virtual Account Account { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual Supplier Supplier { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<POD> PODs { get; set; }
-        public virtual Account Account { get; set; }
     }
 }

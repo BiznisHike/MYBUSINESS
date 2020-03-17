@@ -32,7 +32,10 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<expense> expenses { get; set; }
+        public virtual DbSet<ExpenseDetail> ExpenseDetails { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<PO> POes { get; set; }
         public virtual DbSet<POD> PODs { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -41,9 +44,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<SO> SOes { get; set; }
         public virtual DbSet<SOD> SODs { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
-        public virtual DbSet<Payment> Payments { get; set; }
-        public virtual DbSet<expense> expenses { get; set; }
-        public virtual DbSet<ExpenseDetail> ExpenseDetails { get; set; }
     
         public virtual ObjectResult<spPOReport_Result> spPOReport(string purchaseOrderID)
         {

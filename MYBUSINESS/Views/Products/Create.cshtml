@@ -25,7 +25,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Create New Product</h3>
                     </div>
-                    @using (Html.BeginForm())
+                    @using (Html.BeginForm("Create","Products",FormMethod.Post,new {enctype="multipart/form-data"}))
                     {
                         @Html.AntiForgeryToken()
                         <form role="form">
@@ -58,7 +58,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control",placeholder = "Enter Product Name", required="required"  } })
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Product Name", required = "required" } })
                                     @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
 
                                 </div>
@@ -81,19 +81,19 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Stock, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "stock"} })
+                                    @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "stock" } })
                                     @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-danger" })
 
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.PerPack, htmlAttributes: new { @class = "control-label" }) (at least 1)
 
-                                    @Html.EditorFor(model => model.PerPack, new { htmlAttributes = new { @class = "form-control", @id = "perPack", @Value=1 } })
+                                    @Html.EditorFor(model => model.PerPack, new { htmlAttributes = new { @class = "form-control", @id = "perPack", @Value = 1 } })
                                     @Html.ValidationMessageFor(model => model.PerPack, "", new { @class = "text-danger" })
 
                                 </div>
 
-                                
+
 
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Saleable, htmlAttributes: new { @class = "control-label" })
@@ -109,7 +109,12 @@
                                     @Html.ValidationMessageFor(model => model.Saleable, "", new { @class = "text-danger" })
 
                                 </div>
+                                <div class="form-group">
+                                    <label>Upload Image</label>
+                                    @Html.TextBoxFor(model => model.ImgPath, new { type = "file" })
+                                    @Html.ValidationMessageFor(model => model.ImgPath, "", new { @class = "text-danger" })
 
+                                </div>
                             </div>
 
                             <div class="box-footer">

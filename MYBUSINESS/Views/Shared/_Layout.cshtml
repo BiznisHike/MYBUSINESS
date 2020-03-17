@@ -396,20 +396,20 @@
                             @if (Session["CurrentUser"] != null)
                             {
                                 MYBUSINESS.Models.Employee user = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
-                                if (string.IsNullOrEmpty(user.ImgPath)) {
+                                if (string.IsNullOrEmpty(user.ImgPath))
+                                {
                                     user.ImgPath = "~/Image/download.jpg";
                                 }
 
-                                <li><img src="@Url.Content(user.ImgPath)" width="45" height="45" alt="Avatar"/></li>
+
+                                <li><img class="img-circle" src="@Url.Content(user.ImgPath)" width="50" height="50" alt="Avatar" /></li>
                                 <li>@Html.ActionLink(user.Login, "Edit", "Employees", new { id = 0 }, null)</li>
                                 <li>@Html.ActionLink("Logout", "Logout", "UserManagement")</li>
                                 <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                            
                             }
                         </ul>
-                        <style> img {
-                                 border-radius: 55%;
-                            }
-                        </style>
+                       
                     </div>
                 </nav>
             </header>
@@ -417,6 +417,7 @@
         <aside class="main-sidebar">
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
+
                 <!-- Sidebar user panel -->
                 <!-- /.search form -->
                 <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -439,6 +440,7 @@
                             <span>Sales</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
+                                <small class="label pull-right bg-aqua">818</small>
                             </span>
                         </a>
                         <ul class="treeview-menu">
@@ -455,7 +457,9 @@
                             <i class="fa fa-truck"></i>
                             <span>Purchases</span>
                             <span class="pull-right-container">
+
                                 <i class="fa fa-angle-left pull-right"></i>
+                                <span class="label pull-right bg-green">4</span>
                             </span>
                         </a>
                         <ul class="treeview-menu">
@@ -467,6 +471,22 @@
                             <li><a href="/POPR/Index"><i class="fa fa-search"></i> <span>Purchases History</span></a></li>
                         </ul>
                     </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-money"></i>
+                            <span>Expenses</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                               
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/Expenses/Create"><i class="fa fa-file-text"></i> <span>New Expense</span></a></li>
+                            
+                            <li><a href="/Expenses/Index"><i class="fa fa-search"></i> <span>Expense History</span></a></li>
+                        </ul>
+                    </li>
+
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-credit-card "></i>
@@ -487,6 +507,7 @@
                             <span>Products</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
+                                <small class="label pull-right bg-primary">3</small>
                             </span>
                         </a>
                         <ul class="treeview-menu">
@@ -542,6 +563,7 @@
                             <span>Employees</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
+                                <small class="label pull-right bg-red">24</small>
                             </span>
                         </a>
                         <ul class="treeview-menu">

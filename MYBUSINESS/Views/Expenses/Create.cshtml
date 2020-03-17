@@ -1,0 +1,111 @@
+﻿@model MYBUSINESS.Models.ExpnseVM
+
+@{
+    ViewBag.Title = "Create Expense";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<link href="@Url.Content("~/Content/custom/downloads/jquery-ui-1.12.1.custom/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+@*<link href="@Url.Content("~/Content/custom/downloads/jquery-ui.min.css")" rel="stylesheet" type="text/css" />*@
+<script src="~/Content/custom/downloads/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/Expense.js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+@*<h2>Create</h2>*@
+
+@* @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "SOEdit", id = "SOEdit" })) *@
+@using (Html.BeginForm())
+
+{
+ 
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="container" id="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-offset-5">
+                  </div>
+                </div>
+                <div class="row col-lg-3 pull-right">
+                    @Html.Editor("expense.DateCreate", new { htmlAttributes = new { @class = "form-control datepicker", @id = "datepickerStart", @placeholder = "Start date", @Value = ViewBag.StartDate } })
+                </div>   
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label id="customer">Expenses</label>
+                    </div>
+                </div>
+            </div>
+            <table id="selectedProducts" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width:5%;">Sr.No</th>
+
+                        <th style="width:60%">
+                            <label>Expense Name</label>
+                        </th>
+                        <th>
+                            <label>Amount</label>
+                        </th>                                           
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="SNo0">1</td>                                               
+                        <td><input type="text" autocomplete="off" class="form-control" name="ExpenseDetail[0].ExpenseName" id="name0" placeholder="Enter Expense name" data-toggle="tooltip" data-placement="top" title="Enter Expense name"></td>
+                        <td><input type="text" autocomplete="off" class="form-control classBGcolor" name="ExpenseDetail[0].Amount" id="salePrice0"></td>
+                        <td>
+                            <button type="button" id="delete0" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> New Row</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:inline" id="dvCalculations">
+     
+
+                <div class="table-title">
+
+                    <div class="row">
+
+                        <div class="col-sm-7" style="margin-left:17em">                 
+
+                        </div>
+                       
+
+                        <div class="col-sm-2">
+                            <button type="submit" @*id="CreateSO"*@ class="btn btn-info add-new">Save & Print</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+<script type="text/javascript">
+   
+     var startDate = $('#datepickerStart').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+  
+</script>
+
+

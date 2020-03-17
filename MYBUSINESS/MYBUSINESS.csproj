@@ -267,6 +267,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
+    <Compile Include="Controllers\ExpensesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\NotAllowedController.cs" />
@@ -341,6 +342,7 @@
     <Compile Include="Models\ExpenseDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ExpnseVM.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Location.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
@@ -403,6 +405,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\custom\custom.css" />
+    <Content Include="Content\custom\Expense.js" />
     <Content Include="Content\custom\downloads\css.css" />
     <Content Include="Content\custom\supplierPOPR.js" />
     <Content Include="Content\custom\customerWOWR.js" />
@@ -699,6 +702,7 @@
     <Content Include="Views\Accounts\Edit.cshtml" />
     <Content Include="Views\Accounts\Index.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Expenses\Create.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>

@@ -20,9 +20,9 @@ namespace MYBUSINESS.Models
             this.Accounts = new HashSet<Account>();
             this.Customers = new HashSet<Customer>();
             this.Departments = new HashSet<Department>();
+            this.expenses = new HashSet<expense>();
             this.Locations = new HashSet<Location>();
             this.Suppliers = new HashSet<Supplier>();
-            this.expenses = new HashSet<expense>();
         }
     
         public decimal Id { get; set; }
@@ -40,10 +40,10 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Department> Departments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<expense> expenses { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Location> Locations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Supplier> Suppliers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<expense> expenses { get; set; }
     }
 }

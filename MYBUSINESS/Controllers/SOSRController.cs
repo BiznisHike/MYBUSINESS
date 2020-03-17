@@ -55,7 +55,7 @@ namespace MYBUSINESS.Controllers
             var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
 
-            IQueryable<SO> sOes = _dbFilteredSO.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate).Include(s => s.Customer);
+            IQueryable<SO> sOes = db.SOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate).Include(s => s.Customer);
             //sOes = sOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate);
             //sOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id));
             //var sOes = db.SOes.Where(s => s.SaleReturn == false);
@@ -80,7 +80,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.Customers = _dbFilteredCustomers;
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
-            return View(sOes.OrderByDescending(i => i.Date).ToList());
+            return View(_dbFilteredSO.OrderByDescending(i => i.Date).ToList());
         }
         //public ActionResult SearchData(string custName, DateTime startDate, DateTime endDate)
 
@@ -192,7 +192,7 @@ namespace MYBUSINESS.Controllers
             {
                 thisSerial = (decimal)itm.Customer.SOes.Max(x => x.SOSerial);
 
-                if (!LstMaxSerialNo.ContainsKey((decimal)itm.CustomerId))
+                    if (!LstMaxSerialNo.ContainsKey((decimal)itm.CustomerId))
                 {
                     LstMaxSerialNo.Add(itm.Customer.Id, thisSerial);
                 }
@@ -535,7 +535,7 @@ namespace MYBUSINESS.Controllers
             decimal TotalBalance = 0;
             foreach (SO itm in DistSOes)
             {
-                Customer cust = _dbFilteredCustomers.Where(x => x.Id == itm.CustomerId).FirstOrDefault();
+                Customer cust = db.Customers.Where(x => x.Id == itm.CustomerId).FirstOrDefault();
 
                 TotalBalance += (decimal)cust.Balance;
 
@@ -572,7 +572,7 @@ namespace MYBUSINESS.Controllers
             {
            
             ViewBag.Accounts = _dbFilteredAccounts;
-            ViewBag.IsReturn = true;
+           
             //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name");
             //ViewBag.Products = db.Products;
 

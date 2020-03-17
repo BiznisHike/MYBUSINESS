@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -97,7 +98,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,Stock,SupplierId,Saleable,PerPack")] Product product,String AddAnother)
+        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,Stock,SupplierId,Saleable,PerPack,ImgPath")] Product product,String AddAnother)
         {
             if (product.Stock == null)
             {
@@ -113,7 +114,24 @@ namespace MYBUSINESS.Controllers
             
             if (ModelState.IsValid)
             {
-                
+                if (Request.Files.Count > 0)
+                {
+                    HttpPostedFileBase file = Request.Files[0];
+                    if (file.ContentLength > 0)
+                    {
+                        String FileName = Path.GetFileNameWithoutExtension(file.FileName);
+
+                        FileName = "Product" + product.Id;
+                        string Extention = Path.GetExtension(file.FileName);
+                        FileName = FileName + Extention;
+                        product.ImgPath = "~/Image/" + FileName;
+                        FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
+                        file.SaveAs(FileName);
+                       
+
+                    }
+                }
+
                 db.Products.Add(product);
                 db.SaveChanges();
 

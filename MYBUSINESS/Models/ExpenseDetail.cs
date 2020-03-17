@@ -15,7 +15,7 @@ namespace MYBUSINESS.Models
     public partial class ExpenseDetail
     {
         public decimal Id { get; set; }
-        public decimal ExpenseId { get; set; }
+        public Nullable<decimal> ExpenseId { get; set; }
         public string ExpenseName { get; set; }
         public Nullable<decimal> Amount { get; set; }
     

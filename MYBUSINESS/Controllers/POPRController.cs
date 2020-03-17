@@ -77,7 +77,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.Suppliers = _dbFilteredSuppliers;
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
-            return View(pOes.OrderByDescending(i => i.Date).ToList());
+            return View(_dbFilteredPO.OrderByDescending(i => i.Date).ToList());
         }
         //public ActionResult SearchData(string custName, DateTime startDate, DateTime endDate)
 
@@ -299,6 +299,7 @@ namespace MYBUSINESS.Controllers
         // GET: POes/Create
         public ActionResult Create(string IsReturn)
         {
+           
             //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name");
             //ViewBag.Products = db.Products;
             ViewBag.Accounts = _dbFilteredAccounts;
@@ -441,7 +442,7 @@ namespace MYBUSINESS.Controllers
                 string POId;
                 ////////////////////////////v deffer the duplicate error
                 int previousbillNum = maxId1 - 1;
-                PO previousBill = _dbFilteredPO.Where(x => x.POSerial == previousbillNum).FirstOrDefault();
+                PO previousBill = db.POes.Where(x => x.POSerial == previousbillNum).FirstOrDefault();
 
                 DateTime PrvTime = (DateTime)previousBill.Date;//previous bill time
                 DateTime thisTime = (DateTime)pO.Date;//this bill time

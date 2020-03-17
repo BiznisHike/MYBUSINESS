@@ -5,24 +5,29 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="a584e9a2f9434e69aac2e1c9ca294c92" Name="Diagram1" ZoomLevel="43">
-        <EntityTypeShape EntityType="Models.Account" Width="1.5" PointX="3" PointY="25.625" />
-        <EntityTypeShape EntityType="Models.Business" Width="1.5" PointX="0.75" PointY="16.625" />
-        <EntityTypeShape EntityType="Models.Customer" Width="1.5" PointX="3" PointY="18.125" />
-        <EntityTypeShape EntityType="Models.Department" Width="1.5" PointX="3" PointY="10" />
-        <EntityTypeShape EntityType="Models.Employee" Width="1.5" PointX="5.25" PointY="8.5" />
-        <EntityTypeShape EntityType="Models.Location" Width="1.5" PointX="3" PointY="14.875" />
-        <EntityTypeShape EntityType="Models.PO" Width="1.5" PointX="7.5" PointY="14.875" />
-        <EntityTypeShape EntityType="Models.POD" Width="1.5" PointX="12.75" PointY="17" />
-        <EntityTypeShape EntityType="Models.Product" Width="1.5" PointX="5.25" PointY="17.25" />
-        <EntityTypeShape EntityType="Models.ProductionOrder" Width="1.5" PointX="7.5" PointY="8.625" />
-        <EntityTypeShape EntityType="Models.ProductionOrderDetail" Width="1.5" PointX="9.75" PointY="9.625" />
-        <EntityTypeShape EntityType="Models.SO" Width="1.5" PointX="10.5" PointY="15.25" />
-        <EntityTypeShape EntityType="Models.SOD" Width="1.5" PointX="15.75" PointY="16.875" />
-        <EntityTypeShape EntityType="Models.Supplier" Width="1.5" PointX="3" PointY="21.875" />
+        <EntityTypeShape EntityType="Models.Account" Width="1.5" PointX="3" PointY="13.25" />
+        <EntityTypeShape EntityType="Models.Business" Width="1.5" PointX="0.75" PointY="19.5" />
+        <EntityTypeShape EntityType="Models.Customer" Width="1.5" PointX="3" PointY="23.25" />
+        <EntityTypeShape EntityType="Models.Department" Width="1.5" PointX="3" PointY="18.375" />
+        <EntityTypeShape EntityType="Models.Employee" Width="1.5" PointX="5.25" PointY="16.75" />
+        <EntityTypeShape EntityType="Models.expense" Width="1.5" PointX="3" PointY="30.5" />
+        <EntityTypeShape EntityType="Models.ExpenseDetail" Width="1.5" PointX="5.25" PointY="30.75" />
+        <EntityTypeShape EntityType="Models.Location" Width="1.5" PointX="3" PointY="27.25" />
+        <EntityTypeShape EntityType="Models.Payment" Width="1.5" PointX="12.75" PointY="23.25" />
+        <EntityTypeShape EntityType="Models.PO" Width="1.5" PointX="7.5" PointY="10.125" />
+        <EntityTypeShape EntityType="Models.POD" Width="1.5" PointX="12.75" PointY="13" />
+        <EntityTypeShape EntityType="Models.Product" Width="1.5" PointX="5.25" PointY="23.875" />
+        <EntityTypeShape EntityType="Models.ProductionOrder" Width="1.5" PointX="7.5" PointY="16.875" />
+        <EntityTypeShape EntityType="Models.ProductionOrderDetail" Width="1.5" PointX="12.75" PointY="18" />
+        <EntityTypeShape EntityType="Models.SO" Width="1.5" PointX="10.5" PointY="16.75" />
+        <EntityTypeShape EntityType="Models.SOD" Width="1.5" PointX="15.75" PointY="21.125" />
+        <EntityTypeShape EntityType="Models.Supplier" Width="1.5" PointX="3" PointY="9.5" />
         <AssociationConnector Association="Models.FK_Account_Business" />
+        <AssociationConnector Association="Models.FK_PO_Account" />
         <AssociationConnector Association="Models.FK_SO_Account" />
         <AssociationConnector Association="Models.FK_Customer_Business" />
         <AssociationConnector Association="Models.FK_Department_Business" />
+        <AssociationConnector Association="Models.FK_expense_Business" />
         <AssociationConnector Association="Models.FK_Location_Business" />
         <AssociationConnector Association="Models.FK_Supplier_Business" />
         <AssociationConnector Association="Models.FK_SO_Customer" />
@@ -30,7 +35,9 @@
         <AssociationConnector Association="Models.FK_PO_Employee" />
         <AssociationConnector Association="Models.FK_ProductionOrder_Employee" />
         <AssociationConnector Association="Models.FK_SO_Employee" />
+        <AssociationConnector Association="Models.FK_ExpenseDetail_expense" />
         <AssociationConnector Association="Models.FK_Product_Location" />
+        <AssociationConnector Association="Models.FK_Payment_SO" />
         <AssociationConnector Association="Models.FK_PO_Supplier" />
         <AssociationConnector Association="Models.FK_POD_PO" />
         <AssociationConnector Association="Models.FK_POD_Product" />
@@ -39,13 +46,6 @@
         <AssociationConnector Association="Models.FK_SOD_Product" />
         <AssociationConnector Association="Models.FK_ProductionOrderDetail_ProductionOrder" />
         <AssociationConnector Association="Models.FK_SOD_SO" />
-        <EntityTypeShape EntityType="Models.Payment" Width="1.5" PointX="12.75" PointY="13.125" />
-        <AssociationConnector Association="Models.FK_Payment_SO" />
-        <AssociationConnector Association="Models.FK_PO_Account" />
-        <EntityTypeShape EntityType="Models.expense" Width="1.5" PointX="3" PointY="29.25" />
-        <EntityTypeShape EntityType="Models.ExpenseDetail" Width="1.5" PointX="5.25" PointY="29.375" />
-        <AssociationConnector Association="Models.FK_expense_Business" />
-        <AssociationConnector Association="Models.FK_ExpenseDetail_expense" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

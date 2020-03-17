@@ -105,8 +105,10 @@ namespace MYBUSINESS.Controllers
                 if (file.ContentLength > 0)
                 {
                     String FileName = Path.GetFileNameWithoutExtension(file.FileName);
+
+                    FileName = newEmployee.FirstName + maxId;
                     string Extention = Path.GetExtension(file.FileName);
-                    FileName = FileName + DateTime.Now.ToString("yymmssfff") + Extention;
+                    FileName = FileName + Extention;
                     newEmployee.ImgPath = "~/Image/" + FileName;
                     FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
                      file.SaveAs(FileName);
@@ -128,7 +130,7 @@ namespace MYBUSINESS.Controllers
             int pos = newEmployee.Email.IndexOf("@");
             Nemployee.Login = newEmployee.Email.Substring(0, pos);
             Nemployee.DepartmentId = newEmployee.DepartmentId;
-            Nemployee.FirstName = newEmployee.FirstName;
+            Nemployee.FirstName =
             Nemployee.LastName = newEmployee.LastName;
             Nemployee.Email = newEmployee.Email;
             Nemployee.RegistrationDate = DateTime.Now;

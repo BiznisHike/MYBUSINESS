@@ -77,15 +77,15 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
           <Property Name="bizId" Type="varchar" MaxLength="50" />
-          <Property Name="ImgPath" Type="nvarchar" MaxLength="50" />
+          <Property Name="ImgPath" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="expense">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="decimal" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="DateCreate" Type="nchar" MaxLength="10" />
-          <Property Name="DateUpdated" Type="nchar" MaxLength="10" />
+          <Property Name="Id" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="DateCreate" Type="nvarchar" MaxLength="500" />
+          <Property Name="DateUpdated" Type="nvarchar" MaxLength="500" />
           <Property Name="expenseTotal" Type="decimal" Precision="18" Scale="0" />
           <Property Name="BizId" Type="decimal" Precision="10" Scale="0" />
         </EntityType>
@@ -94,7 +94,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="decimal" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ExpenseId" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="ExpenseId" Type="decimal" Precision="10" Scale="0" />
           <Property Name="ExpenseName" Type="nchar" MaxLength="50" />
           <Property Name="Amount" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
@@ -183,6 +183,7 @@
           <Property Name="LocationId" Type="decimal" Precision="10" Scale="0" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="ImgPath" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="ProductionOrder">
           <Key>
@@ -343,7 +344,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ExpenseDetail_expense">
-          <End Role="expense" Type="Self.expense" Multiplicity="1" />
+          <End Role="expense" Type="Self.expense" Multiplicity="0..1" />
           <End Role="ExpenseDetail" Type="Self.ExpenseDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="expense">
@@ -707,7 +708,10 @@
           <EntitySet Name="Customers" EntityType="Models.Customer" />
           <EntitySet Name="Departments" EntityType="Models.Department" />
           <EntitySet Name="Employees" EntityType="Models.Employee" />
+          <EntitySet Name="expenses" EntityType="Models.expense" />
+          <EntitySet Name="ExpenseDetails" EntityType="Models.ExpenseDetail" />
           <EntitySet Name="Locations" EntityType="Models.Location" />
+          <EntitySet Name="Payments" EntityType="Models.Payment" />
           <EntitySet Name="POes" EntityType="Models.PO" />
           <EntitySet Name="PODs" EntityType="Models.POD" />
           <EntitySet Name="Products" EntityType="Models.Product" />
@@ -720,6 +724,10 @@
             <End Role="Business" EntitySet="Businesses" />
             <End Role="Account" EntitySet="Accounts" />
           </AssociationSet>
+          <AssociationSet Name="FK_PO_Account" Association="Models.FK_PO_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="PO" EntitySet="POes" />
+          </AssociationSet>
           <AssociationSet Name="FK_SO_Account" Association="Models.FK_SO_Account">
             <End Role="Account" EntitySet="Accounts" />
             <End Role="SO" EntitySet="SOes" />
@@ -731,6 +739,10 @@
           <AssociationSet Name="FK_Department_Business" Association="Models.FK_Department_Business">
             <End Role="Business" EntitySet="Businesses" />
             <End Role="Department" EntitySet="Departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_expense_Business" Association="Models.FK_expense_Business">
+            <End Role="Business" EntitySet="Businesses" />
+            <End Role="expense" EntitySet="expenses" />
           </AssociationSet>
           <AssociationSet Name="FK_Location_Business" Association="Models.FK_Location_Business">
             <End Role="Business" EntitySet="Businesses" />
@@ -760,9 +772,17 @@
             <End Role="Employee" EntitySet="Employees" />
             <End Role="SO" EntitySet="SOes" />
           </AssociationSet>
+          <AssociationSet Name="FK_ExpenseDetail_expense" Association="Models.FK_ExpenseDetail_expense">
+            <End Role="expense" EntitySet="expenses" />
+            <End Role="ExpenseDetail" EntitySet="ExpenseDetails" />
+          </AssociationSet>
           <AssociationSet Name="FK_Product_Location" Association="Models.FK_Product_Location">
             <End Role="Location" EntitySet="Locations" />
             <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Payment_SO" Association="Models.FK_Payment_SO">
+            <End Role="SO" EntitySet="SOes" />
+            <End Role="Payment" EntitySet="Payments" />
           </AssociationSet>
           <AssociationSet Name="FK_PO_Supplier" Association="Models.FK_PO_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
@@ -795,25 +815,6 @@
           <AssociationSet Name="FK_SOD_SO" Association="Models.FK_SOD_SO">
             <End Role="SO" EntitySet="SOes" />
             <End Role="SOD" EntitySet="SODs" />
-          </AssociationSet>
-          <EntitySet Name="Payments" EntityType="Models.Payment" />
-          <AssociationSet Name="FK_Payment_SO" Association="Models.FK_Payment_SO">
-            <End Role="SO" EntitySet="SOes" />
-            <End Role="Payment" EntitySet="Payments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PO_Account" Association="Models.FK_PO_Account">
-            <End Role="Account" EntitySet="Accounts" />
-            <End Role="PO" EntitySet="POes" />
-          </AssociationSet>
-          <EntitySet Name="expenses" EntityType="Models.expense" />
-          <EntitySet Name="ExpenseDetails" EntityType="Models.ExpenseDetail" />
-          <AssociationSet Name="FK_expense_Business" Association="Models.FK_expense_Business">
-            <End Role="Business" EntitySet="Businesses" />
-            <End Role="expense" EntitySet="expenses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ExpenseDetail_expense" Association="Models.FK_ExpenseDetail_expense">
-            <End Role="expense" EntitySet="expenses" />
-            <End Role="ExpenseDetail" EntitySet="ExpenseDetails" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="spPOReport_Result">
@@ -871,8 +872,8 @@
           <Property Name="UpdateDate" Type="DateTime" Precision="0" />
           <Property Name="bizId" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
           <NavigationProperty Name="Business" Relationship="Models.FK_Account_Business" FromRole="Account" ToRole="Business" />
-          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Account" FromRole="Account" ToRole="SO" />
           <NavigationProperty Name="POes" Relationship="Models.FK_PO_Account" FromRole="Account" ToRole="PO" />
+          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Account" FromRole="Account" ToRole="SO" />
         </EntityType>
         <EntityType Name="Business">
           <Key>
@@ -888,9 +889,9 @@
           <NavigationProperty Name="Accounts" Relationship="Models.FK_Account_Business" FromRole="Business" ToRole="Account" />
           <NavigationProperty Name="Customers" Relationship="Models.FK_Customer_Business" FromRole="Business" ToRole="Customer" />
           <NavigationProperty Name="Departments" Relationship="Models.FK_Department_Business" FromRole="Business" ToRole="Department" />
+          <NavigationProperty Name="expenses" Relationship="Models.FK_expense_Business" FromRole="Business" ToRole="expense" />
           <NavigationProperty Name="Locations" Relationship="Models.FK_Location_Business" FromRole="Business" ToRole="Location" />
           <NavigationProperty Name="Suppliers" Relationship="Models.FK_Supplier_Business" FromRole="Business" ToRole="Supplier" />
-          <NavigationProperty Name="expenses" Relationship="Models.FK_expense_Business" FromRole="Business" ToRole="expense" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -904,9 +905,9 @@
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
           <Property Name="bizId" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
+          <Property Name="vId" Type="Decimal" Precision="10" Scale="0" />
           <NavigationProperty Name="Business" Relationship="Models.FK_Customer_Business" FromRole="Customer" ToRole="Business" />
           <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Customer" FromRole="Customer" ToRole="SO" />
-          <Property Name="vId" Type="Decimal" Precision="10" Scale="0" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -945,11 +946,33 @@
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
           <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ImgPath" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Department" Relationship="Models.FK_Employee_Department" FromRole="Employee" ToRole="Department" />
           <NavigationProperty Name="POes" Relationship="Models.FK_PO_Employee" FromRole="Employee" ToRole="PO" />
           <NavigationProperty Name="ProductionOrders" Relationship="Models.FK_ProductionOrder_Employee" FromRole="Employee" ToRole="ProductionOrder" />
           <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Employee" FromRole="Employee" ToRole="SO" />
-          <Property Name="ImgPath" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="expense">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
+          <Property Name="DateCreate" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="DateUpdated" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="expenseTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BizId" Type="Decimal" Precision="10" Scale="0" />
+          <NavigationProperty Name="Business" Relationship="Models.FK_expense_Business" FromRole="expense" ToRole="Business" />
+          <NavigationProperty Name="ExpenseDetails" Relationship="Models.FK_ExpenseDetail_expense" FromRole="expense" ToRole="ExpenseDetail" />
+        </EntityType>
+        <EntityType Name="ExpenseDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
+          <Property Name="ExpenseId" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="ExpenseName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
+          <NavigationProperty Name="expense" Relationship="Models.FK_ExpenseDetail_expense" FromRole="ExpenseDetail" ToRole="expense" />
         </EntityType>
         <EntityType Name="Location">
           <Key>
@@ -963,6 +986,18 @@
           <Property Name="bizId" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
           <NavigationProperty Name="Business" Relationship="Models.FK_Location_Business" FromRole="Location" ToRole="Business" />
           <NavigationProperty Name="Products" Relationship="Models.FK_Product_Location" FromRole="Location" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Payment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
+          <Property Name="SOId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentAmount" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="ReceivedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SO" Relationship="Models.FK_Payment_SO" FromRole="Payment" ToRole="SO" />
         </EntityType>
         <EntityType Name="PO">
           <Key>
@@ -988,11 +1023,11 @@
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="EmployeeId" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="AccountId" Type="Decimal" Precision="10" Scale="0" />
+          <NavigationProperty Name="Account" Relationship="Models.FK_PO_Account" FromRole="PO" ToRole="Account" />
           <NavigationProperty Name="Employee" Relationship="Models.FK_PO_Employee" FromRole="PO" ToRole="Employee" />
           <NavigationProperty Name="Supplier" Relationship="Models.FK_PO_Supplier" FromRole="PO" ToRole="Supplier" />
           <NavigationProperty Name="PODs" Relationship="Models.FK_POD_PO" FromRole="PO" ToRole="POD" />
-          <Property Name="AccountId" Type="Decimal" Precision="10" Scale="0" />
-          <NavigationProperty Name="Account" Relationship="Models.FK_PO_Account" FromRole="PO" ToRole="Account" />
         </EntityType>
         <EntityType Name="POD">
           <Key>
@@ -1033,6 +1068,7 @@
           <Property Name="LocationId" Type="Decimal" Precision="10" Scale="0" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="ImgPath" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Location" Relationship="Models.FK_Product_Location" FromRole="Product" ToRole="Location" />
           <NavigationProperty Name="PODs" Relationship="Models.FK_POD_Product" FromRole="Product" ToRole="POD" />
           <NavigationProperty Name="Supplier" Relationship="Models.FK_Product_Supplier" FromRole="Product" ToRole="Supplier" />
@@ -1113,8 +1149,8 @@
           <NavigationProperty Name="Account" Relationship="Models.FK_SO_Account" FromRole="SO" ToRole="Account" />
           <NavigationProperty Name="Customer" Relationship="Models.FK_SO_Customer" FromRole="SO" ToRole="Customer" />
           <NavigationProperty Name="Employee" Relationship="Models.FK_SO_Employee" FromRole="SO" ToRole="Employee" />
-          <NavigationProperty Name="SODs" Relationship="Models.FK_SOD_SO" FromRole="SO" ToRole="SOD" />
           <NavigationProperty Name="Payments" Relationship="Models.FK_Payment_SO" FromRole="SO" ToRole="Payment" />
+          <NavigationProperty Name="SODs" Relationship="Models.FK_SOD_SO" FromRole="SO" ToRole="SOD" />
         </EntityType>
         <EntityType Name="SOD">
           <Key>
@@ -1163,6 +1199,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PO_Account">
+          <End Type="Models.Account" Role="Account" Multiplicity="0..1" />
+          <End Type="Models.PO" Role="PO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PO">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SO_Account">
           <End Type="Models.Account" Role="Account" Multiplicity="0..1" />
           <End Type="Models.SO" Role="SO" Multiplicity="*" />
@@ -1196,6 +1244,18 @@
             </Principal>
             <Dependent Role="Department">
               <PropertyRef Name="bizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_expense_Business">
+          <End Type="Models.Business" Role="Business" Multiplicity="0..1" />
+          <End Type="Models.expense" Role="expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Business">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="expense">
+              <PropertyRef Name="BizId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1283,6 +1343,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ExpenseDetail_expense">
+          <End Type="Models.expense" Role="expense" Multiplicity="0..1" />
+          <End Type="Models.ExpenseDetail" Role="ExpenseDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expense">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExpenseDetail">
+              <PropertyRef Name="ExpenseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Product_Location">
           <End Type="Models.Location" Role="Location" Multiplicity="0..1" />
           <End Type="Models.Product" Role="Product" Multiplicity="*" />
@@ -1292,6 +1364,18 @@
             </Principal>
             <Dependent Role="Product">
               <PropertyRef Name="LocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Payment_SO">
+          <End Type="Models.SO" Role="SO" Multiplicity="0..1" />
+          <End Type="Models.Payment" Role="Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Payment">
+              <PropertyRef Name="SOId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1388,88 +1472,6 @@
             </Principal>
             <Dependent Role="SOD">
               <PropertyRef Name="SOId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Payment">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
-          <Property Name="SOId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PaymentAmount" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
-          <Property Name="ReceivedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="SO" Relationship="Models.FK_Payment_SO" FromRole="Payment" ToRole="SO" />
-        </EntityType>
-        <Association Name="FK_Payment_SO">
-          <End Type="Models.SO" Role="SO" Multiplicity="0..1" />
-          <End Type="Models.Payment" Role="Payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SO">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Payment">
-              <PropertyRef Name="SOId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PO_Account">
-          <End Type="Models.Account" Role="Account" Multiplicity="0..1" />
-          <End Type="Models.PO" Role="PO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Account">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PO">
-              <PropertyRef Name="AccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="expense">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DateCreate" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="DateUpdated" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="expenseTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="BizId" Type="Decimal" Precision="10" Scale="0" />
-          <NavigationProperty Name="Business" Relationship="Models.FK_expense_Business" FromRole="expense" ToRole="Business" />
-          <NavigationProperty Name="ExpenseDetails" Relationship="Models.FK_ExpenseDetail_expense" FromRole="expense" ToRole="ExpenseDetail" />
-        </EntityType>
-        <EntityType Name="ExpenseDetail">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ExpenseId" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
-          <Property Name="ExpenseName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
-          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
-          <NavigationProperty Name="expense" Relationship="Models.FK_ExpenseDetail_expense" FromRole="ExpenseDetail" ToRole="expense" />
-        </EntityType>
-        <Association Name="FK_expense_Business">
-          <End Type="Models.Business" Role="Business" Multiplicity="0..1" />
-          <End Type="Models.expense" Role="expense" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="expense">
-              <PropertyRef Name="BizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ExpenseDetail_expense">
-          <End Type="Models.expense" Role="expense" Multiplicity="1" />
-          <End Type="Models.ExpenseDetail" Role="ExpenseDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="expense">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ExpenseDetail">
-              <PropertyRef Name="ExpenseId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1610,6 +1612,27 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="expenses">
+            <EntityTypeMapping TypeName="Models.expense">
+              <MappingFragment StoreEntitySet="expense">
+                <ScalarProperty Name="BizId" ColumnName="BizId" />
+                <ScalarProperty Name="expenseTotal" ColumnName="expenseTotal" />
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExpenseDetails">
+            <EntityTypeMapping TypeName="Models.ExpenseDetail">
+              <MappingFragment StoreEntitySet="ExpenseDetail">
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="ExpenseName" ColumnName="ExpenseName" />
+                <ScalarProperty Name="ExpenseId" ColumnName="ExpenseId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Locations">
             <EntityTypeMapping TypeName="Models.Location">
               <MappingFragment StoreEntitySet="Location">
@@ -1618,6 +1641,18 @@
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Payments">
+            <EntityTypeMapping TypeName="Models.Payment">
+              <MappingFragment StoreEntitySet="Payment">
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="ReceivedDate" ColumnName="ReceivedDate" />
+                <ScalarProperty Name="PaymentAmount" ColumnName="PaymentAmount" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="SOId" ColumnName="SOId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1669,6 +1704,7 @@
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="Models.Product">
               <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ImgPath" ColumnName="ImgPath" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="LocationId" ColumnName="LocationId" />
@@ -1788,39 +1824,6 @@
                 <ScalarProperty Name="Balance" ColumnName="Balance" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Payments">
-            <EntityTypeMapping TypeName="Models.Payment">
-              <MappingFragment StoreEntitySet="Payment">
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="ReceivedDate" ColumnName="ReceivedDate" />
-                <ScalarProperty Name="PaymentAmount" ColumnName="PaymentAmount" />
-                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
-                <ScalarProperty Name="SOId" ColumnName="SOId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="expenses">
-            <EntityTypeMapping TypeName="Models.expense">
-              <MappingFragment StoreEntitySet="expense">
-                <ScalarProperty Name="BizId" ColumnName="BizId" />
-                <ScalarProperty Name="expenseTotal" ColumnName="expenseTotal" />
-                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
-                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ExpenseDetails">
-            <EntityTypeMapping TypeName="Models.ExpenseDetail">
-              <MappingFragment StoreEntitySet="ExpenseDetail">
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="ExpenseName" ColumnName="ExpenseName" />
-                <ScalarProperty Name="ExpenseId" ColumnName="ExpenseId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

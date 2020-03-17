@@ -1,6 +1,7 @@
 ﻿using MYBUSINESS.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -61,6 +62,7 @@ namespace MYBUSINESS.Controllers
                 db.SaveChanges();
 
                 Department department = new Department();
+
                 department.bizId = maxBizId;
                 department.CreateDate = DateTime.Now;
                 decimal maxDeptId = db.Departments.DefaultIfEmpty().Max(e => e == null ? 0 : e.Id);
@@ -75,6 +77,23 @@ namespace MYBUSINESS.Controllers
                 int pos = registerVM.employee.Email.IndexOf("@");
 
                 employee.Login = registerVM.employee.Email.Substring(0, pos);
+                if (Request.Files.Count > 0)
+                {
+                    HttpPostedFileBase file = Request.Files[0];
+                    if (file.ContentLength > 0)
+                    {
+                        String FileName = Path.GetFileNameWithoutExtension(file.FileName);
+
+                        FileName = registerVM.business.Name + maxBizId;
+                        string Extention = Path.GetExtension(file.FileName);
+                        FileName = FileName + Extention;
+                        registerVM.employee.ImgPath = "~/Image/" + FileName;
+                        FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
+                        file.SaveAs(FileName);
+                        employee.ImgPath = registerVM.employee.ImgPath;
+
+                    }
+                }
                 employee.Id = maxId;
                 employee.bizId = maxBizId.ToString();
                 employee.FirstName = registerVM.employee.FirstName;
@@ -82,6 +101,7 @@ namespace MYBUSINESS.Controllers
                 employee.Email = registerVM.employee.Email;
                 employee.Password = Encryption.Encrypt(registerVM.employee.Password);
                 employee.DepartmentId = maxDeptId;
+                employee.RegistrationDate = DateTime.Now;
                 db.Employees.Add(employee);
                 db.SaveChanges();
             };

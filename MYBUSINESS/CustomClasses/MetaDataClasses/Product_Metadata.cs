@@ -15,7 +15,8 @@ namespace MYBUSINESS.Models
         [Required(AllowEmptyStrings = false)]
         [DisplayName("Product Name")]
         string Name { get; set; }
-
+        [DisplayName("Product Picture")]
+        string ImgPath { get; set; }
         [Range(typeof(Decimal), "0", "9999999999", ErrorMessage = "{0} must be a decimal/number between {1} and {2}.")]
         [DisplayName("Sale Price")]
         decimal SalePrice { get; set; }
