@@ -9,7 +9,6 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using CrystalDecisions.CrystalReports.Engine;
 using Microsoft.Reporting.WebForms;
 using MYBUSINESS.CustomClasses;
 using MYBUSINESS.Models;
@@ -17,7 +16,7 @@ using MYBUSINESS.Models;
 namespace MYBUSINESS.Controllers
 {
     //[NoCache]
-    public class SOSRController : Controller
+    public class ProductionOrderController : Controller
     {
         private BusinessContext db = new BusinessContext();
 
@@ -31,7 +30,7 @@ namespace MYBUSINESS.Controllers
 
             IQueryable<SO> sOes = db.SOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate).Include(s => s.Customer);
             //sOes = sOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate);
-            //sOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
+            //sOes.ForEachAsync(m => m.Id = Models.Encryption.Encrypt(m.Id));
             //var sOes = db.SOes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref sOes);
             Dictionary<int, int> LstMaxSerialNo=new Dictionary<int, int>();
@@ -46,8 +45,8 @@ namespace MYBUSINESS.Controllers
                 }
                     
 
-                //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+                //itm.Id = Models.Encryption.Encrypt(itm.Id);
+                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Models.Encryption.Encrypt(itm.Id)));
             }
 
             ViewBag.LstMaxSerialno = LstMaxSerialNo;
@@ -170,8 +169,8 @@ namespace MYBUSINESS.Controllers
                 {
                     LstMaxSerialNo.Add(itm.Customer.Id, thisSerial);
                 }
-                //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+                //itm.Id = Models.Encryption.Encrypt(itm.Id);
+                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Models.Encryption.Encrypt(itm.Id)));
             }
             ViewBag.LstMaxSerialno = LstMaxSerialNo;
             return PartialView("_SelectedSOSR", selectedSOes.OrderByDescending(i => i.Date).ToList());
@@ -202,8 +201,8 @@ namespace MYBUSINESS.Controllers
             sOes = sOes.Where(x => x.CustomerId == custId && x.Date >= dtStartDate && x.Date <= dtEndtDate).OrderBy(i => i.SOSerial).AsQueryable();
             //foreach (SO itm in sOes)
             //{
-            //    //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-            //    itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+            //    //itm.Id = Models.Encryption.Encrypt(itm.Id);
+            //    itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Models.Encryption.Encrypt(itm.Id)));
             //}
             
             return View("CustomerWiseSale", sOes);
@@ -323,8 +322,8 @@ namespace MYBUSINESS.Controllers
 
             //foreach (SO itm in selectedSOes)
             //{
-            //    //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-            //    itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+            //    //itm.Id = Models.Encryption.Encrypt(itm.Id);
+            //    itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Models.Encryption.Encrypt(itm.Id)));
             //}
             //GetTotalBalance(ref selectedSOes);
             //return PartialView("_SelectedSOSR", selectedSOes.OrderByDescending(i => i.Date).ToList());
@@ -361,8 +360,8 @@ namespace MYBUSINESS.Controllers
             sOes = lstSlectedSO.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate).ToList();
             foreach (SO itm in sOes)
             {
-                //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+                //itm.Id = Models.Encryption.Encrypt(itm.Id);
+                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Models.Encryption.Encrypt(itm.Id)));
             }
 
             return View("ProductWiseSale", sOes.OrderBy(i => i.SOSerial).ToList());
@@ -433,8 +432,8 @@ namespace MYBUSINESS.Controllers
 
             //foreach (SO itm in selectedSOes)
             //{
-            //    //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-            //    itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+            //    //itm.Id = Models.Encryption.Encrypt(itm.Id);
+            //    itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Models.Encryption.Encrypt(itm.Id)));
             //}
             //GetTotalBalance(ref selectedSOes);
             //return PartialView("_SelectedSOSR", selectedSOes.OrderByDescending(i => i.Date).ToList());
@@ -461,8 +460,8 @@ namespace MYBUSINESS.Controllers
             sOes = lstSlectedSO.ToList().AsQueryable();
             foreach (SO itm in sOes)
             {
-                //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+                //itm.Id = Models.Encryption.Encrypt(itm.Id);
+                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Models.Encryption.Encrypt(itm.Id)));
             }
             ViewBag.ProductName = db.Products.FirstOrDefault(x => x.Id == productId).Name;
             return View("PerMonthSale", sOes.OrderBy(i => i.Date).ToList());
@@ -488,14 +487,14 @@ namespace MYBUSINESS.Controllers
 
             sOes = lstSlectedSO.ToList().AsQueryable();
 
-            //sOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
+            //sOes.ForEachAsync(m => m.Id = Models.Encryption.Encrypt(m.Id));
             //var sOes = db.SOes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref sOes);
             foreach (SO itm in sOes)
             {
 
-                //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+                //itm.Id = Models.Encryption.Encrypt(itm.Id);
+                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Models.Encryption.Encrypt(itm.Id)));
             }
             ViewBag.Customers = db.Customers;
             return View("Index", sOes.OrderByDescending(i => i.Date).ToList());
@@ -506,12 +505,12 @@ namespace MYBUSINESS.Controllers
             //IQueryable<SO> DistSOes = SOes.Select(x => x.CustomerId).Distinct();
             IQueryable<SO> DistSOes = SOes.GroupBy(x => x.CustomerId).Select(y => y.FirstOrDefault());
 
-            double TotalBalance = 0;
+            decimal TotalBalance = 0;
             foreach (SO itm in DistSOes)
             {
                 Customer cust = db.Customers.Where(x => x.Id == itm.CustomerId).FirstOrDefault();
 
-                TotalBalance += (double)cust.Balance;
+                TotalBalance += (decimal)cust.Balance;
 
             }
             ViewBag.TotalBalance = TotalBalance;
@@ -642,7 +641,7 @@ namespace MYBUSINESS.Controllers
                         if (sod.SaleType == true)//return
                         {
                             product.Stock += sod.Quantity;
-                            sO.SaleReturnAmount += (double)(sod.Quantity * sod.SalePrice);
+                            sO.SaleReturnAmount += (sod.Quantity * sod.SalePrice);
                             sO.SaleReturnQty += (int)sod.Quantity;
 
                             sO.Profit -= (sod.Quantity * sod.SalePrice) - (decimal)(sod.Quantity * product.PurchasePrice); //- (decimal)(sO.Discount);
@@ -650,7 +649,7 @@ namespace MYBUSINESS.Controllers
                         else//sale
                         {
                             product.Stock -= sod.Quantity;
-                            sO.SaleOrderAmount += (double)(sod.Quantity * sod.SalePrice);
+                            sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice);
                             sO.SaleOrderQty += (int)sod.Quantity;
 
                             sO.Profit += (sod.Quantity * sod.SalePrice) - (decimal)(sod.Quantity * product.PurchasePrice); //- (decimal)(sO.Discount);
@@ -703,7 +702,7 @@ namespace MYBUSINESS.Controllers
                 /////////////////////////////////////
 
 
-                SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(sO.Id, "BZNS")));
+                SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Models.Encryption.Encrypt(sO.Id)));
 
                 //RedirectToAction("Create", PrintSO3(SOId));
 
@@ -722,11 +721,11 @@ namespace MYBUSINESS.Controllers
         }
         //public void PrintSO(string SOId)
         //{
-        //    SOId = Encryption.Decrypt(SOId, "BZNS");
+        //    SOId = Models.Encryption.Decrypt(SOId);
         //    string pathh = HttpRuntime.AppDomainAppPath;
         //    ReportDocument reportDocument = new ReportDocument();
         //    reportDocument.Load(pathh + @"Reports\SOSRReceipt2.rpt");
-        //    //reportDocument.SetDatabaseLogon("sa", "abc", "LAPTOP-MGR35B58", "Business");
+        //    //reportDocument.SetDatabaseLogon("sa", "LAPTOP-MGR35B58", "Business");
 
 
         //    ////
@@ -752,85 +751,7 @@ namespace MYBUSINESS.Controllers
         //    //printerSettings.PrinterName = "abc";
         //    reportDocument.PrintToPrinter(printerSettings, new PageSettings(), false);
 
-        //}
-        public ActionResult PrintSO(string SOId)
-        {
-            SOId = Encryption.Decrypt(SOId, "BZNS");
-
-            ReportDocument rd = new ReportDocument();
-            rd.Load(System.IO.Path.Combine(Server.MapPath("~/Reports"), "SOSRReceipt2.rpt"));
-            rd.SetParameterValue("@SaleOrderID", SOId);
-            //rd.SetDataSource(allCustomer);
-
-            Response.Buffer = false;
-            Response.ClearContent();
-            Response.ClearHeaders();
-
-
-            System.IO.Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-            stream.Seek(0, System.IO.SeekOrigin.Begin);
-
-            return File(stream, "application/pdf", "SOSR.pdf");
-
-        }
-        //PrintSO1
-        public FileContentResult PrintSO1(string id)
-        {
-            id = Decode(id);
-
-            //id = Encryption.Decrypt(id, "BZNS");
-
-            ReportDocument rd = new ReportDocument();
-            rd.Load(System.IO.Path.Combine(Server.MapPath("~/Reports"), "SOSRReceipt2.rpt"));
-            rd.SetParameterValue("@SaleOrderID", id);
-            //rd.SetDataSource(allCustomer);
-
-
-            //Response.Buffer = false;
-            //Response.ClearContent();
-            //Response.ClearHeaders();
-
-
-            CrystalDecisions.CrystalReports.Engine.Database oCRDb = rd.Database;
-            CrystalDecisions.CrystalReports.Engine.Tables oCRTables = oCRDb.Tables;
-            //CrystalDecisions.CrystalReports.Engine.Table oCRTable;
-            CrystalDecisions.Shared.TableLogOnInfo oCRTableLogonInfo;
-            CrystalDecisions.Shared.ConnectionInfo oCRConnectionInfo = new CrystalDecisions.Shared.ConnectionInfo();
-
-            oCRConnectionInfo.DatabaseName = "Business1";
-            oCRConnectionInfo.ServerName = "(local)";
-            oCRConnectionInfo.UserID = "sa";
-            oCRConnectionInfo.Password = "abc";
-
-            //oCRConnectionInfo.DatabaseName = "Business1";
-            ////oCRConnectionInfo.ServerName = "(local)";
-            //oCRConnectionInfo.ServerName = "Business1.mssql.somee.com";
-            //oCRConnectionInfo.UserID = "waqaslinks_SQLLogin_2";
-            //oCRConnectionInfo.Password = "klvfdbwfvg";
-
-
-            foreach (CrystalDecisions.CrystalReports.Engine.Table oCRTable in oCRTables)
-            {
-                oCRTableLogonInfo = oCRTable.LogOnInfo;
-                oCRTableLogonInfo.ConnectionInfo = oCRConnectionInfo;
-                oCRTable.ApplyLogOnInfo(oCRTableLogonInfo);
-            }
-
-
-            System.IO.Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-
-            //stream.Seek(0, System.IO.SeekOrigin.Begin);
-            System.IO.BinaryReader br = new System.IO.BinaryReader(stream);
-            byte[] getBytes = null;
-            getBytes = br.ReadBytes(Convert.ToInt32(br.BaseStream.Length));
-            HttpContext.Response.AddHeader("content-disposition", "inline; filename=" + "SOSR.pdf");
-
-            return File(getBytes, "application/pdf");
-
-            //return File(getBytes, "application/octet-stream");
-            ////return File(stream, "application/pdf", "SOSR.pdf");
-
-        }
+     
 
         public FileContentResult PrintSO2(string id)
         {
@@ -914,17 +835,17 @@ namespace MYBUSINESS.Controllers
 
         }
 
-        public double GetPreviousBalance(int id)
+        public decimal GetPreviousBalance(int id)
         {
             IQueryable lstSO = db.SOes.Where(x => x.CustomerId == id);
 
             //lstSO.ForEachAsync(c => { c. = 0; c.GroupID = 0; c.CompanyID = 0; });
-            double SOAmount = 0;
-            double SRAmount = 0;
+            decimal SOAmount = 0;
+            decimal SRAmount = 0;
             foreach (SO itm in lstSO)
             {
-                SOAmount += (double)itm.SaleOrderAmount;
-                SRAmount += (double)itm.SaleReturnAmount;
+                SOAmount += (decimal)itm.SaleOrderAmount;
+                SRAmount += (decimal)itm.SaleReturnAmount;
 
             }
 
@@ -944,7 +865,7 @@ namespace MYBUSINESS.Controllers
 
             //byte[] BytesArr = id.Split('-').Select(byte.Parse).ToArray();
             //id = new string( Encoding.UTF8.GetString(BytesArr).ToCharArray());
-            //id = Encryption.Decrypt(id,"BZNS");
+            //id = Models.Encryption.Decrypt(id,"ABC");
 
             int maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
@@ -1000,7 +921,7 @@ namespace MYBUSINESS.Controllers
             saleOrderViewModel.Products = db.Products;
             saleOrderViewModel.Customers = db.Customers;
             saleOrderViewModel.SaleOrderDetail = sod;
-            sO.Id = Encryption.Encrypt(sO.Id, "BZNS");
+            sO.Id = Models.Encryption.Encrypt(sO.Id);
             saleOrderViewModel.SaleOrder = sO;
 
 
@@ -1023,7 +944,7 @@ namespace MYBUSINESS.Controllers
             List<SOD> newSODs = saleOrderViewModel1.SaleOrderDetail;
             if (ModelState.IsValid)
             {
-                newSO.Id = Encryption.Decrypt(saleOrderViewModel1.SaleOrder.Id, "BZNS");//
+                newSO.Id = Models.Encryption.Decrypt(saleOrderViewModel1.SaleOrder.Id);//
                 SO sO = db.SOes.Where(x => x.Id == newSO.Id).FirstOrDefault();
                 sO.Date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));//
                 sO.SaleReturn = false;//
@@ -1123,7 +1044,7 @@ namespace MYBUSINESS.Controllers
                         if (sod.SaleType == true)//return
                         {
                             product.Stock += sod.Quantity;
-                            sO.SaleReturnAmount += (double)(sod.Quantity * sod.SalePrice);
+                            sO.SaleReturnAmount += (sod.Quantity * sod.SalePrice);
                             sO.SaleReturnQty += (int)sod.Quantity;
 
                             sO.Profit -= (sod.Quantity * sod.SalePrice) - (decimal)(sod.Quantity * product.PurchasePrice); //- (decimal)(sO.Discount);
@@ -1131,10 +1052,10 @@ namespace MYBUSINESS.Controllers
                         else//sale
                         {
                             product.Stock -= sod.Quantity;
-                            sO.SaleOrderAmount += (double)(sod.Quantity * sod.SalePrice);
+                            sO.SaleOrderAmount += (decimal)(sod.Quantity * sod.SalePrice);
                             sO.SaleOrderQty += (int)sod.Quantity;
 
-                            sO.Profit += (sod.Quantity * product.SalePrice) - (decimal)(sod.Quantity * product.PurchasePrice); //- (decimal)(sO.Discount);
+                            sO.Profit += (sod.Quantity * sod.SalePrice) - (decimal)(sod.Quantity * product.PurchasePrice); //- (decimal)(sO.Discount);
                         }
 
                     }
@@ -1162,7 +1083,7 @@ namespace MYBUSINESS.Controllers
         {
             byte[] BytesArr = id.Split('-').Select(byte.Parse).ToArray();
             id = new string(Encoding.UTF8.GetString(BytesArr).ToCharArray());
-            id = Encryption.Decrypt(id, "BZNS");
+            id = Models.Encryption.Decrypt(id);
             return id;
         }
 
@@ -1230,13 +1151,13 @@ namespace MYBUSINESS.Controllers
         bool LicenseExpired(int orderNo)
         {
             int limit = 0;
-            string encryptedLimit = Encryption.Encrypt("300", "BZNS");
+            string encryptedLimit = Models.Encryption.Encrypt("300");
             if (System.IO.File.Exists(Server.MapPath("~/bin/stdoly.dll")) == false) { return true; }
             List<string> lic = System.IO.File.ReadAllLines(Server.MapPath("~/bin/stdoly.dll")).ToList();
 
             try
             {
-                limit = Int32.Parse(Encryption.Decrypt(lic[0], "BZNS"));
+                limit = Int32.Parse(Models.Encryption.Decrypt(lic[0]));
             }
             catch (Exception ex)
             {

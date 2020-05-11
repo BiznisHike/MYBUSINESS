@@ -38,6 +38,9 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.RegistrationDate)
                                 </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.UpdateDate)
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -64,8 +67,11 @@
                                     @Html.DisplayFor(modelItem => item.RegistrationDate)
                                 </td>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.UpdateDate)
+                                </td>
+                                <td>
 
-                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id, bizId = item.bizId })
+                                    @*@Html.ActionLink("Update", "Edit", new { id = item.Id, bizId = item.bizId })*@
                                     @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
                                     @*@Html.ActionLink("Delete", "Delete", new { id = item.Id,})*@
                                 </td>

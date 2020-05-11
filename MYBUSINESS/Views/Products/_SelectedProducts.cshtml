@@ -106,10 +106,15 @@
                                             </td>
 
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.PurchasePrice)
+                                                @if (item.ProductType == false)
+                                                {
 
+                                                    @Html.DisplayFor(modelItem => item.PurchasePrice)
+                                                }
+                                               
                                             </td>
                                             <td>
+
                                                 @Html.DisplayFor(modelItem => item.SalePrice)
 
                                             </td>
@@ -137,7 +142,13 @@
 
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.PerPack)
+                                                @if (item.ProductType == false)
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.PerPack)
+
+                                                }
+
+
 
                                             </td>
                                             <td>
@@ -146,8 +157,13 @@
                                             </td>
 
                                             <td>
-                                                @((item.SalePrice * item.Stock).Value.ToString("0.00"))
-                                                @{TotalSalePrice += (double)(item.SalePrice * item.Stock);}
+                                                
+                                                @if (item.ProductType==false)
+                                                {
+                                                    @((item.SalePrice * item.Stock).Value.ToString("0.00"))
+                                                    TotalSalePrice += (double)(item.SalePrice * item.Stock);
+                                                }
+
                                             </td>
 
 

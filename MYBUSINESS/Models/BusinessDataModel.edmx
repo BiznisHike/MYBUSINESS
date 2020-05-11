@@ -168,7 +168,7 @@
           </Key>
           <Property Name="Id" Type="decimal" Precision="10" Scale="0" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="500" />
-          <Property Name="PurchasePrice" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PurchasePrice" Type="numeric" Precision="18" Scale="2" />
           <Property Name="SalePrice" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Stock" Type="decimal" Precision="18" Scale="2" />
           <Property Name="PerPack" Type="int" />
@@ -184,6 +184,7 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
           <Property Name="ImgPath" Type="varchar" MaxLength="500" />
+          <Property Name="ProductType" Type="bit" />
         </EntityType>
         <EntityType Name="ProductionOrder">
           <Key>
@@ -1053,7 +1054,7 @@
           </Key>
           <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
           <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="PurchasePrice" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="SalePrice" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="Stock" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="PerPack" Type="Int32" />
@@ -1074,6 +1075,7 @@
           <NavigationProperty Name="Supplier" Relationship="Models.FK_Product_Supplier" FromRole="Product" ToRole="Supplier" />
           <NavigationProperty Name="ProductionOrderDetails" Relationship="Models.FK_ProductionOrderDetail_Product" FromRole="Product" ToRole="ProductionOrderDetail" />
           <NavigationProperty Name="SODs" Relationship="Models.FK_SOD_Product" FromRole="Product" ToRole="SOD" />
+          <Property Name="ProductType" Type="Boolean" />
         </EntityType>
         <EntityType Name="ProductionOrder">
           <Key>
@@ -1704,6 +1706,7 @@
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="Models.Product">
               <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
                 <ScalarProperty Name="ImgPath" ColumnName="ImgPath" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />

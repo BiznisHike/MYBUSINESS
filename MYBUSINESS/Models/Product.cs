@@ -24,7 +24,7 @@ namespace MYBUSINESS.Models
     
         public decimal Id { get; set; }
         public string Name { get; set; }
-        public decimal PurchasePrice { get; set; }
+        public Nullable<decimal> PurchasePrice { get; set; }
         public decimal SalePrice { get; set; }
         public Nullable<decimal> Stock { get; set; }
         public Nullable<int> PerPack { get; set; }
@@ -40,6 +40,7 @@ namespace MYBUSINESS.Models
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public string ImgPath { get; set; }
+        public Nullable<bool> ProductType { get; set; }
     
         public virtual Location Location { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

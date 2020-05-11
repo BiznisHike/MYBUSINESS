@@ -72,12 +72,12 @@ namespace MYBUSINESS.Controllers
                 decimal maxAccId = db.Accounts.DefaultIfEmpty().Max(a => a == null ? 0 : a.Id);
                 maxAccId += 1;
 
-                Account NAccount = new Account();
-                NAccount.bizId = CurrentBusiness.Id;
-                NAccount.Id = maxAccId;
-                NAccount.Name = account.Name;
-                NAccount.CreateDate = DateTime.Now;
-                db.Accounts.Add(NAccount);
+               
+               account.bizId = CurrentBusiness.Id;
+               account.Id = maxAccId;
+     
+                account.CreateDate = DateTime.Now;
+                db.Accounts.Add(account);
                 db.SaveChanges();
                 if (!string.IsNullOrEmpty(AddAnother))
 
@@ -87,13 +87,14 @@ namespace MYBUSINESS.Controllers
 
             }
 
-            ViewBag.bizId = new SelectList(db.Businesses, "Id", "Name", account.bizId);
+            ViewBag.bizId = CurrentBusiness.Name;
             return View(account);
         }
 
         // GET: Accounts/Edit/5
         public ActionResult Edit(decimal id)
         {
+            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -103,7 +104,7 @@ namespace MYBUSINESS.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.bizId = new SelectList(db.Businesses, "Id", "Name", account.bizId);
+            ViewBag.time = DateTime.Now;
             return View(account);
         }
 
@@ -114,13 +115,14 @@ namespace MYBUSINESS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Remarks,CreateDate,UpdateDate,bizId")] Account account)
         {
+            
             if (ModelState.IsValid)
             {
                 db.Entry(account).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.bizId = new SelectList(db.Businesses, "Id", "Name", account.bizId);
+            
             return View(account);
         }
 

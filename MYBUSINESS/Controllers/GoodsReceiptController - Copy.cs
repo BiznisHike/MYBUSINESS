@@ -15,10 +15,8 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-
-    //[OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     //[NoCache]
-    public class SOSRController : Controller
+    public class GoodsReceiptController : Controller
     {
         private BusinessContext db = new BusinessContext();
 
@@ -35,17 +33,17 @@ namespace MYBUSINESS.Controllers
             //sOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id));
             //var sOes = db.SOes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref sOes);
-            Dictionary<int, int> LstMaxSerialNo = new Dictionary<int, int>();
-            int thisSerial = 0;
+            Dictionary<int, int> LstMaxSerialNo=new Dictionary<int, int>();
+            int thisSerial=0;
             foreach (SO itm in sOes)
             {
-                thisSerial = (int)itm.Customer.SOes.Max(x => x.SOSerial);
-
+                thisSerial= (int)itm.Customer.SOes.Max(x => x.SOSerial);
+                
                 if (!LstMaxSerialNo.ContainsKey((int)itm.CustomerId))
                 {
                     LstMaxSerialNo.Add(itm.Customer.Id, thisSerial);
                 }
-
+                    
 
                 //itm.Id = Encryption.Encrypt(itm.Id);
                 itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id)));
@@ -183,7 +181,7 @@ namespace MYBUSINESS.Controllers
         }
         public ActionResult CustomerWiseSale(int custId, string custName)
         {
-
+           
             //DateTime dtEndtDate = DateTime.Today.AddDays(1);
             //DateTime dtStartDate = dtEndtDate.AddDays(-7);
             DateTime PKDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
@@ -198,7 +196,7 @@ namespace MYBUSINESS.Controllers
 
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
-
+            
             IQueryable<SO> sOes = db.SOes;//.Include(s => s.Customer);
             sOes = sOes.Where(x => x.CustomerId == custId && x.Date >= dtStartDate && x.Date <= dtEndtDate).OrderBy(i => i.SOSerial).AsQueryable();
             //foreach (SO itm in sOes)
@@ -206,7 +204,7 @@ namespace MYBUSINESS.Controllers
             //    //itm.Id = Encryption.Encrypt(itm.Id);
             //    itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id)));
             //}
-
+            
             return View("CustomerWiseSale", sOes);
 
             //return View("CustomerWiseSale", sOes.OrderBy(i => i.Date).ToList());
@@ -525,7 +523,7 @@ namespace MYBUSINESS.Controllers
         //    return PartialView(db.SOes);
         //}
 
-
+        
         // GET: SOes/Details/5
         public ActionResult Details(decimal id)
         {
@@ -543,7 +541,7 @@ namespace MYBUSINESS.Controllers
 
         // GET: SOes/Create
 
-        public ActionResult Create(string IsReturn)
+        public ActionResult Create()
         {
 
             //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name");
@@ -558,10 +556,6 @@ namespace MYBUSINESS.Controllers
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
             saleOrderViewModel.Customers = db.Customers;
             saleOrderViewModel.Products = db.Products.Where(x => x.Saleable == true);
-            //bool IsReturn1 = true;
-            ViewBag.IsReturn = IsReturn;
-            //string isReturn1 = "true";
-            //ViewBag.isReturn = isReturn1;
             return View(saleOrderViewModel);
         }
 
@@ -569,7 +563,7 @@ namespace MYBUSINESS.Controllers
         //[OutputCache(NoStore = true, Duration = 0)]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Prefix = "Customer", Include = "Name,Address")] Customer Customer, [Bind(Prefix = "SaleOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,CustomerId,Remarks,Remarks2,PaymentMethod,PaymentDetail,SaleReturn")] SO sO, [Bind(Prefix = "SaleOrderDetail", Include = "ProductId,SalePrice,Quantity,SaleType,PerPack,IsPack")] List<SOD> sOD, FormCollection collection)
+        public ActionResult Create([Bind(Prefix = "Customer", Include = "Name,Address")] Customer Customer, [Bind(Prefix = "SaleOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,CustomerId,Remarks")] SO sO, [Bind(Prefix = "SaleOrderDetail", Include = "ProductId,SalePrice,Quantity,SaleType")] List<SOD> sOD, FormCollection collection)
 
         {
 
@@ -624,9 +618,6 @@ namespace MYBUSINESS.Controllers
                 sO.SaleOrderQty = 0;
                 sO.SaleReturnQty = 0;
                 sO.Profit = 0;
-                Employee emp = (Employee)Session["CurrentUser"];
-                sO.EmployeeId = emp.Id;
-
                 db.SOes.Add(sO);
                 //db.SaveChanges();
                 int sno = 0;
@@ -644,59 +635,24 @@ namespace MYBUSINESS.Controllers
 
                         Product product = db.Products.FirstOrDefault(x => x.Id == sod.ProductId);
                         //sod.Sale Price in now from view
-
                         //sod.SalePrice = product.SalePrice;
-                        //dont do this uneessary and sacary (not it has to be. because purchaseprice is not comming and error comes in product wise sale [where we calculate profit. so this line must be used])
                         sod.PurchasePrice = product.PurchasePrice;
                         if (sod.Quantity == null) { sod.Quantity = 0; }
-                        sod.OpeningStock = product.Stock;
                         if (sod.SaleType == true)//return
                         {
-                            if (sod.IsPack == false)
-                            {
-                                sO.SaleReturnAmount += (sod.Quantity * sod.SalePrice);
-                                decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
-                                product.Stock += qty;
-                                sO.SaleReturnQty += qty;//(int)sod.Quantity;
-                                sO.Profit -= (qty * sod.SalePrice) - (decimal)(qty * product.PurchasePrice); //- (decimal)(sO.Discount);
-                            }
-                            else
-                            {
-                                sO.SaleReturnAmount += (sod.Quantity * sod.SalePrice * sod.PerPack);
-                                product.Stock += (int)sod.Quantity * sod.PerPack;
+                            product.Stock += sod.Quantity;
+                            sO.SaleReturnAmount += (decimal)(sod.Quantity * sod.SalePrice);
+                            sO.SaleReturnQty += (int)sod.Quantity;
 
-                                sO.SaleReturnQty += (int)sod.Quantity * sod.PerPack;
-                                sO.Profit -= (sod.Quantity * sod.SalePrice * sod.PerPack) - (decimal)(sod.Quantity * product.PurchasePrice * sod.PerPack); //- (decimal)(sO.Discount);
-                            }
+                            sO.Profit -= (sod.Quantity * sod.SalePrice) - (decimal)(sod.Quantity * product.PurchasePrice); //- (decimal)(sO.Discount);
                         }
                         else//sale
                         {
+                            product.Stock -= sod.Quantity;
+                            sO.SaleOrderAmount += (decimal)(sod.Quantity * sod.SalePrice);
+                            sO.SaleOrderQty += (int)sod.Quantity;
 
-
-                            if (sod.IsPack == false)
-                            {//piece
-                                sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice);
-                                //int pieceSold = (int)(sod.Quantity * product.Stock);
-                                decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
-                                product.Stock -= qty;
-
-                                sO.SaleOrderQty += qty;//(int)sod.Quantity;
-                                sO.Profit += (qty * sod.SalePrice) - (decimal)(qty * product.PurchasePrice); //- (decimal)(sO.Discount);
-                            }
-                            else
-                            {//pack
-
-                                sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice * sod.PerPack);
-                                product.Stock -= (int)sod.Quantity * sod.PerPack;
-
-                                sO.SaleOrderQty += (int)sod.Quantity * sod.PerPack;
-                                sO.Profit += (sod.Quantity * sod.SalePrice * sod.PerPack) - (decimal)(sod.Quantity * product.PurchasePrice * sod.PerPack); //- (decimal)(sO.Discount);
-                            }
-
-
-
-
-
+                            sO.Profit += (sod.Quantity * sod.SalePrice) - (decimal)(sod.Quantity * product.PurchasePrice); //- (decimal)(sO.Discount);
                         }
 
                     }
@@ -719,36 +675,9 @@ namespace MYBUSINESS.Controllers
 
                 db.Payments.Add(payment);
 
-                ////////////////////////////v deffer the duplicate error
-                int previousbillNum = maxId1 - 1;
-                SO previousBill = db.SOes.Where(x => x.SOSerial == previousbillNum).FirstOrDefault();
+                //////////////////////
 
-                DateTime PrvTime = (DateTime)previousBill.Date;//previous bill time
-                DateTime thisTime = (DateTime)sO.Date;//this bill time
-                TimeSpan span = thisTime.Subtract(PrvTime);
-
-
-                if (previousBill.BillAmount == sO.BillAmount && previousBill.BillPaid == sO.BillPaid
-                    && previousBill.CustomerId == sO.CustomerId && previousBill.Discount == sO.Discount
-                    && previousBill.SaleOrderAmount == sO.SaleOrderAmount && previousBill.SaleOrderQty == sO.SaleOrderQty
-                    && previousBill.SaleReturnAmount == sO.SaleReturnAmount && previousBill.SaleReturnQty == sO.SaleReturnQty)
-                //&& span.TotalSeconds < 60)
-                {
-                    //Duplicate bill found. don't save. don't do anything
-                    SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(previousBill.Id)));
-
-                    string path = Server.MapPath("~/log.txt");
-                    System.IO.File.AppendAllText(path, DateTime.Now.ToString("dd/MM/yy hh:mm tt") + "\tSO" + System.Environment.NewLine);
-                }
-                else
-                {
-                    db.SaveChanges();
-                    SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(sO.Id)));
-                }
-                ViewBag.SOIDEnc = SOId;
-
-
-                ////////////////////////////^ deffer the duplicate error
+                db.SaveChanges();
 
 
                 //SqlParameter param1 = new SqlParameter("@SaleOrderID", sO.Id);
@@ -773,7 +702,7 @@ namespace MYBUSINESS.Controllers
                 /////////////////////////////////////
 
 
-                //SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(sO.Id)));
+                SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(sO.Id)));
 
                 //RedirectToAction("Create", PrintSO3(SOId));
 
@@ -822,7 +751,9 @@ namespace MYBUSINESS.Controllers
         //    //printerSettings.PrinterName = "abc";
         //    reportDocument.PrintToPrinter(printerSettings, new PageSettings(), false);
 
-    
+        //}
+     
+
         public FileContentResult PrintSO2(string id)
         {
             id = Decode(id);
@@ -860,16 +791,7 @@ namespace MYBUSINESS.Controllers
             // Setup the report viewer object and get the array of bytes
             ReportViewer viewer = new ReportViewer();
             viewer.ProcessingMode = ProcessingMode.Local;
-
-            //SO sO = db.SOes.FirstOrDefault(x => x.Id == id);
-            Employee emp = db.Employees.FirstOrDefault(x => x.Id == db.SOes.FirstOrDefault(y => y.Id == id).EmployeeId);
-            if (emp.Login == "LahoreKarachi")
-            { viewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Sale_LahoreKarachi.rdlc"); }
-            else
-            { viewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Sale_GoldPanel.rdlc"); }
-
-
-
+            viewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Report1.rdlc");
 
 
             ReportDataSource reportDataSource = new ReportDataSource();
@@ -933,7 +855,7 @@ namespace MYBUSINESS.Controllers
 
 
         // GET: SOes/Edit/5
-        public ActionResult Edit(string id, bool update)
+        public ActionResult Edit(string id,bool update)
         {
 
             if (id == null)
@@ -969,10 +891,6 @@ namespace MYBUSINESS.Controllers
                                 Value = "Cash"
                             },
                             new MyPaymentMethod {
-                                Text = "Online",
-                                Value = "Online"
-                            },
-                            new MyPaymentMethod {
                                 Text = "Cheque",
                                 Value = "Cheque"
                             },
@@ -983,19 +901,6 @@ namespace MYBUSINESS.Controllers
                         };
 
             ViewBag.PaymentMethodOptionLst = myPaymentOptionLst;
-
-            List<MyUnitType> myUnitTypeOptionList = new List<MyUnitType> {
-                            new MyUnitType {
-                                Text = "Piece",
-                                Value = "false"
-                            },
-                            new MyUnitType {
-                                Text = "Pack",
-                                Value = "true"
-                            }
-                        };
-
-            ViewBag.UnitTypeOptionList = myUnitTypeOptionList;
             string iid = Decode(id);
             Payment pmnt = db.Payments.Where(x => x.SOId == iid).FirstOrDefault();
             if (pmnt != null)
@@ -1019,41 +924,8 @@ namespace MYBUSINESS.Controllers
             saleOrderViewModel.SaleOrderDetail = sod;
             sO.Id = Encryption.Encrypt(sO.Id);
             saleOrderViewModel.SaleOrder = sO;
-            int orderQty = 0;
-            int orderQtyPiece = 0;//orderQtyPiece 'P for piece' 
-            int returnQty = 0;
-            int returnQtyPiece = 0;//orderQtyPiece 'P for piece' 
-            foreach (var item in sod)
-            {
-                if (sO.SaleReturn == false)
-                {
-                    if (item.IsPack == true)
-                    {//Pack
-                        orderQty += (int)item.Quantity;
-                    }
-                    else
-                    {//Item
-                        orderQtyPiece += (int)item.Quantity;
-                    }
-                }
-                else
-                {
-                    if (item.IsPack == true)
-                    {//Pack
-                        returnQty += (int)item.Quantity;
-                    }
-                    else
-                    {//Item
-                        returnQtyPiece += (int)item.Quantity;
-                    }
 
-                }
 
-            }
-            ViewBag.orderQty = orderQty;
-            ViewBag.orderQtyPiece = orderQtyPiece;
-            ViewBag.returnQty = returnQty;
-            ViewBag.returnQtyPiece = returnQtyPiece;
             //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name", sO.CustomerId);
             ViewBag.CustomerName = sO.Customer.Name;
             ViewBag.CustomerAddress = sO.Customer.Address;
@@ -1061,7 +933,6 @@ namespace MYBUSINESS.Controllers
             ViewBag.SubTotal = subTotal;
             ViewBag.Total = subTotal + (decimal)sO.PrevBalance;
             ViewBag.IsUpdate = update;
-            ViewBag.IsReturn = sO.SaleReturn.ToString().ToLower();
             return View(saleOrderViewModel);
         }
 
@@ -1077,15 +948,12 @@ namespace MYBUSINESS.Controllers
                 newSO.Id = Encryption.Decrypt(saleOrderViewModel1.SaleOrder.Id);//
                 SO sO = db.SOes.Where(x => x.Id == newSO.Id).FirstOrDefault();
                 sO.Date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));//
-                //sO.SaleReturn = false;//
+                sO.SaleReturn = false;//
                 sO.BillAmount = newSO.BillAmount;//
                 sO.Discount = newSO.Discount;//
+                sO.Remarks = newSO.Remarks;//
                 sO.BillPaid = newSO.BillPaid;//
                 sO.Balance = newSO.Balance;//
-                sO.Remarks = newSO.Remarks;//
-                sO.Remarks2 = newSO.Remarks;//
-                sO.PaymentMethod = newSO.PaymentMethod;
-                sO.PaymentDetail = newSO.PaymentDetail;
 
                 //sO.SOSerial = newSO.SOSerial;//should be unchanged
 
@@ -1136,38 +1004,14 @@ namespace MYBUSINESS.Controllers
                 foreach (SOD sod in oldSODs)
                 {
                     Product product = db.Products.FirstOrDefault(x => x.Id == sod.ProductId);
-
                     if (sod.SaleType == false)//sale
                     {
-                        //product.Stock += sod.Quantity;
-
-                        if (sod.IsPack == false)
-                        {
-                            decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
-                            product.Stock += qty;
-                        }
-                        else
-                        {
-                            product.Stock += (int)sod.Quantity * sod.PerPack;
-                        }
-
+                        product.Stock += sod.Quantity;
 
                     }
                     else//return
                     {
-                        //product.Stock -= sod.Quantity;
-
-                        if (sod.IsPack == false)
-                        {
-                            decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
-                            product.Stock -= qty;
-                        }
-                        else
-                        {
-                            product.Stock -= (int)sod.Quantity * sod.PerPack;
-                        }
-
-
+                        product.Stock -= sod.Quantity;
 
                     }
                     db.Entry(product).State = EntityState.Modified;
@@ -1196,52 +1040,23 @@ namespace MYBUSINESS.Controllers
                         Product product = db.Products.FirstOrDefault(x => x.Id == sod.ProductId);
                         //sod.salePrice is now from view
                         //sod.SalePrice = product.SalePrice;
-                        //dont do this. when user even just open a old bill and just press save. and price was updated after that old bill. all calculations gets wrong
-                        //but if we comment it and user update SO. no purchase price. and error in procut wise sale
                         sod.PurchasePrice = product.PurchasePrice;
                         if (sod.Quantity == null) { sod.Quantity = 0; }
-                        sod.OpeningStock = product.Stock;
                         if (sod.SaleType == true)//return
                         {
-                            if (sod.IsPack == false)
-                            {
-                                sO.SaleReturnAmount += (sod.Quantity * sod.SalePrice);
-                                decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
-                                product.Stock += qty;
-                                sO.SaleReturnQty += qty;//(int)sod.Quantity;
-                                sO.Profit -= (qty * sod.SalePrice) - (decimal)(qty * product.PurchasePrice); //- (decimal)(sO.Discount);
-                            }
-                            else
-                            {
-                                sO.SaleReturnAmount += (sod.Quantity * sod.SalePrice * sod.PerPack);
-                                product.Stock += (int)sod.Quantity * sod.PerPack;
+                            product.Stock += sod.Quantity;
+                            sO.SaleReturnAmount += (decimal)(sod.Quantity * sod.SalePrice);
+                            sO.SaleReturnQty += (int)sod.Quantity;
 
-                                sO.SaleReturnQty += (int)sod.Quantity * sod.PerPack;
-                                sO.Profit -= (sod.Quantity * sod.SalePrice * sod.PerPack) - (decimal)(sod.Quantity * product.PurchasePrice * sod.PerPack); //- (decimal)(sO.Discount);
-                            }
+                            sO.Profit -= (sod.Quantity * sod.SalePrice) - (decimal)(sod.Quantity * product.PurchasePrice); //- (decimal)(sO.Discount);
                         }
                         else//sale
                         {
-                            if (sod.IsPack == false)
-                            {//piece
-                                sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice);
-                                //int pieceSold = (int)(sod.Quantity * product.Stock);
-                                decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
-                                product.Stock -= qty;
+                            product.Stock -= sod.Quantity;
+                            sO.SaleOrderAmount += (decimal)(sod.Quantity * sod.SalePrice);
+                            sO.SaleOrderQty += (int)sod.Quantity;
 
-                                sO.SaleOrderQty += qty;//(int)sod.Quantity;
-                                sO.Profit += (qty * sod.SalePrice) - (decimal)(qty * product.PurchasePrice); //- (decimal)(sO.Discount);
-                            }
-                            else
-                            {//pack
-
-                                sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice * sod.PerPack);
-                                product.Stock -= (int)sod.Quantity * sod.PerPack;
-
-                                sO.SaleOrderQty += (int)sod.Quantity * sod.PerPack;
-                                sO.Profit += (sod.Quantity * sod.SalePrice * sod.PerPack) - (decimal)(sod.Quantity * product.PurchasePrice * sod.PerPack); //- (decimal)(sO.Discount);
-                            }
-
+                            sO.Profit += (sod.Quantity * sod.SalePrice) - (decimal)(sod.Quantity * product.PurchasePrice); //- (decimal)(sO.Discount);
                         }
 
                     }
@@ -1252,7 +1067,7 @@ namespace MYBUSINESS.Controllers
 
                 }
                 db.SaveChanges();
-
+                
                 return RedirectToAction("Index");
             }
 
@@ -1327,10 +1142,10 @@ namespace MYBUSINESS.Controllers
         }
         bool FileTempered(string filePath)
         {
-            return false;
-            //DateTime modificationDate = System.IO.File.GetLastWriteTime(filePath);
-            //long fileSize = new System.IO.FileInfo(filePath).Length;
-            //return (fileSize != 60576) ? true : false;
+            //return false;
+            DateTime modificationDate = System.IO.File.GetLastWriteTime(filePath);
+            long fileSize = new System.IO.FileInfo(filePath).Length;
+            return (fileSize != 60576) ? true : false;
 
 
         }

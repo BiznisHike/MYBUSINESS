@@ -9,7 +9,6 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Reporting.WebForms;
 using MYBUSINESS.CustomClasses;
 using MYBUSINESS.Models;
@@ -754,23 +753,30 @@ namespace MYBUSINESS.Controllers
                 ////////////////////////////v deffer the duplicate error
                 int previousbillNum = maxId1 - 1;
                 SO previousBill = db.SOes.Where(x => x.SOSerial == previousbillNum).FirstOrDefault();
-
-                DateTime PrvTime = (DateTime)previousBill.Date;//previous bill time
-                DateTime thisTime = (DateTime)sO.Date;//this bill time
-                TimeSpan span = thisTime.Subtract(PrvTime);
-
-
-                if (previousBill.BillAmount == sO.BillAmount && previousBill.BillPaid == sO.BillPaid
-                    && previousBill.CustomerId == sO.CustomerId && previousBill.Discount == sO.Discount
-                    && previousBill.SaleOrderAmount == sO.SaleOrderAmount && previousBill.SaleOrderQty == sO.SaleOrderQty
-                    && previousBill.SaleReturnAmount == sO.SaleReturnAmount && previousBill.SaleReturnQty == sO.SaleReturnQty)
-                //&& span.TotalSeconds < 60)
+                if (previousBill != null)
                 {
-                    //Duplicate bill found. don't save. don't do anything
-                    SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(previousBill.Id)));
+                    DateTime PrvTime = (DateTime)previousBill.Date;//previous bill time
+                    DateTime thisTime = (DateTime)sO.Date;//this bill time
+                    TimeSpan span = thisTime.Subtract(PrvTime);
 
-                    string path = Server.MapPath("~/log.txt");
-                    System.IO.File.AppendAllText(path, DateTime.Now.ToString("dd/MM/yy hh:mm tt") + "\tSO" + System.Environment.NewLine);
+
+                    if (previousBill.BillAmount == sO.BillAmount && previousBill.BillPaid == sO.BillPaid
+                        && previousBill.CustomerId == sO.CustomerId && previousBill.Discount == sO.Discount
+                        && previousBill.SaleOrderAmount == sO.SaleOrderAmount && previousBill.SaleOrderQty == sO.SaleOrderQty
+                        && previousBill.SaleReturnAmount == sO.SaleReturnAmount && previousBill.SaleReturnQty == sO.SaleReturnQty)
+                    //&& span.TotalSeconds < 60)
+                    {
+                        //Duplicate bill found. don't save. don't do anything
+                        SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(previousBill.Id)));
+
+                        string path = Server.MapPath("~/log.txt");
+                        System.IO.File.AppendAllText(path, DateTime.Now.ToString("dd/MM/yy hh:mm tt") + "\tSO" + System.Environment.NewLine);
+                    }
+                    else
+                    {
+                        db.SaveChanges();
+                        SOId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(sO.Id)));
+                    }
                 }
                 else
                 {

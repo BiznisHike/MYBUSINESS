@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
-
 using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
@@ -16,28 +13,17 @@ namespace MYBUSINESS.Controllers
     public class ProductsController : Controller
     {
         private BusinessContext db = new BusinessContext();
-        private IQueryable<Product> _dbFilteredProducts;
-        private IQueryable<Supplier> _dbFilteredSuppliers;
         public ProductsController()
         {
-            //Business CurrentBusiness = (Business)Session["CurrentBusiness"];
-            //db.Products = (DbSet<Product>)db.Products.AsQueryable().Where(x => x.Supplier.Business.Id == CurrentBusiness.Id);
-            //db.Suppliers = (DbSet<Supplier>)db.Suppliers.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
-        }
-        protected override void Initialize(RequestContext requestContext)
-        {
 
-            base.Initialize(requestContext);
-
-            Business CurrentBusiness = (Business)Session["CurrentBusiness"];
-            _dbFilteredProducts = db.Products.AsQueryable().Where(x => x.Supplier.bizId == CurrentBusiness.Id);
-            _dbFilteredSuppliers = db.Suppliers.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+            //db.Customers = (DbSet<Customer>)db.Customers.AsQueryable().Where(x => x.Business.Id == "1");
+            //db.Products = (DbSet<Product>)db.Products.AsQueryable().Where(x => x.Supplier.Business.Id == "1");
         }
         // GET: Products
         public ActionResult Index()
         {
-            ViewBag.Suppliers = _dbFilteredSuppliers;
-            return View(_dbFilteredProducts.ToList());
+            ViewBag.Suppliers = db.Suppliers;
+            return View(db.Products.ToList());
         }
 
         public ActionResult SearchData(string suppId)
@@ -79,10 +65,10 @@ namespace MYBUSINESS.Controllers
         public ActionResult Create()
         {
             //int maxId = db.Products.Max(p => p.Id);
-            decimal maxId = db.Products.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            int maxId = db.Products.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             ViewBag.SuggestedId = maxId;
-            ViewBag.Suppliers = _dbFilteredSuppliers;
+            ViewBag.Suppliers = db.Suppliers;
             Product prod = new Product();
 
             prod.PurchasePrice = 0;
@@ -98,53 +84,27 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,Stock,SupplierId,Saleable,PerPack,ImgPath,ProductType")] Product product,String AddAnother)
+        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,Stock,SupplierId,Saleable,PerPack")] Product product)
         {
-            
-             if (product.Stock == null)
+            if (product.Stock == null)
             {
                 product.Stock = 0;
             }
 
-            if (product.PerPack == null || product.PerPack == 0)
+            if (product.PerPack == null || product.PerPack==0)
             {
                 product.PerPack = 1;
             }
-            
 
-                product.Stock = product.Stock * product.PerPack;
-            
+            product.Stock = product.Stock * product.PerPack;
+
             if (ModelState.IsValid)
             {
-                if (Request.Files.Count > 0)
-                {
-                    HttpPostedFileBase file = Request.Files[0];
-                    if (file.ContentLength > 0)
-                    {
-                        String FileName = Path.GetFileNameWithoutExtension(file.FileName);
-
-                        FileName = "Product" + product.Id;
-                        string Extention = Path.GetExtension(file.FileName);
-                        FileName = FileName + Extention;
-                        product.ImgPath = "~/Image/" + FileName;
-                        FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
-                        file.SaveAs(FileName);
-                       
-
-                    }
-                }
-
                 db.Products.Add(product);
                 db.SaveChanges();
-
-                if (!string.IsNullOrEmpty(AddAnother))
-
-                {
-                    return RedirectToAction("Create");
-                }
-                else { return RedirectToAction("Index"); }
+                return RedirectToAction("Index");
             }
-            ViewBag.Suppliers = _dbFilteredSuppliers;
+            ViewBag.Suppliers = db.Suppliers;
             return View(product);
         }
 
@@ -171,7 +131,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,PurchasePrice,SalePrice,Stock,Saleable,SupplierId,PerPack,ImgPath")] Product product)
+        public ActionResult Edit([Bind(Include = "Id,Name,PurchasePrice,SalePrice,Stock,Saleable,SupplierId,PerPack")] Product product)
         {
             //Product prd = db.Products.Where(x => x.Id == product.Id).FirstOrDefault();
             //product.SuppId = prd.SuppId;

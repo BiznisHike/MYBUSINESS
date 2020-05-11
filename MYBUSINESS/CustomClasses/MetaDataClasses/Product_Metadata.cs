@@ -23,7 +23,7 @@ namespace MYBUSINESS.Models
 
         [Range(typeof(Decimal), "0", "9999999999", ErrorMessage = "{0} must be a decimal/number between {1} and {2}.")]
         [DisplayName("Purchase Price")]
-        decimal PurchasePrice { get; set; }
+        Nullable<decimal> PurchasePrice { get; set; }
 
         [DisplayName("Per Pack")]
         [Range(1, int.MaxValue, ErrorMessage = "Please enter a value more than 0")]

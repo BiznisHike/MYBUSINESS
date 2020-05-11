@@ -4,122 +4,129 @@
     ViewBag.Title = "Update Product";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="content-wrapper">
-    <section class="content">
-        <div class="row">
-            <!-- left column -->
-            <div class="col-md-6">
-                <!-- general form elements -->
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Update Product</h3>
+   
+    <div class="content-wrapper">
+        <section class="content">
+          
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-6">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Update Product</h3>
+                        </div>
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <form role="form">
+                                <div class="box-body">
+
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @*@Html.HiddenFor(model => model.Id)*@
+                                    @Html.HiddenFor(model => model.ImgPath)
+
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label" })
+
+                                        @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @Readonly = "Readonly" } })
+                                        @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
+
+                                    </div>
+
+
+                                    @Html.HiddenFor(model => model.SupplierId)
+
+                                    <div class="form-group">
+                                        @Html.Label("Supplier", new { @class = "control-label" })
+
+                                        @Html.TextBox("SuppName", (string)ViewBag.SuppName, new { @class = "form-control", @Readonly = "Readonly" })
+                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
+
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.PurchasePrice, htmlAttributes: new { @class = "control-label" })
+
+                                        @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SalePrice, htmlAttributes: new { @class = "control-label" })
+
+                                        @Html.EditorFor(model => model.SalePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })
+
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Stock, htmlAttributes: new { @class = "control-label" })
+
+                                        @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "stock" } })
+                                        @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-danger" })
+
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.PerPack, htmlAttributes: new { @class = "control-label" })
+
+                                        @Html.EditorFor(model => model.PerPack, new { htmlAttributes = new { @class = "form-control", @id = "perPack" } })
+                                        @Html.ValidationMessageFor(model => model.PerPack, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Saleable, htmlAttributes: new { @class = "control-label" })
+
+
+                                        @Html.EditorFor(model => model.Saleable)
+                                        @Html.ValidationMessageFor(model => model.Saleable, "", new { @class = "text-danger" })
+                                        @if (String.IsNullOrEmpty(Model.ImgPath))
+                                        {
+                                            Model.ImgPath = "~/image/download (1).png";
+                                        }
+                                        <img class="pull-right" src=" @Url.Content(Model.ImgPath)" height="50" width="50" />
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="box-footer">
+                                    <input type="submit" value="Update" class="btn btn-primary" />
+                                    @Html.ActionLink("Back to List", "Index")
+                                </div>
+
+
+                            </form>
+                        }
+
                     </div>
-                    @using (Html.BeginForm())
-                    {
-                        @Html.AntiForgeryToken()
-                        
-                        <form role="form">
-                            <div class="box-body">
-
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                @*@Html.HiddenFor(model => model.Id)*@
-
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label" })
-
-                                    @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @Readonly = "Readonly" } })
-                                    @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
-
-                                </div>
-
-
-                                @Html.HiddenFor(model => model.SupplierId)
-
-                                <div class="form-group">
-                                    @Html.Label("Supplier", new { @class = "control-label" })
-
-                                    @Html.TextBox("SuppName", (string)ViewBag.SuppName, new { @class = "form-control", @Readonly = "Readonly" })
-                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-
-                                </div>
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
-
-                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-
-                                </div>
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.PurchasePrice, htmlAttributes: new { @class = "control-label" })
-
-                                    @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
-
-                                </div>
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.SalePrice, htmlAttributes: new { @class = "control-label" })
-
-                                    @Html.EditorFor(model => model.SalePrice, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })
-
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Stock, htmlAttributes: new { @class = "control-label" })
-
-                                    @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "stock" } })
-                                    @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-danger" })
-
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.PerPack, htmlAttributes: new { @class = "control-label" })
-
-                                    @Html.EditorFor(model => model.PerPack, new { htmlAttributes = new { @class = "form-control", @id = "perPack" } })
-                                    @Html.ValidationMessageFor(model => model.PerPack, "", new { @class = "text-danger" })
-
-                                </div>
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Saleable, htmlAttributes: new { @class = "control-label" })
-
-
-                                    @Html.EditorFor(model => model.Saleable)
-                                    @Html.ValidationMessageFor(model => model.Saleable, "", new { @class = "text-danger" })
-
-                                </div>
-
-
-                            </div>
-
-
-                            <div class="box-footer">
-                                <input type="submit" value="Update" class="btn btn-primary" />
-                                @Html.ActionLink("Back to List", "Index")
-                            </div>
-
-
-                        </form>
-                    }
-
                 </div>
             </div>
-        </div>
-    </section>
-</div>
+        </section>
+    </div>
 
-<script>
+    <script>
 
-    //$('#packing,#perPack').keyup(function () {
+        //$('#packing,#perPack').keyup(function () {
 
-    //    $("#stock").val($("#packing").val() * $("#perPack").val())
-    //});
+        //    $("#stock").val($("#packing").val() * $("#perPack").val())
+        //});
 
 
-</script>
+    </script>
 
-@*@section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }*@
+    @*@section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }*@

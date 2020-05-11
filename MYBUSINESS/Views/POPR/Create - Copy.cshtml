@@ -1,7 +1,7 @@
-﻿@model MYBUSINESS.Models.SaleOrderViewModel
+﻿@model MYBUSINESS.Models.PurchaseOrderViewModel
 
 @{
-    ViewBag.Title = "Create SO";
+    ViewBag.Title = "Create PO";
     //Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
@@ -11,44 +11,38 @@
 <script src="~/Content/custom/downloads/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 
 <link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
-<script src="~/Content/custom/customerSOSR.js"></script>
+<script src="~/Content/custom/supplierPOPR.js"></script>
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
 @*<h2>Create</h2>*@
 
-@* @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "SOEdit", id = "SOEdit" })) *@
-@using (Html.BeginForm("Create", "SOSR", FormMethod.Post, new { name = "SOCreate", id = "SOCreate" }))
+@* @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "POEdit", id = "POEdit" })) *@
+@using (Html.BeginForm("Create", "POPR", FormMethod.Post, new { name = "POCreate", id = "POCreate" }))
 
 {
-    //var myBoolValue = @Viewbag.IsReturn.ToString().ToLower();
-
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    
+
     <div class="container" id="container">
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <div class="col-sm-offset-5"><h2>Sale <b>Order</b></h2></div>
+                    <div class="col-sm-offset-5"><h2>Purchase <b>Order</b></h2></div>
                     @*<div class="col-sm-4">
-                <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
-            </div>*@
+                            <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
+                        </div>*@
                 </div>
-                @*<input type="hidden" name="SaleOrder.SaleReturn" id="saleReturn" value="true" />*@
-                <input type="hidden" name="SaleOrder.SaleReturn" id="saleReturn" value=@ViewBag.IsReturn />
-                
-                @*@Html.HiddenFor(model => model.SaleOrder.SaleReturn, @ViewBag.IsReturn)*@
-                @*@Html.Hidden("SaleOrder.SaleReturn", ViewBag.IsReturn)*@
-                <input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="" />
+                <input type="hidden" name="PurchaseOrder.PurchaseReturn" id="purchaseReturn" value=@ViewBag.IsReturn />
+                <input type="hidden" name="PurchaseOrder.SupplierId" id="idnSupplier" value="" />
                 <div class="row">
                     <div class="col-sm-6">
-                        <h5><b>Customer Name</b></h5>
-                        <input type="text" autocomplete="off" class="form-control" name="Customer.Name" id="customer" value="" placeholder="Type customer name" data-toggle="tooltip" data-placement="top" title="Type customer name">
-                        <font size="1">Or <a id="OpenNewCustForm" href="#">Add New Customer</a></font>
+                        <h5><b>Supplier Name</b></h5>
+                        <input type="text" autocomplete="off" class="form-control" name="Supplier.Name" id="supplier" value="" placeholder="Type supplier name" data-toggle="tooltip" data-placement="top" title="Type supplier name">
+                        <font size="1">Or <a id="OpenNewSuppForm" href="#">Add New Supplier</a></font>
                     </div>
 
                     <div class="col-sm-6">
                         <h5><b>Address</b></h5>
-                        <input type="text" autocomplete="off" class="form-control" name="Customer.Address" id="customerAddress" readonly tabindex="-1">
+                        <input type="text" autocomplete="off" class="form-control" name="Supplier.Address" id="supplierAddress" readonly tabindex="-1">
                     </div>
 
                     @*<input type="text" id="search" />*@
@@ -72,7 +66,7 @@
                             @Html.DisplayNameFor(model => model.Product.Name)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Product.SalePrice)
+                            @Html.DisplayNameFor(model => model.Product.PurchasePrice)
                         </th>
                         <th>
                             @*@Html.DisplayNameFor(model => model.SaleOrderDetail.Quantity)*@
@@ -82,7 +76,7 @@
                             Unit
                         </th>
                         <th>
-                            Per Pack
+                            @Html.DisplayNameFor(model => model.Product.PerPack)
                         </th>
 
                         <th>
@@ -100,24 +94,23 @@
                 <tbody>
                     <tr>
                         <td id="SNo0">1</td>
-                        <td style="display:none;"><input type="hidden" name="SaleOrderDetail.Index" value="0" /></td>
-                        <td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SaleOrderDetail[0].ProductId" id="idn0"></td>
+                        <td style="display:none;"><input type="hidden" name="PurchaseOrderDetail.Index" value="0" /></td>
+                        <td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="PurchaseOrderDetail[0].ProductId" id="idn0"></td>
                         @*<td><input type="text" class="form-control" name="name0" id="name0" onkeyup="myFunction()" data-toggle="tooltip" data-placement="top" title="Type product name"></td>*@
                         @*<td><input type="text" autocomplete="off"  class="form-control" name="name0" id="name0" onkeyup="myFunction()"></td>*@
                         <td><input type="text" autocomplete="off" class="form-control" name="name0" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
-                        <td><input type="text" autocomplete="off" class="form-control classBGcolor" name="SaleOrderDetail[0].SalePrice" id="salePrice0"></td>
-                        <td><input type="text" autocomplete="off" class="form-control" name="SaleOrderDetail[0].Quantity" id="quantity0"></td>
-
+                        <td><input type="text" autocomplete="off" class="form-control classBGcolor" name="PurchaseOrderDetail[0].PurchasePrice" id="purchasePrice0"></td>
+                        <td><input type="text" autocomplete="off" class="form-control" name="PurchaseOrderDetail[0].Quantity" id="quantity0"></td>
                         <td>
-                            <select class="form-control" name="SaleOrderDetail[0].IsPack" id="isPack0">
+                            <select class="form-control" name="PurchaseOrderDetail[0].IsPack" id="isPack0">
                                 <option value="false">Piece</option>
                                 <option value="true" selected>Pack</option>
                             </select>
                         </td>
-                        <td><input type="text" readonly autocomplete="off" class="form-control" name="SaleOrderDetail[0].PerPack" id="perPack0"></td>
+                        <td><input type="text" readonly autocomplete="off" class="form-control" name="PurchaseOrderDetail[0].PerPack" id="perPack0"></td>
                         <td><input type="text" readonly class="form-control classBGcolor" name="itemTotal0" id="itemTotal0" tabindex="-1"></td>
                         <td style="display:none;">
-                            <select class="form-control" name="SaleOrderDetail[0].SaleType" id="saleType0">
+                            <select class="form-control" name="PurchaseOrderDetail[0].SaleType" id="saleType0">
                                 <option value="false" selected>Order</option>
                                 <option value="true">Return</option>
                             </select>
@@ -150,13 +143,13 @@
                     <thead>
                         <tr>
                             <th>
-                                @*@Html.DisplayNameFor(model => model.SaleOrderDetail.Product.Name)*@
+                                @*@Html.DisplayNameFor(model => model.PurchaseOrderDetail.Product.Name)*@
                             </th>
                             <th>
-                                @*@Html.DisplayNameFor(model => model.SaleOrderDetail.Product.SalePrice)*@
+                                @*@Html.DisplayNameFor(model => model.PurchaseOrderDetail.Product.PurchasePrice)*@
                             </th>
                             <th style="width:25%;">
-                                @*@Html.DisplayNameFor(model => model.SaleOrderDetail.Quantity)*@
+                                @*@Html.DisplayNameFor(model => model.PurchaseOrderDetail.Quantity)*@
                             </th>
                             <th style="width:20%;">
                                 @*Item Total*@
@@ -171,14 +164,14 @@
                     </thead>
                     <tbody>
                         <tr id="rOrderTotal">
-                            @*@Html.DisplayNameFor(model => model.SaleOrder.Balance.Product.SalePrice)*@
+                            @*@Html.DisplayNameFor(model => model.PurchaseOrder.Balance.Product.PurchasePrice)*@
 
                             @*<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a product">*@
 
                             <td><input type="text" readonly class="form-control classBorder0" name="gt1" id="gt1" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="gt2" id="gt2" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="OrderTotal" id="OrderTotal" value="Order Total" tabindex="-1"></td>
-                            <td><input type="text" readonly class="form-control classBorder0" name="SaleOrder.BillAmount" id="ItemsTotal" value="0" tabindex="-1"></td>
+                            <td><input type="text" readonly class="form-control classBorder0" name="PurchaseOrder.BillAmount" id="ItemsTotal" value="0" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="gt5" id="gt5" tabindex="-1"></td>
                             <td></td>
                         </tr>
@@ -195,7 +188,7 @@
                             <td><input type="text" readonly class="form-control classBorder0" name="dc1" id="dc1" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="dc2" id="dc2" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="dc3" id="dc3" value="Order Discount" tabindex="-1"></td>
-                            <td><input type="text" autocomplete="off" class="form-control" name="SaleOrder.Discount" id="discount" value="0"></td>
+                            <td><input type="text" autocomplete="off" class="form-control" name="PurchaseOrder.Discount" id="discount" value="0"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="dc5" id="dc5" tabindex="-1"></td>
                             <td></td>
                         </tr>
@@ -211,7 +204,7 @@
                             <td><input type="text" readonly class="form-control classBorder0" name="pb1" id="pb1" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="pb2" id="pb2" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="pb3" id="pb3" value="Prev. Balance" tabindex="-1"></td>
-                            <td><input type="text" autocomplete="off" class="form-control" name="SaleOrder.PrevBalance" id="PreviousBalance" value="0" tabindex="-1"></td>
+                            <td><input readonly type="text" autocomplete="off" class="form-control" name="PurchaseOrder.PrevBalance" id="PreviousBalance" value="0" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="pb5" id="pb5" tabindex="-1"></td>
                             <td></td>
                         </tr>
@@ -228,7 +221,7 @@
                             <td><input type="text" readonly class="form-control classBorder0" name="pd1" id="pd1" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="pd2" id="pd2" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="pd3" id="pd3" value="Paid" tabindex="-1"></td>
-                            <td><input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="paid" value="0"></td>
+                            <td><input type="text" autocomplete="off" class="form-control" name="PurchaseOrder.BillPaid" id="paid" value="0"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="pd5" id="pd5" tabindex="-1"></td>
                             <td></td>
                         </tr>
@@ -236,7 +229,7 @@
                             <td><input type="text" readonly class="form-control classBorder0" name="bl1" id="bl1" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="bl2" id="bl2" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="bl3" id="bl3" value="Balance" tabindex="-1"></td>
-                            <td><input type="text" readonly class="form-control classBorder0" name="SaleOrder.Balance" id="balance" value="0" tabindex="-1"></td>
+                            <td><input type="text" readonly class="form-control classBorder0" name="PurchaseOrder.Balance" id="balance" value="0" tabindex="-1"></td>
                             <td><input type="text" readonly class="form-control classBorder0" name="bl5" id="bl5" tabindex="-1"></td>
                             <td></td>
                         </tr>
@@ -251,13 +244,13 @@
                 <div class="table-title">
 
                     <div class="row">
-                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
                         <div class="col-sm-3">
 
                         </div>
                         <div class="col-sm-7">
-                            @*<textarea name="SaleOrder.PaymentMethod" rows="1" cols="100" class="form-control" placeholder="Payment method..."></textarea>*@
-                            <select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method">
+                            @*<textarea name="PurchaseOrder.PaymentMethod" rows="1" cols="100" class="form-control" placeholder="Payment method..."></textarea>*@
+                            <select class="form-control" name="PurchaseOrder.PaymentMethod" id="PurchaseOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method">
                                 <option value="Cash" selected>Cash</option>
                                 <option value="Online">Online</option>
                                 <option value="Cheque">Cheque</option>
@@ -269,12 +262,12 @@
                     </div>
 
                     <div class="row">
-                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
                         <div class="col-sm-3">
 
                         </div>
                         <div class="col-sm-7">
-                            <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
+                            <input type="text" autocomplete="off" class="form-control" name="PurchaseOrder.PaymentDetail" id="PurchaseOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
                         </div>
 
 
@@ -283,13 +276,13 @@
 
 
                     <div class="row">
-                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
 
                         <div class="col-sm-3">
 
                         </div>
                         <div class="col-sm-7">
-                            <textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill"></textarea>
+                            <textarea name="PurchaseOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill"></textarea>
                         </div>
 
 
@@ -297,16 +290,16 @@
                     </div>
 
                     <div class="row">
-                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
                         <div class="col-sm-3">
 
                         </div>
                         <div class="col-sm-7">
-                            <textarea name="SaleOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill"></textarea>
+                            <textarea name="PurchaseOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill"></textarea>
                         </div>
 
                         <div class="col-sm-2">
-                            <button type="submit" id="CreateSO" class="btn btn-info add-new">Save & Print</button>
+                            <button type="submit" id="CreatePO" class="btn btn-info add-new">Save & Print</button>
                         </div>
                     </div>
                 </div>
@@ -315,11 +308,11 @@
     </div>
 }
 
-<script>
+    <script>
     $(document).ready(function () {
-        document.getElementById('SOCreate').reset(); // has to be handle
+        document.getElementById('POCreate').reset(); // has to be handle
     });
-    //$("[id^='quantity'],#salePrice").keyup(function () {
+    //$("[id^='quantity'],#purchasePrice").keyup(function () {
     //    //alert("afasf");
     //    update_itemTotal();
     //});
@@ -337,95 +330,95 @@
     txtSerialNum = 0;
     TriggerBodyEvents();
 
-    @foreach (var d in Model.Customers)
+    @foreach (var d in Model.Suppliers)
     {
-        @*@:products.push(["@d.Name","@d.SalePrice","@d.Stock"]);*@
-        @:customers.push(["@d.Id","@d.Name", "@d.Address", "@d.Balance"]);
+        @*@:products.push(["@d.Name","@d.PurchasePrice","@d.Stock"]);*@
+        @:suppliers.push(["@d.Id","@d.Name", "@d.Address", "@d.Balance"]);
     }
 
-    OnTypeCustomerName('#customer');
+    OnTypeSupplierName('#supplier');
     //OpenDialogue('#name0');
-        var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "SOSR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
+        var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "POPR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
 
     //var productColumns = [{ name: 'Product', minWidth: '320px' }, { name: 'Price', minWidth: '100px' }, { name: 'Qty', minWidth: '70px' }];
     //var products = [['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
     //alert(products);
      @{
-            var carton = 0; //= (d.Stock / d.PerPack);
-            foreach (var d in Model.Products)
+         var carton = 0; //= (d.Stock / d.PerPack);
+         var piece = 0;
+         foreach (var d in Model.Products)
+         {
+            carton = (int)(d.Stock / d.PerPack);
+            piece = (int)(d.Stock % d.PerPack);
+            if (piece == 0)
             {
-                @*@:products.push(["@d.Name","@d.SalePrice","@d.Stock"]);*@
-                if (d.PerPack == 0)
-                {
-                        @:products.push(["@d.Id","@d.Name", "@d.SalePrice", "@d.Stock","@d.PerPack"]);
-                }
-                else
-                {
-                        carton = (int)(d.Stock / d.PerPack);
-                        @:products.push(["@d.Id","@d.Name", "@d.SalePrice", "@carton","@d.PerPack"]);
-                }
-
+                 @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton", "@d.PerPack"]); 
             }
-        }
+            else
+            {
+                 @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton,@piece", "@d.PerPack"]); 
+            }
+         }
+      }
     //alert(products);
 
     //OnTypeName('#name0');
 
-</script>
+    </script>
 
 
-<div id="dialog-CreateCustomer" title="Create customer dialog">
+<div id="dialog-CreateSupplier" title="Create supplier dialog">
     @*@using (Html.BeginForm())*@
-    @*@using (Html.BeginForm("Create", "Customers", FormMethod.Post, new { name = "SOSRCreateNewCustomer", id = "SOSRCreateNewCustomer" }))*@
+    @*@using (Html.BeginForm("Create", "Suppliers", FormMethod.Post, new { name = "POPRCreateNewSupplier", id = "POPRCreateNewSupplier" }))*@
     @*{*@
     @*@Html.AntiForgeryToken()*@
-    @*ViewBag.Controller = "SOSR";
+    @*ViewBag.Controller = "POPR";
         ViewBag.Action = "Create";
-        TempData["Controller"] = "SOSR";
+        TempData["Controller"] = "POPR";
         TempData["Action"] = "Create";*@
-    @*<input type="hidden" name="CustomerId" value="@ViewBag.Data1" />
-        <input type="hidden" name="CustomerId" value="@ViewBag.Data1" />*@
+    @*<input type="hidden" name="SupplierId" value="@ViewBag.Data1" />
+        <input type="hidden" name="SupplierId" value="@ViewBag.Data1" />*@
     <div class="form-horizontal">
 
-        <h4>Add New Customer</h4>
+        <h4>Add New Supplier</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.Customer.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Supplier.Id, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.EditorFor(model => model.Customer.Id, new { htmlAttributes = new { @class = "form-control", @name = "Customer.Id", @id ="NewCustomerId", @Value = ViewBag.SuggestedNewCustId, @readonly = "readonly" } })*@
-                <input type="text" autocomplete="off" class="form-control" id="NewCustomerId" value=@ViewBag.SuggestedNewCustId readonly="readonly" />
-                @*@Html.ValidationMessageFor(model => model.Customer.Id, "", new { @class = "text-danger" })*@
+                @*@Html.EditorFor(model => model.Supplier.Id, new { htmlAttributes = new { @class = "form-control", @name = "Supplier.Id", @id ="NewSupplierId", @Value = ViewBag.SuggestedNewSuppId, @readonly = "readonly" } })*@
+                <input type="text" autocomplete="off" class="form-control" id="NewSupplierId" value=@ViewBag.SuggestedNewSuppId readonly="readonly" />
+                @*@Html.ValidationMessageFor(model => model.Supplier.Id, "", new { @class = "text-danger" })*@
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Customer.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Supplier.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.EditorFor(model => model.Customer.Name, new { htmlAttributes = new { @class = "form-control", @name = "Customer.Name", @id = "NewCustomerName"} })*@
-                <input type="text" autocomplete="off" class="form-control" id="NewCustomerName" value="" />
-                @*<input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="10" />*@
-                @*@Html.ValidationMessageFor(model => model.Customer.Name, "", new { @class = "text-danger" })*@
+                @*@Html.EditorFor(model => model.Supplier.Name, new { htmlAttributes = new { @class = "form-control", @name = "Supplier.Name", @id = "NewSupplierName"} })*@
+                <input type="text" autocomplete="off" class="form-control" id="NewSupplierName" value="" />
+                @*<input type="hidden" name="PurchaseOrder.SupplierId" id="idnSupplier" value="10" />*@
+                @*@Html.ValidationMessageFor(model => model.Supplier.Name, "", new { @class = "text-danger" })*@
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Customer.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Supplier.Address, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.EditorFor(model => model.Customer.Name, new { htmlAttributes = new { @class = "form-control", @name = "Customer.Name", @id = "NewCustomerName"} })*@
-                <input type="text" autocomplete="off" class="form-control" id="NewCustomerAddress" value="" />
-                @*<input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="10" />*@
-                @*@Html.ValidationMessageFor(model => model.Customer.Name, "", new { @class = "text-danger" })*@
+                @*@Html.EditorFor(model => model.Supplier.Name, new { htmlAttributes = new { @class = "form-control", @name = "Supplier.Name", @id = "NewSupplierName"} })*@
+                <input type="text" autocomplete="off" class="form-control" id="NewSupplierAddress" value="" />
+                @*<input type="hidden" name="PurchaseOrder.SupplierId" id="idnSupplier" value="10" />*@
+                @*@Html.ValidationMessageFor(model => model.Supplier.Name, "", new { @class = "text-danger" })*@
             </div>
         </div>
 
 
         <div class="table-title">
             <div class="row">
-                @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
                 <div class="col-sm-8">
-                    @*<button type="submit" id="CreateSO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
-                    <input type="button" value="Add" id="btnCreateNewCust" class="btn btn-info add-new" />
+                    @*<button type="submit" id="CreatePO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
+                    <input type="button" value="Add" id="btnCreateNewSupp" class="btn btn-info add-new" />
                 </div>
             </div>
         </div>
@@ -440,7 +433,7 @@
 
 <script type="text/javascript">
     IsReturn = '@(ViewBag.IsReturn)';
-    
+
     //alert(IsReturn);
 </script>
 

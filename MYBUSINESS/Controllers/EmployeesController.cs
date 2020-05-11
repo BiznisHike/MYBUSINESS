@@ -20,9 +20,9 @@ namespace MYBUSINESS.Controllers
         private IQueryable<Department> _dbFilteredDepartments;
         public EmployeesController()
         {
-           //Business CurrentBusiness = (Business)Session["CurrentBusiness"];
-           // db.Employees = (DbSet<Employee>)db.Employees.AsQueryable().Where(x => x.Department.bizId == CurrentBusiness.Id);
-           // db.Departments = (DbSet<Department>)db.Departments.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
+            //Business CurrentBusiness = (Business)Session["CurrentBusiness"];
+            // db.Employees = (DbSet<Employee>)db.Employees.AsQueryable().Where(x => x.Department.bizId == CurrentBusiness.Id);
+            // db.Departments = (DbSet<Department>)db.Departments.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -81,23 +81,24 @@ namespace MYBUSINESS.Controllers
         public ActionResult Create()
         {
             ViewBag.Department = _dbFilteredDepartments;
-           
+
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Employee newEmployee,String AddAnother)
+        public ActionResult Create(Employee newEmployee, String AddAnother)
         {
             Employee user = db.Employees.SingleOrDefault(x => x.Email == newEmployee.Email);
-            if (user != null) {
+            if (user != null)
+            {
                 ViewBag.Error = "Employee Id Already Exist!";
                 ViewBag.Department = _dbFilteredDepartments;
                 return View("Create");
-            
+
             }
             decimal maxId = db.Employees.DefaultIfEmpty().Max(e => e == null ? 0 : e.Id);
             maxId += 1;
-       
+
             Employee Nemployee = new Employee();
             if (Request.Files.Count > 0)
             {
@@ -111,32 +112,30 @@ namespace MYBUSINESS.Controllers
                     FileName = FileName + Extention;
                     newEmployee.ImgPath = "~/Image/" + FileName;
                     FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
-                     file.SaveAs(FileName);
+                    file.SaveAs(FileName);
                     Nemployee.ImgPath = newEmployee.ImgPath;
-       
+
                 }
             }
-                //if (!string.IsNullOrEmpty(newEmployee.ImgPath))
-                //{
-                //    String FileName = Path.GetFileNameWithoutExtension(newEmployee.ImageFile.FileName);
-                //    string Extention = Path.GetExtension(newEmployee.ImageFile.FileName);
-                //    FileName = FileName + DateTime.Now.ToString("yymmssfff") + Extention;
-                //    newEmployee.ImgPath = "~/Image/" + FileName;
-                //    FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
-                //    newEmployee.ImageFile.SaveAs(FileName);
-                //    Nemployee.ImgPath = newEmployee.ImgPath;
-                //}
-                Nemployee.Id = maxId;
+            //if (!string.IsNullOrEmpty(newEmployee.ImgPath))
+            //{
+            //    String FileName = Path.GetFileNameWithoutExtension(newEmployee.ImageFile.FileName);
+            //    string Extention = Path.GetExtension(newEmployee.ImageFile.FileName);
+            //    FileName = FileName + DateTime.Now.ToString("yymmssfff") + Extention;
+            //    newEmployee.ImgPath = "~/Image/" + FileName;
+            //    FileName = Path.Combine(Server.MapPath("~/Image/"), FileName);
+            //    newEmployee.ImageFile.SaveAs(FileName);
+            //    Nemployee.ImgPath = newEmployee.ImgPath;
+            //}
+            newEmployee.Id = maxId;
             int pos = newEmployee.Email.IndexOf("@");
-            Nemployee.Login = newEmployee.Email.Substring(0, pos);
-            Nemployee.DepartmentId = newEmployee.DepartmentId;
-            Nemployee.FirstName =
-            Nemployee.LastName = newEmployee.LastName;
-            Nemployee.Email = newEmployee.Email;
-            Nemployee.RegistrationDate = DateTime.Now;
-            Nemployee.Password= Encryption.Encrypt(newEmployee.Password);
-           
-            db.Employees.Add(Nemployee);
+            newEmployee.Login = newEmployee.Email.Substring(0, pos);
+
+
+            newEmployee.RegistrationDate = DateTime.Now;
+            newEmployee.Password = Encryption.Encrypt(newEmployee.Password);
+
+            db.Employees.Add(newEmployee);
             db.SaveChanges();
             if (!string.IsNullOrEmpty(AddAnother))
 
@@ -155,6 +154,7 @@ namespace MYBUSINESS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Employee employee = db.Employees.Find(id);
+           
             if (employee == null)
             {
                 return HttpNotFound();
@@ -168,12 +168,12 @@ namespace MYBUSINESS.Controllers
         //public ActionResult Edit([Bind(Include = "Login,Password")] Employee employee)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Email,Password")] Employee userChanges,FormCollection fc)
+        public ActionResult Edit([Bind(Include = "Email,Password,bizId,DepartmentId,ImgPath")] Employee userChanges, FormCollection fc)
         {
             string oldPass = fc["OldPassword"];
             string pass1 = fc["Password1"];
             string pass2 = fc["Password2"];
-            
+
             Employee CurrentUser = (Employee)Session["CurrentUser"];
 
             if (CurrentUser.Email == userChanges.Email && CurrentUser.Password == Encryption.Encrypt(oldPass) && pass1 == pass2)
@@ -181,11 +181,15 @@ namespace MYBUSINESS.Controllers
                 userChanges.Id = CurrentUser.Id;
                 //userChanges.Login = userChanges.Login;
                 userChanges.Password = Encryption.Encrypt(pass2);
+                userChanges.FirstName = CurrentUser.FirstName;
+                userChanges.LastName = CurrentUser.LastName;
+                userChanges.RegistrationDate = CurrentUser.RegistrationDate;
+                userChanges.UpdateDate = DateTime.Now;
                 userChanges.Login = CurrentUser.Email.Split('@').FirstOrDefault();
 
                 if (ModelState.IsValid)
                 {
-                    
+
                     db.Entry(userChanges).State = EntityState.Modified;
                     db.SaveChanges();
                     Session.Add("CurrentUser", userChanges);

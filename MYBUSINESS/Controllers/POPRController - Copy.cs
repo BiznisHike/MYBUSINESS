@@ -12,7 +12,6 @@ using System.Web.Mvc;
 
 using Microsoft.Reporting.WebForms;
 using MYBUSINESS.CustomClasses;
-using System.Web.Routing;
 using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
@@ -20,32 +19,6 @@ namespace MYBUSINESS.Controllers
     public class POPRController : Controller
     {
         private BusinessContext db = new BusinessContext();
-        private IQueryable<Product> _dbFilteredProducts;
-        private IQueryable<Supplier> _dbFilteredSuppliers;
-        private IQueryable<Account> _dbFilteredAccounts;
-        private IQueryable<PO> _dbFilteredPO;
-        private IQueryable<POD> _dbFilteredPoD;
-        protected override void Initialize(RequestContext requestContext)
-        {
-            //Employee employee1 = TempData["mydata"] as Employee;
-            //Employee employee = ViewBag.data;
-            base.Initialize(requestContext);
-            //decimal BusinessId = decimal.Parse(this.ControllerContext.RouteData.Values["CurrentBusiness"].ToString());
-            Business CurrentBusiness = (Business)Session["CurrentBusiness"];
-            _dbFilteredSuppliers = db.Suppliers.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
-            _dbFilteredProducts = db.Products.AsQueryable().Where(x => x.Supplier.bizId == CurrentBusiness.Id);
-            _dbFilteredPO = db.POes.AsQueryable().Where(x => x.Supplier.bizId == CurrentBusiness.Id);
-            _dbFilteredPoD = db.PODs.AsQueryable().Where(x => x.Product.Supplier.bizId == CurrentBusiness.Id);
-            _dbFilteredAccounts = db.Accounts.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
-        }
-        public POPRController()
-        {
-            //Business CurrentBusiness = (Business)Session["CurrentBusiness"];
-            //db.Products = (DbSet<Product>)db.Products.AsQueryable().Where(x => x.Supplier.Business.Id == CurrentBusiness.Id);
-            //db.Suppliers = (DbSet<Supplier>)db.Suppliers.AsQueryable().Where(x => x.bizId == CurrentBusiness.Id);
-            //db.POes = (DbSet<PO>)db.POes.AsQueryable().Where(x => x.Supplier.bizId == CurrentBusiness.Id);
-            //db.PODs = (DbSet<POD>)db.PODs.AsQueryable().Where(x=>x.Product.Supplier.bizId==CurrentBusiness.Id);
-        }
 
         // GET: POes
         public ActionResult Index()
@@ -55,17 +28,17 @@ namespace MYBUSINESS.Controllers
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
 
             //IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
-            IQueryable<PO> pOes = _dbFilteredPO.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate).Include(s => s.Supplier);
+            IQueryable<PO> pOes = db.POes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate).Include(s => s.Supplier);
             //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id));
             //var pOes = db.POes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref pOes);
-            Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
-            decimal thisSerial = 0;
+            Dictionary<int, int> LstMaxSerialNo = new Dictionary<int, int>();
+            int thisSerial = 0;
             foreach (PO itm in pOes)
             {
-                thisSerial = (decimal)itm.Supplier.POes.Max(x => x.POSerial);
+                thisSerial = (int)itm.Supplier.POes.Max(x => x.POSerial);
 
-                if (!LstMaxSerialNo.ContainsKey((decimal)itm.SupplierId))
+                if (!LstMaxSerialNo.ContainsKey((int)itm.SupplierId))
                 {
                     LstMaxSerialNo.Add(itm.Supplier.Id, thisSerial);
                 }
@@ -74,10 +47,10 @@ namespace MYBUSINESS.Controllers
                 itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id)));
             }
             ViewBag.LstMaxSerialno = LstMaxSerialNo;
-            ViewBag.Suppliers = _dbFilteredSuppliers;
+            ViewBag.Suppliers = db.Suppliers;
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
-            return View(_dbFilteredPO.OrderByDescending(i => i.Date).ToList());
+            return View(pOes.OrderByDescending(i => i.Date).ToList());
         }
         //public ActionResult SearchData(string custName, DateTime startDate, DateTime endDate)
 
@@ -103,7 +76,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse(startDate);
                 dtEndtDate = DateTime.Parse(endDate);
 
-                selectedPOes = _dbFilteredPO.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedPOes = db.POes.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -113,7 +86,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse("1-1-1800");
                 dtEndtDate = DateTime.Today.AddDays(1);
 
-                selectedPOes = _dbFilteredPO;//.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedPOes = db.POes;//.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -124,7 +97,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse(startDate);
                 dtEndtDate = DateTime.Parse(endDate);
 
-                selectedPOes = _dbFilteredPO.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedPOes = db.POes.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -135,7 +108,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse("1-1-1800");
                 dtEndtDate = DateTime.Parse(endDate);
 
-                selectedPOes = _dbFilteredPO.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedPOes = db.POes.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -146,7 +119,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse(startDate);
                 dtEndtDate = DateTime.Today.AddDays(1);
 
-                selectedPOes = _dbFilteredPO.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedPOes = db.POes.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -157,7 +130,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse("1-1-1800");
                 dtEndtDate = DateTime.Today.AddDays(1);
 
-                selectedPOes = _dbFilteredPO.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedPOes = db.POes.Where(so => so.SupplierId == intSuppId && so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -168,7 +141,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse(startDate);
                 dtEndtDate = DateTime.Today.AddDays(1);
 
-                selectedPOes = _dbFilteredPO.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedPOes = db.POes.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
@@ -179,17 +152,17 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse("1-1-1800");
                 dtEndtDate = DateTime.Parse(endDate);
 
-                selectedPOes = _dbFilteredPO.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
+                selectedPOes = db.POes.Where(so => so.Date >= dtStartDate && so.Date <= dtEndtDate);
 
             }
 
             GetTotalBalance(ref selectedPOes);
-            Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
-            decimal thisSerial = 0;
+            Dictionary<int, int> LstMaxSerialNo = new Dictionary<int, int>();
+            int thisSerial = 0;
             foreach (PO itm in selectedPOes)
             {
-                thisSerial = (decimal)itm.Supplier.POes.Max(x => x.POSerial);
-                if (!LstMaxSerialNo.ContainsKey((decimal)itm.SupplierId))
+                thisSerial = (int)itm.Supplier.POes.Max(x => x.POSerial);
+                if (!LstMaxSerialNo.ContainsKey((int)itm.SupplierId))
                 {
                     LstMaxSerialNo.Add(itm.Supplier.Id, thisSerial);
                 }
@@ -205,11 +178,11 @@ namespace MYBUSINESS.Controllers
         }
         public ActionResult PerMonthPurchase(int productId)
         {
-            IQueryable<PO> pOes = _dbFilteredPO.Include(s => s.Supplier);
+            IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
 
             //sOes = db.SOes.Where(x => x.SODs.Where(y => y.ProductId == productId));
 
-            List<POD> lstPODs = _dbFilteredPoD.Where(x => x.ProductId == productId && x.SaleType == false).ToList();
+            List<POD> lstPODs = db.PODs.Where(x => x.ProductId == productId && x.SaleType == false).ToList();
             List<PO> lstSlectedPO = new List<PO>();
             foreach (POD lpod in lstPODs)
             {
@@ -225,15 +198,15 @@ namespace MYBUSINESS.Controllers
                 //itm.Id = Encryption.Encrypt(itm.Id);
                 itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id)));
             }
-            ViewBag.ProductName = _dbFilteredProducts.FirstOrDefault(x => x.Id == productId).Name;
+            ViewBag.ProductName = db.Products.FirstOrDefault(x => x.Id == productId).Name;
             return View("PerMonthPurchase", pOes.OrderBy(i => i.Date).ToList());
         }
 
         public ActionResult SearchProduct(int productId)
         {
-            IQueryable<PO> pOes = _dbFilteredPO.Include(s => s.Supplier);
+            IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
 
-            List<POD> lstPODs = _dbFilteredPoD.Where(x => x.ProductId == productId).ToList();
+            List<POD> lstPODs = db.PODs.Where(x => x.ProductId == productId).ToList();
             List<PO> lstSlectedPO = new List<PO>();
             foreach (POD lpod in lstPODs)
             {
@@ -256,7 +229,7 @@ namespace MYBUSINESS.Controllers
                 //itm.Id = Encryption.Encrypt(itm.Id);
                 itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id)));
             }
-            ViewBag.Suppliers = _dbFilteredSuppliers;
+            ViewBag.Suppliers = db.Suppliers;
             return View("Index", pOes.OrderByDescending(i => i.Date).ToList());
         }
 
@@ -280,7 +253,7 @@ namespace MYBUSINESS.Controllers
 
         //    return PartialView(db.POes);
         //}
-
+        
         // GET: POes/Details/5
         public ActionResult Details(decimal id)
         {
@@ -299,19 +272,18 @@ namespace MYBUSINESS.Controllers
         // GET: POes/Create
         public ActionResult Create(string IsReturn)
         {
-
             //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name");
             //ViewBag.Products = db.Products;
-            ViewBag.Accounts = _dbFilteredAccounts;
+
             //int maxId = db.Suppliers.Max(p => p.Id);
-            decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            int maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             ViewBag.SuggestedNewSuppId = maxId;
 
 
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
-            purchaseOrderViewModel.Suppliers = _dbFilteredSuppliers;
-            purchaseOrderViewModel.Products = _dbFilteredProducts.Where(x => x.Saleable == true);
+            purchaseOrderViewModel.Suppliers = db.Suppliers;
+            purchaseOrderViewModel.Products = db.Products.Where(x => x.Saleable == true);
             ViewBag.IsReturn = IsReturn;
             return View(purchaseOrderViewModel);
         }
@@ -319,25 +291,20 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,AccountId")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice")] List<POD> pOD)
+        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice")] List<POD> pOD)
 
         {
-
             //PO pO = new PO();
             if (ModelState.IsValid)
             {
-
                 Supplier supp = db.Suppliers.FirstOrDefault(x => x.Id == pO.SupplierId);
                 if (supp == null)
                 {//its means new customer
                     //pO.SupplierId = 10;
                     //int maxId = db.Suppliers.Max(p => p.Id);
-                    decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+                    int maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                     maxId += 1;
-                    Business CurrentBusiness = (Business)Session["CurrentBusiness"];
                     Supplier.Id = maxId;
-                    Supplier.bizId = CurrentBusiness.Id;
-
                     Supplier.Balance = pO.Balance;
                     db.Suppliers.Add(Supplier);
                     //db.SaveChanges();
@@ -393,14 +360,14 @@ namespace MYBUSINESS.Controllers
                         pod.OpeningStock = product.Stock;
                         if (pod.SaleType == true)//return
                         {
-
+                            
                             if (pod.IsPack == false)
                             {
                                 pO.PurchaseReturnAmount += (decimal)(pod.Quantity * pod.PurchasePrice);
                                 decimal qty = (decimal)pod.Quantity;// / (decimal)product.PerPack;
                                 product.Stock -= qty;
                                 pO.PurchaseReturnQty += qty;//(int)sod.Quantity;
-
+                                
                             }
                             else
                             {
@@ -408,12 +375,12 @@ namespace MYBUSINESS.Controllers
                                 product.Stock -= (int)pod.Quantity * pod.PerPack;
 
                                 pO.PurchaseReturnQty += (int)pod.Quantity * pod.PerPack;
-
+                                
                             }
                         }
                         else//purchase
                         {
-
+                            
                             if (pod.IsPack == false)
                             {//piece
                                 pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice);
@@ -422,7 +389,7 @@ namespace MYBUSINESS.Controllers
                                 product.Stock += qty;
 
                                 pO.PurchaseOrderQty += qty;//(int)sod.Quantity;
-
+                                
                             }
                             else
                             {//pack
@@ -444,39 +411,29 @@ namespace MYBUSINESS.Controllers
                 int previousbillNum = maxId1 - 1;
                 PO previousBill = db.POes.Where(x => x.POSerial == previousbillNum).FirstOrDefault();
 
-                if (previousBill != null)
+                DateTime PrvTime = (DateTime)previousBill.Date;//previous bill time
+                DateTime thisTime = (DateTime)pO.Date;//this bill time
+                TimeSpan span = thisTime.Subtract(PrvTime);
+
+                if (previousBill.BillAmount == pO.BillAmount && previousBill.BillPaid == pO.BillPaid
+                    && previousBill.SupplierId == pO.SupplierId && previousBill.Discount == pO.Discount
+                    && previousBill.PurchaseOrderAmount == pO.PurchaseOrderAmount && previousBill.PurchaseOrderQty == pO.PurchaseOrderQty
+                    && previousBill.PurchaseReturnAmount == pO.PurchaseReturnAmount && previousBill.PurchaseReturnQty == pO.PurchaseReturnQty)
+                //&& span.TotalSeconds < 60)
                 {
+                    //Duplicate bill found. don't do anything
+                    POId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(previousBill.Id)));
 
-                    DateTime PrvTime = (DateTime)previousBill.Date;//previous bill time
-                    DateTime thisTime = (DateTime)pO.Date;//this bill time
-                    TimeSpan span = thisTime.Subtract(PrvTime);
-
-                    if (previousBill.BillAmount == pO.BillAmount && previousBill.BillPaid == pO.BillPaid
-                        && previousBill.SupplierId == pO.SupplierId && previousBill.Discount == pO.Discount
-                        && previousBill.PurchaseOrderAmount == pO.PurchaseOrderAmount && previousBill.PurchaseOrderQty == pO.PurchaseOrderQty
-                        && previousBill.PurchaseReturnAmount == pO.PurchaseReturnAmount && previousBill.PurchaseReturnQty == pO.PurchaseReturnQty)
-                    //&& span.TotalSeconds < 60)
-                    {
-                        //Duplicate bill found. don't do anything
-                        POId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(previousBill.Id)));
-
-                        string path = Server.MapPath("~/log.txt");
-                        System.IO.File.AppendAllText(path, DateTime.Now.ToString("dd/MM/yy hh:mm tt") + "\tPO" + System.Environment.NewLine);
-                    }
-                    else
-                    {
-                        db.SaveChanges();
-                        POId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(pO.Id)));
-                    }
+                    string path = Server.MapPath("~/log.txt");
+                    System.IO.File.AppendAllText(path, DateTime.Now.ToString("dd/MM/yy hh:mm tt") + "\tPO" + System.Environment.NewLine);
                 }
                 else
                 {
                     db.SaveChanges();
                     POId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(pO.Id)));
                 }
-
                 ViewBag.POIDEnc = POId;
-                
+
 
                 ////////////////////////////^ deffer the duplicate error
 
@@ -510,11 +467,11 @@ namespace MYBUSINESS.Controllers
                 //return RedirectToAction("Index");
             }
 
-            //ViewBag.SupplierId = new SelectList(_dbFilteredSuppliers, "Id", "Name", pO.SupplierId);
+            //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name", pO.SupplierId);
             //return View(pO);
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
-            purchaseOrderViewModel.Suppliers = _dbFilteredSuppliers;
-            purchaseOrderViewModel.Products = _dbFilteredProducts;
+            purchaseOrderViewModel.Suppliers = db.Suppliers;
+            purchaseOrderViewModel.Products = db.Products;
 
             return View(purchaseOrderViewModel);
             //return View();
@@ -553,7 +510,7 @@ namespace MYBUSINESS.Controllers
         //    reportDocument.PrintToPrinter(printerSettings, new PageSettings(), false);
 
         //}
-
+    
 
         public FileContentResult PrintSO2(string id)
         {
@@ -694,7 +651,7 @@ namespace MYBUSINESS.Controllers
                  //PO.SupplierId = 10;
                  //int maxId = db.Suppliers.Max(p => p.Id);
                     supplier = purchaseOrderViewModel1.Supplier;
-                    decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+                    int maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                     maxId += 1;
 
                     supplier.Id = maxId;
@@ -710,7 +667,7 @@ namespace MYBUSINESS.Controllers
                 {//POme other db supplier
                  //first revert the previous supplier balance 
                     Supplier oldSupplier = db.Suppliers.Where(x => x.Id == PO.SupplierId).FirstOrDefault();
-                    oldSupplier.Balance = _dbFilteredPO.Where(x => x.Id == PO.Id).FirstOrDefault().PrevBalance;
+                    oldSupplier.Balance = db.POes.Where(x => x.Id == PO.Id).FirstOrDefault().PrevBalance;
                     db.Entry(oldSupplier).State = EntityState.Modified;
                 }
 
@@ -808,7 +765,7 @@ namespace MYBUSINESS.Controllers
                                 PO.PurchaseReturnAmount += (decimal)(pod.Quantity * pod.PurchasePrice * pod.PerPack);
                                 product.Stock -= (int)pod.Quantity * pod.PerPack;
 
-                                PO.PurchaseReturnQty += (int)pod.Quantity * pod.PerPack;
+                                PO.PurchaseReturnQty += (int)pod.Quantity *pod.PerPack;
 
                             }
                         }
@@ -880,7 +837,7 @@ namespace MYBUSINESS.Controllers
             //id = new string( Encoding.UTF8.GetString(BytesArr).ToCharArray());
             //id = Encryption.Decrypt(id,"BZNS");
 
-            decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            int maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
             ViewBag.SuggestedNewSuppId = maxId;
 
@@ -948,8 +905,8 @@ namespace MYBUSINESS.Controllers
             }
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             List<POD> pod = db.PODs.Where(x => x.POId == id).ToList();
-            purchaseOrderViewModel.Products = _dbFilteredProducts;
-            purchaseOrderViewModel.Suppliers = _dbFilteredSuppliers;
+            purchaseOrderViewModel.Products = db.Products;
+            purchaseOrderViewModel.Suppliers = db.Suppliers;
             purchaseOrderViewModel.PurchaseOrderDetail = pod;
             pO.Id = Encryption.Encrypt(pO.Id);
             purchaseOrderViewModel.PurchaseOrder = pO;
